@@ -58,10 +58,26 @@ unit LibPhoneNumber.UpstreamSuite.Matcher.Tests;
   this fixture.
 }
 
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{ The test sources are pure ASCII and spell every non ASCII character as a
+  numeric constant (#$XXXX). Without a source code page FreePascal converts
+  such a constant to an AnsiString `string` at COMPILE time through its
+  default code page and turns every character outside it into '?'. UTF-8
+  as the source code page makes that conversion lossless and matches the
+  UTF-8 string contract of the library on FreePascal. }
+{$CODEPAGE UTF8}
+{ Implicit UnicodeString <-> AnsiString conversions are the documented
+  string contract here: the runner sets the UTF-8 conversion code page, so
+  they are lossless, and the warning would bury every other one. }
+{$WARN 4105 OFF}
+{$ENDIF}
+
 interface
 
 uses
-  DUnitX.TestFramework,
+  LibPhoneNumber.TestFramework,
   LibPhoneNumber.Types,
   LibPhoneNumber.Metadata,
   LibPhoneNumber.MetadataCore,
@@ -84,8 +100,7 @@ type
   end;
   TNumberContextArray = array of TNumberContext;
 
-  [TestFixture]
-  TUpstreamPhoneNumberMatcherTests = class
+  TUpstreamPhoneNumberMatcherTests = class(TTestCase)
   private
     function ImpossibleCases: TNumberTestArray;
     function PossibleOnlyCases: TNumberTestArray;
@@ -123,107 +138,65 @@ type
     procedure DoTestNumberNonMatchesForLeniency(const ACases: TNumberTestArray;
       ALeniency: TPhoneNumberLeniency);
   public
-    [Setup]
-    procedure Setup;
-    [TearDown]
-    procedure TearDown;
+    procedure Setup; override;
+    procedure TearDown; override;
 
-    [Test]
+  published
     procedure Test_ContainsMoreThanOneSlashInNationalNumber;
-    [Test]
     procedure Test_FindNationalNumber;
-    [Test]
     procedure Test_FindWithInternationalPrefixes;
-    [Test]
     procedure Test_FindWithLeadingZero;
-    [Test]
     procedure Test_FindNationalNumberArgentina;
-    [Test]
     procedure Test_FindWithXInNumber;
-    [Test]
     procedure Test_FindNumbersMexico;
-    [Test]
     procedure Test_FindNumbersWithPlusWithNoRegion;
-    [Test]
     procedure Test_FindExtensions;
-    [Test]
     procedure Test_FindInterspersedWithSpace;
-    [Test]
     procedure Test_IntermediateParsePositions;
-    [Test]
     procedure Test_FourMatchesInARow;
-    [Test]
     procedure Test_MatchesFoundWithMultipleSpaces;
-    [Test]
     procedure Test_MatchWithSurroundingZipcodes;
-    [Test]
     procedure Test_IsLatinLetter;
-    [Test]
     procedure Test_MatchesWithSurroundingLatinChars;
-    [Test]
     procedure Test_MoneyNotSeenAsPhoneNumber;
-    [Test]
     procedure Test_PercentageNotSeenAsPhoneNumber;
-    [Test]
     procedure Test_PhoneNumberWithLeadingOrTrailingMoneyMatches;
-    [Test]
     procedure Test_MatchesWithSurroundingLatinCharsAndLeadingPunctuation;
-    [Test]
     procedure Test_MatchesWithSurroundingChineseChars;
-    [Test]
     procedure Test_MatchesWithSurroundingPunctuation;
-    [Test]
     procedure Test_MatchesMultiplePhoneNumbersSeparatedByPhoneNumberPunctuation;
-    [Test]
     procedure Test_DoesNotMatchMultiplePhoneNumbersSeparatedWithNoWhiteSpace;
-    [Test]
     procedure Test_MatchesWithPossibleLeniency;
-    [Test]
     procedure Test_NonMatchesWithPossibleLeniency;
-    [Test]
     procedure Test_MatchesWithValidLeniency;
-    [Test]
     procedure Test_NonMatchesWithValidLeniency;
-    [Test]
     procedure Test_MatchesWithStrictGroupingLeniency;
-    [Test]
     procedure Test_NonMatchesWithStrictGroupLeniency;
-    [Test]
     procedure Test_MatchesWithExactGroupingLeniency;
-    [Test]
     procedure Test_NonMatchesExactGroupLeniency;
-    [Test]
     procedure Test_NonMatchingBracketsAreInvalid;
-    [Test]
     procedure Test_NoMatchIfRegionIsNull;
-    [Test]
     procedure Test_NoMatchInEmptyString;
-    [Test]
     procedure Test_NoMatchIfNoNumber;
-    [Test]
     procedure Test_Sequences;
-    [Test]
     procedure Test_NullInput;
-    [Test]
     procedure Test_MaxMatches;
-    [Test]
     procedure Test_MaxMatchesInvalid;
-    [Test]
     procedure Test_MaxMatchesMixed;
-    [Test]
     procedure Test_NonPlusPrefixedNumbersNotFoundForInvalidRegion;
-    [Test]
     procedure Test_EmptyIteration;
-    [Test]
     procedure Test_SingleIteration;
-    [Test]
     procedure Test_DoubleIteration;
   end;
 
 implementation
 
 uses
+{$IFDEF FPC}
+  SysUtils;
+{$ELSE}
   System.SysUtils;
+{$ENDIF}
 
 const
   RC_AR = 'AR';
@@ -307,6 +280,7 @@ function TUpstreamPhoneNumberMatcherTests.Concat(const A,
 var
   I: Integer;
 begin
+  Result := nil;
   SetLength(Result, Length(A) + Length(B));
   for I := 0 to Length(A) - 1 do
     Result[I] := A[I];
@@ -544,13 +518,17 @@ begin
   for I := 0 to Length(AContexts) - 1 do
   begin
     Text := AContexts[I].LeadingText + ANumber + AContexts[I].TrailingText;
-    Start := Length(AContexts[I].LeadingText);
-    Stop := Start + Length(ANumber);
+    { Match offsets are UTF-16 code unit offsets (Java String indices) on
+      both compilers, so the expected region is measured, and the match cut
+      out, on the UnicodeString form; on FreePascal `string` is UTF-8. }
+    Start := Length(UnicodeString(AContexts[I].LeadingText));
+    Stop := Start + Length(UnicodeString(ANumber));
 
     Assert.IsTrue(FirstMatch(Text, ADefaultCountry, ALeniency, Match),
       Format('Did not find a number in "%s"; expected "%s"', [Text, ANumber]));
 
-    Extracted := Copy(Text, Match.Start + 1, Match.EndIndex - Match.Start);
+    Extracted := string(Copy(UnicodeString(Text), Match.Start + 1,
+      Match.EndIndex - Match.Start));
     Assert.IsTrue((Start = Match.Start) and (Stop = Match.EndIndex),
       Format('Unexpected phone region in "%s"; extracted "%s"',
         [Text, Extracted]));
@@ -1314,6 +1292,6 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TUpstreamPhoneNumberMatcherTests);
+  RegisterTest(TUpstreamPhoneNumberMatcherTests);
 
 end.

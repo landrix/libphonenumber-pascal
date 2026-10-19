@@ -67,9 +67,14 @@ reopens them.
    LONE surrogate cannot be carried by a UTF-8 `string` at all; only the
    UnicodeString entry points (the code point primitives, the
    AsYouTypeFormatter) can receive one. The runtime gate driver
-   `tools/fpcruntime/PhoneNumbersFpcRuntime.dpr` and the sample in `samples/`
-   do exactly this. ASCII input - which is what the metadata path works on -
-   is unaffected. Inside the port the rule is: a `string` is UTF-8 on
+   `tools/fpcruntime/PhoneNumbersFpcRuntime.dpr`, the test program
+   `tests/LibPhoneNumberTests.dpr` and the sample in `samples/` do exactly
+   this. A unit that spells non ASCII text as a numeric constant (`#$FF11`) in
+   a `string` context additionally needs a source code page: without
+   `{$CODEPAGE UTF8}` FreePascal converts such a constant at COMPILE time
+   through its default code page and turns every character outside it into
+   `?` (the test units carry the directive for exactly that reason). ASCII
+   input - which is what the metadata path works on - is unaffected. Inside the port the rule is: a `string` is UTF-8 on
    FreePascal, and every length, index and character test that upstream
    performs on a Java String is performed on its UnicodeString form - the
    facade (`LibPhoneNumber.PhoneNumberUtil`, whose unit header states the
@@ -90,7 +95,24 @@ reopens them.
    over it, because pinning a Unicode version would be a decision upstream
    does not make either. Every character class the port spells out itself
    (Nd, `VALID_PUNCTUATION`, the plus characters, the vanity dial pad) is
-   compared strictly and identical on all compilers.
+   compared strictly and identical on all compilers. No test of the suite
+   depends on a character in the differing ranges, so the suite passes
+   unchanged on FreePascal 3.2.x; a test that did would need a version
+   conditional expectation with the reason next to it, never a skip.
+8. **Two pattern shapes the empty input probe of regexpr < 1.0 answers
+   wrongly.** regexpr 0.987 (FreePascal 3.2.2) never matches an empty input,
+   so the regex layer decides an empty input with a multi line probe
+   (`EmptyInputMatches` in `src/LibPhoneNumber.Regex.pas`). On an EMPTY input
+   two shapes answer False where java.util.regex answers True: an inline
+   modifier group that switches multi line mode off (`(?-m)^$`,
+   `(?-m)\A`), and a `(?#...)` comment containing `[` in front of a `\A` (the
+   anchor rewrite of the probe then misreads the class state). `(?#...)` is
+   not java.util.regex syntax and thus outside the contract of a port of Java
+   patterns. No metadata pattern contains either shape (none of the generated
+   units nor the four upstream XMLs has a `(?-` or `(?#` group); only a
+   caller supplied pattern, on FreePascal 3.2.2, with an empty input can hit
+   them. Deliberately not rewritten for this legacy engine; FreePascal 3.2.4
+   and later (regexpr 1.x) and Delphi do not use the probe.
 
 ## Deferred
 

@@ -8,8 +8,10 @@ items.
 
 libphonenumber-pascal is a literal Object Pascal port of Google's
 libphonenumber for Delphi AND FreePascal: `src/` holds the library (hand
-written units plus generated metadata units), `tests/` the DUnitX suite,
-`tools/` the generator and the gates, `samples/` a console sample.
+written units plus generated metadata units), `tests/` the test suite (one
+program on a test layer of its own in `tests/framework/`, for Delphi and
+FreePascal), `tools/` the generator and the gates, `samples/` a console
+sample.
 
 ## Current State
 
@@ -20,16 +22,18 @@ nowhere else. `README.md`, `docs/ARCHITECTURE.md`, `tools/README.md` and
 many there are; a number repeated in one of them is a bug in that file. Update
 this block, with its date, in the same change that moves a number.
 
-As of 2026-10-19 (initial import; every number re-measured in this repository):
+As of 2026-10-19 (test layer of its own replaces DUnitX; the suite runs on Delphi and FreePascal):
 
 | item | value |
 | --- | --- |
-| Delphi test suite | 555 tests, all green |
+| Test suite (Delphi + FreePascal) | 555 tests in 10 fixtures, one program `tests/LibPhoneNumberTests.dpr`, all green on Delphi 13 Win64 (`tools/run_delphi_tests.ps1`) and on FreePascal 3.2.4 aarch64-linux (WSL, the default), 3.2.2 aarch64-linux (WSL distribution package), 3.3.1 aarch64-linux (WSL), 3.3.1 aarch64-win64 and 3.2.4 aarch64-darwin (Mac), plus 3.2.2 x86_64-linux (Ubuntu 24.04 distribution package, verified in an emulated container; CI) |
+| FreePascal test suite gate | `tools/run_fpc_tests.ps1`: build + run about 25-30 s on WSL, 8 s Native, 7 s on the Mac; a step of `run_update_workflow.ps1` (`-SkipFpcTests`) and of `run_pr_quick_check.ps1` (the whole quick check about 115 s on an otherwise idle machine) |
+| CI | `.github/workflows/quick-check.yml`: job `quick-check` (windows-latest; generator, generated unit check, compare gate - no compiler) and job `freepascal` (ubuntu-24.04, distribution FPC 3.2.2 x86_64: compile check, the whole suite with a JUnit artifact, the sample) |
 | Generator inputs | 4 upstream XMLs |
 | Generated units | 9 (`Metadata.{Data,Descs,Formats}`, `ShortMetadata.{Data,Descs}`, `TestingMetadata.{Data,Descs,Formats}`, `AlternateFormats.Data`) |
 | Hand written `src/` units | 13 |
 | FreePascal compile gate | 12 units listed = every hand written unit of `src/` (`LibPhoneNumber.Metadata.Types` is compiled through `LibPhoneNumber.Metadata`), the facade and the matcher included |
-| FreePascal runtime gate | `tools/run_fpc_runtime_check.ps1`, the same 12 units: 74469 observation lines (18929094 bytes). Core sections: 1144 production + 93 testing phone examples, 961 short number examples, 137 tricky inputs, 2784 AYTF sequences, 5548 compiled patterns each also compiled and matched in its counted quantifier rewrite - longest rewrite 1439 chars against a budget of 32768, 0 over budget - 52 targeted regex/rewrite/budget probes, 471 BMP class ranges. Facade and matcher sections (production and testing metadata): 1144 + 93 examples parsed back and found in sentences, 6938 parse inputs (6237 parse), 290 example number lookups (regions + non geo entities), 247 reference corpus cases, 17 mobileDialing + 12 keepingAlphaChars cases, 16196 matcher texts = 80980 `FindNumbers` calls with 63078 matches. The summary must show 0 exceptions, pattern failures, rewrite mismatches and expansion probe failures and a positive count in every section. Byte identical between Delphi and FPC 3.2.4 aarch64-linux (WSL, mandatory), 3.2.2 aarch64-linux (WSL) and 3.3.1 aarch64-win64 (Windows); before the import also 3.3.1 aarch64-linux (WSL) and 3.2.4-rc2 aarch64-darwin (Mac). FPC build + run about 33 s on WSL, Delphi build + run about 13 s. RTL Unicode category sweep (reported, not gated): identical on 3.3.1, differs on 3.2.x (KNOWN_ISSUES.md, permanent item 7) |
+| FreePascal runtime gate | `tools/run_fpc_runtime_check.ps1`, the same 12 units: 74488 observation lines (18930558 bytes). Core sections: 1144 production + 93 testing phone examples, 961 short number examples, 137 tricky inputs, 2784 AYTF sequences, 5548 compiled patterns each also compiled and matched in its counted quantifier rewrite - longest rewrite 1439 chars against a budget of 32768, 0 over budget - 71 targeted regex/rewrite/budget probes (19 of them on the empty input), 471 BMP class ranges. Facade and matcher sections (production and testing metadata): 1144 + 93 examples parsed back and found in sentences, 6938 parse inputs (6237 parse), 290 example number lookups (regions + non geo entities), 247 reference corpus cases, 17 mobileDialing + 12 keepingAlphaChars cases, 16196 matcher texts = 80980 `FindNumbers` calls with 63078 matches. The summary must show 0 exceptions, pattern failures, rewrite mismatches and expansion probe failures and a positive count in every section. Byte identical between Delphi and FPC 3.2.4 aarch64-linux (WSL, mandatory), 3.2.2 aarch64-linux (WSL), 3.3.1 aarch64-win64 (Windows) and 3.2.4 aarch64-darwin (Mac); before the import also 3.3.1 aarch64-linux (WSL). FPC build + run about 21 s on WSL, Delphi build + run about 11 s. RTL Unicode category sweep (reported, not gated): identical on 3.3.1, differs on 3.2.x (KNOWN_ISSUES.md, permanent item 7) |
 | Length compare gate | 254/254 territories, all four counters zero |
 | Mass differential | 1144 cases x 9 APIs = 10296 compared fields, 0 findings |
 | Reference corpus | 247 cases in `tests/data/reference_cases_java_csharp.json` |
@@ -95,7 +99,9 @@ Not ported: geocoder, carrier mapper, time zone mapper.
    character test upstream performs on a Java String is performed on the
    UTF-16 (UnicodeString) form. No non ASCII `string` constant may be built in
    an initialization section. A change that only compiles on Delphi is not
-   done.
+   done. The same holds for the test suite: it runs on both compilers, and a
+   test that fails on FreePascal is a finding to root-cause, never a test to
+   skip.
 4. **Add tests first** when a behaviour change touches already ported code,
    then change the port.
 5. Keep changes focused; do not reformat unrelated code.
@@ -191,12 +197,14 @@ What the workflow does, in order: refresh the reference cases (child `pwsh`;
 `-SkipReference` opts out), regenerate the metadata units (`-SkipMetadataGen`),
 with `-FailOnDiff` verify with `git status --porcelain` that the nine generated
 units equal the committed state, the FreePascal compile check
-(`-SkipFpcCheck`), the FreePascal runtime check (`-SkipFpcRuntime`), the length
-compare gate (export snapshot, extract upstream rules, compare; with
-`-FailOnDiff` a non-zero counter fails), the Delphi tests (`-SkipTests`) and,
-with `-RunMassDifferential`, the mass differential (a hard gate with
-`-FailOnDiff`). `-RequireFpc` turns a missing FreePascal into a failure in both
-FreePascal steps. The workflow needs Delphi for the test run and for the mass
+(`-SkipFpcCheck`), the FreePascal runtime check (`-SkipFpcRuntime`), the
+FreePascal test suite (`tools/run_fpc_tests.ps1`, WSL; `-SkipFpcTests`), the
+length compare gate (export snapshot, extract upstream rules, compare; with
+`-FailOnDiff` a non-zero counter fails), the Delphi test suite (`-SkipTests`,
+which skips the Delphi run only) and, with `-RunMassDifferential`, the mass
+differential (a hard gate with `-FailOnDiff`). `-RequireFpc` turns a missing
+FreePascal into a failure in all three FreePascal steps. The workflow needs
+Delphi for the Delphi test run and for the mass
 differential (`run_delphi_tests.ps1` throws without it); a missing Delphi only
 skips the FreePascal runtime check with a warning, and the workflow has no
 `-RequireDelphi`. The `-FailOnDiff` check compares against the committed state:
@@ -204,11 +212,16 @@ a generated unit that is not committed yet (for example before the first
 commit) counts as differing.
 
 `run_pr_quick_check.ps1` is the workflow with `-FailOnDiff -SkipTests
--SkipReference` plus a compile-only build of the DUnitX project
+-SkipReference` - so the FreePascal test suite DOES run (`-SkipFpcTests` opts
+out) - plus a compile-only build of the Delphi test program
 (`run_delphi_tests.ps1 -BuildOnly`); missing Delphi or FreePascal are warnings
 (`-RequireDelphi`, `-RequireFpc`). The GitHub workflow
-`.github/workflows/quick-check.yml` runs it on a hosted Windows runner, which
-has neither compiler; it fetches the pinned upstream commit first.
+`.github/workflows/quick-check.yml` has two jobs: `quick-check` runs the quick
+check on a hosted Windows runner, which has neither compiler (it fetches the
+pinned upstream commit first); `freepascal` installs the FreePascal of the
+Ubuntu distribution and runs `check_fpc_compile.ps1 -RequireFpc`,
+`run_fpc_tests.ps1 -Toolchain Native -RequireFpc` with the JUnit report
+uploaded as an artifact, and the FreePascal build and run of the sample.
 
 Interpretation:
 
@@ -261,13 +274,16 @@ built.
 5. `src/LibPhoneNumber.Metadata.Types.pas`, `src/LibPhoneNumber.Metadata.pas`, `src/LibPhoneNumber.ShortMetadata.pas`, `src/LibPhoneNumber.AlternateFormats.pas`, `src/LibPhoneNumber.TestingMetadata.pas`
 6. GENERATED - never edit: `src/LibPhoneNumber.Metadata.{Data,Descs,Formats}.pas`, `src/LibPhoneNumber.ShortMetadata.{Data,Descs}.pas`, `src/LibPhoneNumber.TestingMetadata.{Data,Descs,Formats}.pas`, `src/LibPhoneNumber.AlternateFormats.Data.pas`
 7. `tests/LibPhoneNumber.*.Tests.pas`; the four `tests/LibPhoneNumber.UpstreamSuite.*.Tests.pas` are the ONLY place for Java expected values
+7a. `tests/LibPhoneNumberTests.dpr` (+ `.dproj`), the test program of both compilers, and its test layer `tests/framework/LibPhoneNumber.TestFramework.pas` (fixtures, `Assert`, published method discovery), `LibPhoneNumber.TestRunner.pas` (command line, console report, JUnit) and `LibPhoneNumber.TestJson.pas` (JSON reader, test data lookup)
 8. `tests/data/reference_cases_java_csharp.json`, `tests/data/aytf_reference_cases.json` (generated by `tools/generate_aytf_cases.ps1`), `tests/data/mass_differential_findings.json`
 9. `tools/generate_metadata.ps1`, `tools/oracle_helpers.ps1`
-10. `tools/run_update_workflow.ps1`, `tools/run_pr_quick_check.ps1`, `tools/run_delphi_tests.ps1`
-11. `tools/check_fpc_compile.ps1`, `tools/run_fpc_runtime_check.ps1` + `tools/fpcruntime/PhoneNumbersFpcRuntime.dpr`
+10. `tools/run_update_workflow.ps1`, `tools/run_pr_quick_check.ps1`, `tools/run_delphi_tests.ps1`, `tools/run_fpc_tests.ps1`
+11. `tools/check_fpc_compile.ps1`, `tools/run_fpc_runtime_check.ps1` + `tools/fpcruntime/PhoneNumbersFpcRuntime.dpr`, `tools/fpc_toolchains.ps1` (the FreePascal toolchain helpers both FreePascal scripts dot-source)
+11a. `.github/workflows/quick-check.yml` (the Windows quick check job and the Ubuntu FreePascal job)
 12. `tools/run_mass_differential.ps1` + `tools/differential/PhoneNumbersDifferential.dpr`
 13. `tools/export_generated_metadata_snapshot.ps1`, `tools/extract_upstream_length_rules.ps1`, `tools/compare_generated_metadata_with_upstream.ps1`
 14. `vendor/versions.md`, `docs/ARCHITECTURE.md`, `KNOWN_ISSUES.md`, `CHANGELOG.md`
+15. `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/` (bug report, feature request, `config.yml` routing data issues upstream), `.github/pull_request_template.md`
 
 ## Next Steps
 

@@ -137,20 +137,28 @@ with both compilers.
   units use only the RTL (`System.SysUtils`, `System.RegularExpressions`,
   `System.Character`, `System.SyncObjs`).
 - **FreePascal**: 3.2.2, 3.2.4 and 3.3.1 are tested (Linux, Windows and macOS on
-  aarch64), in `{$MODE DELPHI}`. The units use the `regexpr` unit of the
-  FreePascal distribution.
-- **Tooling** (only for tests, gates and metadata updates): PowerShell 7 and
+  aarch64; 3.2.2 also on Linux x86_64 in CI), in `{$MODE DELPHI}`. The units
+  use the `regexpr` unit of the FreePascal distribution.
+- **Tests**: nothing beyond the compiler. The test suite brings its own small
+  test layer (`tests/framework/`) and runs unchanged on Delphi and on
+  FreePascal; no DUnitX or FPCUnit is needed.
+- **Tooling** (only for gates and metadata updates): PowerShell 7 and
   Windows PowerShell, `git`, the .NET 8 SDK for the reference oracle, and
-  optionally WSL with FreePascal for the runtime gate.
+  optionally WSL with FreePascal for the FreePascal gates.
 
 ## Tests and gates
 
 ```powershell
-# DUnitX suite (Delphi)
+# The test suite on Delphi
 powershell -ExecutionPolicy Bypass -File tools/run_delphi_tests.ps1
 
+# The same test suite on FreePascal (WSL by default; -Toolchain Native for the
+# fpc on PATH, -Toolchain Mac for the shared Mac toolchain)
+pwsh -NoProfile -File tools/run_fpc_tests.ps1
+
 # Quick gate: metadata regeneration check, length compare against the upstream
-# XML, FreePascal compile and runtime checks, Delphi compile of the test project
+# XML, FreePascal compile and runtime checks, the FreePascal test suite and the
+# Delphi compile of the test program
 powershell -ExecutionPolicy Bypass -File tools/run_pr_quick_check.ps1
 
 # Full gate, including the test run and the differential against the C# oracle
@@ -167,8 +175,15 @@ Which toolchain each entry point needs:
 | entry point | Delphi missing | FreePascal missing |
 | --- | --- | --- |
 | `run_delphi_tests.ps1` | fails | not used |
-| `run_pr_quick_check.ps1` | the compile-only build of the test project and the FreePascal runtime check (it needs a Delphi reference build) are skipped with a warning; `-RequireDelphi` makes the build a failure | the compile and runtime checks are skipped with a warning; `-RequireFpc` makes them a failure |
-| `run_update_workflow.ps1` | the test run fails, and so does `-RunMassDifferential` (it builds the probe with Delphi); with `-SkipTests` and without `-RunMassDifferential` only the runtime check is skipped, with a warning | as for the quick check (`-RequireFpc`) |
+| `run_fpc_tests.ps1` | not used | skipped with a warning; `-RequireFpc` makes it a failure |
+| `run_pr_quick_check.ps1` | the compile-only build of the test program and the FreePascal runtime check (it needs a Delphi reference build) are skipped with a warning; `-RequireDelphi` makes the build a failure | the compile and runtime checks and the FreePascal test suite are skipped with a warning; `-RequireFpc` makes them a failure |
+| `run_update_workflow.ps1` | the Delphi test run fails, and so does `-RunMassDifferential` (it builds the probe with Delphi); with `-SkipTests` and without `-RunMassDifferential` only the runtime check is skipped, with a warning | as for the quick check (`-RequireFpc`) |
+
+The GitHub workflow (`.github/workflows/quick-check.yml`) has two jobs: the
+quick check on a hosted Windows runner (no compiler there, so it covers the
+generator and the compare gates), and a FreePascal job on Ubuntu that installs
+the distribution's FreePascal and runs the compile check, the whole test suite
+(JUnit report as an artifact) and the sample.
 
 `run_update_workflow.ps1` also refreshes the reference cases from the oracle
 unless `-SkipReference` is passed, which needs PowerShell 7 and the .NET 8 SDK;
@@ -203,9 +218,12 @@ Never edit a generated unit - change `tools/generate_metadata.ps1` instead.
 ## How correctness is established
 
 - **Ported upstream test suites.** `PhoneNumberUtilTest`, `ShortNumberInfoTest`,
-  `PhoneNumberMatcherTest` and `AsYouTypeFormatterTest` are ported to DUnitX and
-  run against the upstream TEST metadata, which the generator produces as a
+  `PhoneNumberMatcherTest` and `AsYouTypeFormatterTest` are ported and run
+  against the upstream TEST metadata, which the generator produces as a
   separate data set, with the Java expected values verbatim.
+- **One suite, both compilers.** The whole test suite is one program on a test
+  layer of its own; it runs on Delphi and on FreePascal 3.2.2, 3.2.4 and 3.3.1
+  with the same expectations.
 - **Production tests against an oracle.** Everywhere else expected values are
   computed with the published C# port
   ([libphonenumber-csharp](https://github.com/twcclegg/libphonenumber-csharp))
@@ -226,6 +244,12 @@ Never edit a generated unit - change `tools/generate_metadata.ps1` instead.
 Design notes, engine quirks and the closed design questions are in
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); open items in
 [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Wrong number DATA is almost always an
+upstream metadata issue and goes to Google's libphonenumber; bugs of the port
+go to this repository's issue tracker.
 
 ## License
 

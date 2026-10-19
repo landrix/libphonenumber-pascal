@@ -7,14 +7,33 @@ unit LibPhoneNumber.Metadata.Tests;
   formatting semantics; those are covered by the other test units.
 
   The regex dialect gate runs twice: once in the generator against .NET regex
-  as a PCRE proxy, and once here against the actual Delphi engine
-  (System.RegularExpressions). Both must accept every upstream pattern.
+  as a PCRE proxy, and once here against the actual engine of the build:
+  System.RegularExpressions (PCRE) on Delphi, and on FreePascal the regex
+  layer of the port (LibPhoneNumber.Regex, TRegExpr plus its pattern
+  rewrites), which is what the library itself runs there. Both must accept
+  every upstream pattern.
 }
+
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{ The test sources are pure ASCII and spell every non ASCII character as a
+  numeric constant (#$XXXX). Without a source code page FreePascal converts
+  such a constant to an AnsiString `string` at COMPILE time through its
+  default code page and turns every character outside it into '?'. UTF-8
+  as the source code page makes that conversion lossless and matches the
+  UTF-8 string contract of the library on FreePascal. }
+{$CODEPAGE UTF8}
+{ Implicit UnicodeString <-> AnsiString conversions are the documented
+  string contract here: the runner sets the UTF-8 conversion code page, so
+  they are lossless, and the warning would bury every other one. }
+{$WARN 4105 OFF}
+{$ENDIF}
 
 interface
 
 uses
-  DUnitX.TestFramework,
+  LibPhoneNumber.TestFramework,
   LibPhoneNumber.Metadata.Types,
   LibPhoneNumber.Metadata.Data,
   LibPhoneNumber.Metadata.Descs,
@@ -22,8 +41,7 @@ uses
   LibPhoneNumber.Metadata;
 
 type
-  [TestFixture]
-  TMetadataTests = class
+  TMetadataTests = class(TTestCase)
   private
     function TryCompilePattern(const APattern: string; out AError: string): Boolean;
     function MatchesFully(const APattern, AInput: string): Boolean;
@@ -31,125 +49,95 @@ type
     procedure CheckExampleNumbersForRegion(const ARegionCode: string;
       var AChecked: Integer);
     procedure CheckIntlListMirrorsNationalList(const ARegionCode: string);
-  public
+  published
     { Inventory }
-    [Test]
     procedure TerritoryCount_MatchesPinnedUpstreamBaseline;
 
-    [Test]
     procedure RegionsAndNonGeoEntities_AddUpToTerritoryCount;
 
-    [Test]
     procedure MetadataProvenance_IsEmbedded;
 
     { Spot checks }
-    [Test]
     procedure Germany_HasExpectedTerritoryAttributes;
 
-    [Test]
     procedure UnitedStates_HasExpectedTerritoryAttributes;
 
-    [Test]
     procedure NonGeoEntity800_IsAvailable;
 
-    [Test]
     procedure AllNonGeoEntities_AreReachableByCallingCode;
 
-    [Test]
     procedure UnknownRegionAndCallingCode_AreNotResolved;
 
     { Index integrity }
-    [Test]
     procedure RegionCodes_AreOrdinallySortedAndUnique;
 
-    [Test]
     procedure EveryGeographicalTerritory_IsResolvableByRegionCode;
 
-    [Test]
     procedure GetSupportedRegions_ExcludesNonGeoEntities;
 
-    [Test]
     procedure GetRegionCodesForCountryCode_PutsMainCountryFirst;
 
-    [Test]
     procedure GetRegionCodesForCountryCode_ReturnsNonGeoIdForGlobalNetworkCode;
 
-    [Test]
     procedure SupportedCallingCodes_CoverEveryTerritory;
 
     { Regex dialect gate against the Delphi engine }
-    [Test]
     procedure AllNationalNumberPatterns_CompileWithDelphiRegexEngine;
 
-    [Test]
     procedure AllNumberFormatPatterns_CompileWithDelphiRegexEngine;
 
-    [Test]
     procedure AllLeadingDigitsPatterns_CompileWithDelphiRegexEngine;
 
-    [Test]
     procedure AllTerritoryLevelPatterns_CompileWithDelphiRegexEngine;
 
     { Example numbers }
-    [Test]
     procedure ExampleNumbers_MatchOwnPattern_AcrossAllContinents;
 
-    [Test]
     procedure ExampleNumbers_MatchOwnPattern_ForAllNonGeoEntities;
 
-    [Test]
     procedure ExampleNumbers_MatchOwnPattern_ForEveryTerritory;
 
     { Possible lengths }
-    [Test]
     procedure GeneralDescPossibleLengths_AreNeverEmpty;
 
-    [Test]
     procedure TypedDescs_WithoutOwnLengths_FallBackToGeneralDesc;
 
-    [Test]
     procedure AbsentNumberTypes_UseTheNeverMatchingLength;
 
-    [Test]
     procedure PossibleLengthSlices_StayInsideThePool;
 
     { Format tables }
-    [Test]
     procedure FormatSlices_StayInsideTheTables;
 
-    [Test]
     procedure IntlFormatList_IsEitherEmptyOrCarriesAnExplicitFormat;
 
-    [Test]
     procedure NotAvailableIntlFormats_AreExcludedFromTheIntlList;
 
-    [Test]
     procedure IntlFormatList_MirrorsNationalListMinusNotAvailable_ForEveryTerritory;
 
-    [Test]
     procedure IntlFormatList_HasExpectedShape_ForBrazil;
 
-    [Test]
     procedure IntlFormatList_HasExpectedShape_ForMexico;
 
-    [Test]
     procedure IntlFormatList_KeepsExplicitFormats_ForArgentina;
 
-    [Test]
     procedure NationalPrefixFormattingRule_IsExpandedFromNpAndFgPlaceholders;
 
-    [Test]
     procedure NationalPrefixTransformRule_IsTakenFromUpstream;
 
-    [Test]
     procedure DomesticCarrierCodeFormattingRule_IsExpanded_ForBrazil;
   end;
 
 implementation
 
 uses
+{$IFDEF FPC}
+  SysUtils,
+  LibPhoneNumber.Regex;
+{$ELSE}
   System.SysUtils,
   System.RegularExpressions;
+{$ENDIF}
 
 const
   { Territory count of the pinned upstream baseline
@@ -171,6 +159,12 @@ const
 
 function TMetadataTests.TryCompilePattern(const APattern: string;
   out AError: string): Boolean;
+{$IFDEF FPC}
+begin
+  { The compile probe of the regex layer the library runs on FreePascal. }
+  Result := LibPhoneNumber.Regex.TryCompilePattern(APattern, AError);
+end;
+{$ELSE}
 var
   Expression: TRegEx;
 begin
@@ -188,16 +182,24 @@ begin
     end;
   end;
 end;
+{$ENDIF}
 
 function TMetadataTests.MatchesFully(const APattern, AInput: string): Boolean;
 begin
   { Upstream uses Matcher.matches(), i.e. the pattern must consume the whole
     input. \A .. \z anchors that without the trailing newline tolerance of $. }
+{$IFDEF FPC}
+  Result := TryMatchFull(APattern, AInput);
+{$ELSE}
   Result := TRegEx.IsMatch(AInput, '\A(?:' + APattern + ')\z');
+{$ENDIF}
 end;
 
 function TMetadataTests.DescKindName(AKind: TPhoneNumberDescKind): string;
 begin
+  { Every kind has a name; the default only keeps the compilers from
+    disagreeing about whether an else branch is reachable. }
+  Result := 'unknown';
   case AKind of
     pdkGeneralDesc: Result := 'generalDesc';
     pdkFixedLine: Result := 'fixedLine';
@@ -211,8 +213,6 @@ begin
     pdkUan: Result := 'uan';
     pdkVoicemail: Result := 'voicemail';
     pdkNoInternationalDialling: Result := 'noInternationalDialling';
-  else
-    Result := 'unknown';
   end;
 end;
 
@@ -1008,6 +1008,6 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TMetadataTests);
+  RegisterTest(TMetadataTests);
 
 end.

@@ -28,98 +28,83 @@ unit LibPhoneNumber.UpstreamSuite.AsYouTypeFormatter.Tests;
   expectations.
 }
 
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{ The test sources are pure ASCII and spell every non ASCII character as a
+  numeric constant (#$XXXX). Without a source code page FreePascal converts
+  such a constant to an AnsiString `string` at COMPILE time through its
+  default code page and turns every character outside it into '?'. UTF-8
+  as the source code page makes that conversion lossless and matches the
+  UTF-8 string contract of the library on FreePascal. }
+{$CODEPAGE UTF8}
+{ Implicit UnicodeString <-> AnsiString conversions are the documented
+  string contract here: the runner sets the UTF-8 conversion code page, so
+  they are lossless, and the warning would bury every other one. }
+{$WARN 4105 OFF}
+{$ENDIF}
+
 interface
 
 uses
-  DUnitX.TestFramework,
+  LibPhoneNumber.TestFramework,
   LibPhoneNumber.Metadata,
   LibPhoneNumber.TestingMetadata,
   LibPhoneNumber.AsYouTypeFormatter;
 
 type
-  [TestFixture]
-  TUpstreamAsYouTypeFormatterTests = class
+  TUpstreamAsYouTypeFormatterTests = class(TTestCase)
   private
     FFormatter: TAsYouTypeFormatter;
     procedure NewFormatter(const ARegionCode: string);
   public
-    [Setup]
-    procedure Setup;
-    [TearDown]
-    procedure TearDown;
+    procedure Setup; override;
+    procedure TearDown; override;
 
-    [Test]
+  published
     procedure Test_InvalidRegion;
-    [Test]
     procedure Test_InvalidPlusSign;
-    [Test]
     procedure Test_TooLongNumberMatchingMultipleLeadingDigits;
-    [Test]
     procedure Test_CountryWithSpaceInNationalPrefixFormattingRule;
-    [Test]
     procedure Test_CountryWithSpaceInNationalPrefixFormattingRuleAndLongNdd;
-    [Test]
     procedure Test_AYTFUS;
-    [Test]
     procedure Test_AYTFUSFullWidthCharacters;
-    [Test]
     procedure Test_AYTFUSMobileShortCode;
-    [Test]
     procedure Test_AYTFUSVanityNumber;
-    [Test]
     procedure Test_AYTFAndRememberPositionUS;
-    [Test]
     procedure Test_AYTFGBFixedLine;
-    [Test]
     procedure Test_AYTFGBTollFree;
-    [Test]
     procedure Test_AYTFGBPremiumRate;
-    [Test]
     procedure Test_AYTFNZMobile;
-    [Test]
     procedure Test_AYTFDE;
-    [Test]
     procedure Test_AYTFAR;
-    [Test]
     procedure Test_AYTFARMobile;
-    [Test]
     procedure Test_AYTFKR;
-    [Test]
     procedure Test_AYTF_MX;
-    [Test]
     procedure Test_AYTF_International_Toll_Free;
-    [Test]
     procedure Test_AYTFMultipleLeadingDigitPatterns;
-    [Test]
     procedure Test_AYTFLongIDD_AU;
-    [Test]
     procedure Test_AYTFLongIDD_KR;
-    [Test]
     procedure Test_AYTFLongNDD_KR;
-    [Test]
     procedure Test_AYTFLongNDD_SG;
-    [Test]
     procedure Test_AYTFShortNumberFormattingFix_AU;
-    [Test]
     procedure Test_AYTFShortNumberFormattingFix_KR;
-    [Test]
     procedure Test_AYTFShortNumberFormattingFix_MX;
-    [Test]
     procedure Test_AYTFNoNationalPrefix;
-    [Test]
     procedure Test_AYTFNoNationalPrefixFormattingRule;
-    [Test]
     procedure Test_AYTFShortNumberFormattingFix_US;
-    [Test]
     procedure Test_AYTFClearNDDAfterIDDExtraction;
-    [Test]
     procedure Test_AYTFNumberPatternsBecomingInvalidShouldNotResultInDigitLoss;
   end;
 
 implementation
 
 uses
+{$IFDEF FPC}
+  SysUtils;
+{$ELSE}
   System.SysUtils;
+{$ENDIF}
 
 const
   RC_AO = 'AO';
@@ -1352,6 +1337,6 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TUpstreamAsYouTypeFormatterTests);
+  RegisterTest(TUpstreamAsYouTypeFormatterTests);
 
 end.

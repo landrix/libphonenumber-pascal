@@ -1,40 +1,46 @@
-program DUnitXCmdTest;
+program LibPhoneNumberTests;
 
+{
+  The test program of libphonenumber-pascal. One source for Delphi and
+  FreePascal (3.2.2 and later):
+
+    Delphi      tools/run_delphi_tests.ps1 (msbuild LibPhoneNumberTests.dproj)
+    FreePascal  tools/run_fpc_tests.ps1, or by hand from this folder:
+                  fpc -Mdelphi -Sh -Fu../src -Fuframework -FUbin/units -FEbin LibPhoneNumberTests.dpr
+
+  Command line: see LibPhoneNumber.TestRunner (--filter, --junit, --verbose,
+  --list). Exit code 0 only when every selected test passed.
+
+  String contract on FreePascal: `string` is an AnsiString there, and the
+  library and the tests treat it as UTF-8. The program therefore makes the
+  AnsiString <-> UnicodeString conversion lossless before any test runs:
+  SetMultiByteConversionCodePage(CP_UTF8) and, on Unix, the cwstring
+  widestring manager (KNOWN_ISSUES.md). On Delphi `string` is UnicodeString
+  and neither step applies.
+
+  Every unit of src/ is listed, the generated ones included, so this program
+  is the one artefact that compiles the whole library together with the
+  tests. The TESTING metadata units are linked here and nowhere else.
+}
+
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{$ENDIF}
 {$APPTYPE CONSOLE}
 
-{$STRONGLINKTYPES ON}
-
 uses
+{$IFDEF FPC}
+  {$IFDEF UNIX}
+  cwstring,
+  {$ENDIF}
   SysUtils,
-  Forms,
-  DUnitX.ConsoleWriter.Base,
-  DUnitX.DUnitCompatibility,
-  DUnitX.Generics,
-  DUnitX.InternalInterfaces,
-  DUnitX.Loggers.Console,
-  DUnitX.Loggers.Text,
-  DUnitX.Loggers.XML.NUnit,
-  DUnitX.Loggers.XML.xUnit,
-  DUnitX.Test,
-  DUnitX.TestFixture,
-  DUnitX.TestFramework,
-  DUnitX.TestResult,
-  DUnitX.RunResults,
-  DUnitX.TestRunner,
-  DUnitX.Utils,
-  DUnitX.Utils.XML,
-  DUnitX.WeakReference,
-  DUnitX.Windows.Console,
-  DUnitX.StackTrace.EurekaLog7,
-  DUnitX.FixtureResult,
-  DUnitX.Loggers.Null,
-  DUnitX.MemoryLeakMonitor.Default,
-  DUnitX.Extensibility,
-  DUnitX.CommandLine.OptionDef,
-  DUnitX.CommandLine.Options,
-  DUnitX.CommandLine.Parser,
-  DUnitX.Timeout,
-  DUnitX.Attributes,
+{$ELSE}
+  System.SysUtils,
+{$ENDIF}
+  LibPhoneNumber.TestFramework in 'framework\LibPhoneNumber.TestFramework.pas',
+  LibPhoneNumber.TestJson in 'framework\LibPhoneNumber.TestJson.pas',
+  LibPhoneNumber.TestRunner in 'framework\LibPhoneNumber.TestRunner.pas',
   LibPhoneNumber.PhoneNumberUtil.Tests in 'LibPhoneNumber.PhoneNumberUtil.Tests.pas',
   LibPhoneNumber.Metadata.Tests in 'LibPhoneNumber.Metadata.Tests.pas',
   LibPhoneNumber.MetadataCore.Tests in 'LibPhoneNumber.MetadataCore.Tests.pas',
@@ -63,56 +69,22 @@ uses
   LibPhoneNumber.AlternateFormats.Data in '..\src\LibPhoneNumber.AlternateFormats.Data.pas',
   LibPhoneNumber.AlternateFormats in '..\src\LibPhoneNumber.AlternateFormats.pas',
   LibPhoneNumber.PhoneNumberMatcher in '..\src\LibPhoneNumber.PhoneNumberMatcher.pas',
-  { The upstream TEST metadata. Linked HERE and nowhere else: no
-    unit under src\ references these four, so only this test binary carries
-    them. }
   LibPhoneNumber.TestingMetadata.Data in '..\src\LibPhoneNumber.TestingMetadata.Data.pas',
   LibPhoneNumber.TestingMetadata.Descs in '..\src\LibPhoneNumber.TestingMetadata.Descs.pas',
   LibPhoneNumber.TestingMetadata.Formats in '..\src\LibPhoneNumber.TestingMetadata.Formats.pas',
-  LibPhoneNumber.TestingMetadata in '..\src\LibPhoneNumber.TestingMetadata.pas'
-  ;
+  LibPhoneNumber.TestingMetadata in '..\src\LibPhoneNumber.TestingMetadata.pas';
 
-var
-  runner : ITestRunner;
-  results : IRunResults;
-  logger : ITestLogger;
-  nunitLogger : ITestLogger;
 begin
+{$IFDEF FPC}
+  SetMultiByteConversionCodePage(CP_UTF8);
+{$ENDIF}
   try
-    //Create the runner
-    runner := TDUnitX.CreateRunner;
-    runner.UseRTTI := True;
-
-    //tell the runner how we will log things
-
-    if TDUnitX.Options.ConsoleMode <> TDunitXConsoleMode.Off then
-    begin
-      logger := TDUnitXConsoleLogger.Create(TDUnitX.Options.ConsoleMode = TDunitXConsoleMode.Quiet);
-      runner.AddLogger(logger);
-    end;
-
-    nunitLogger := TDUnitXXMLNUnitFileLogger.Create(TDUnitX.Options.XMLOutputFile);
-    runner.AddLogger(nunitLogger);
-
-    //Run tests
-    results := runner.Execute;
-
-    //Report failing/errored tests to the caller (CI, tools\run_delphi_tests.ps1).
-    if not results.AllPassed then
-      System.ExitCode := EXIT_ERRORS;
-
-    //Only pause when explicitly requested via the DUnitX command line
-    //(--exitbehavior:Pause); the default is Continue so CI does not hang.
-    if TDUnitX.Options.ExitBehavior = TDUnitXExitBehavior.Pause then
-    begin
-      System.Write('Done.. press <Enter> key to quit.');
-      System.Readln;
-    end;
+    ExitCode := RunTestsFromCommandLine;
   except
     on E: Exception do
     begin
-      System.Writeln(E.ClassName, ': ', E.Message);
-      System.ExitCode := EXIT_ERRORS;
+      WriteLn('ERROR (runner) ', E.ClassName, ': ', E.Message);
+      ExitCode := 2;
     end;
   end;
 end.

@@ -45,6 +45,10 @@ if (-not (Test-Path -LiteralPath $projectFile)) {
 if ([string]::IsNullOrWhiteSpace($WorkDir)) {
   $WorkDir = [System.IO.Path]::GetTempPath()
 }
+# Absolute from here on: the script changes its location (Push-Location) and
+# hands paths to other processes, so a relative -WorkDir would resolve
+# against a different directory later.
+$WorkDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($WorkDir)
 $scratchDir = Join-Path $WorkDir ("libphonenumber-benchmark-{0}" -f $PID)
 
 if (Test-Path -LiteralPath $scratchDir) {

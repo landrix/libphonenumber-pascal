@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Wrong number data (metadata) - report upstream
+    url: https://github.com/google/libphonenumber/blob/master/CONTRIBUTING.md#filing-a-metadata-issue
+    about: A number that Google's libphonenumber also handles wrongly is an upstream metadata issue. Report it through upstream's process (Google Issue Tracker); this repository picks the fix up with the next metadata refresh.

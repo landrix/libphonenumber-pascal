@@ -54,7 +54,7 @@ if ($Units.Count -eq 0) {
   #
   # LibPhoneNumber.TestingMetadata pulls in the three
   # generated TESTING units, which is what puts them under the same compile
-  # gate as the production ones. Only the DUnitX test project links it; no unit
+  # gate as the production ones. Only the test programs link it; no unit
   # under src/ references it.
   #
   # LibPhoneNumber.AlternateFormats pulls in the generated
@@ -97,6 +97,10 @@ if ($Units.Count -eq 0) {
 if ([string]::IsNullOrWhiteSpace($WorkDir)) {
   $WorkDir = [System.IO.Path]::GetTempPath()
 }
+# Absolute from here on: the script changes its location (Push-Location) and
+# hands paths to other processes, so a relative -WorkDir would resolve
+# against a different directory later.
+$WorkDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($WorkDir)
 $scratchDir = Join-Path $WorkDir ("libphonenumber-fpccheck-{0}" -f $PID)
 
 function Write-Info {

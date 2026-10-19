@@ -70,16 +70,31 @@ unit LibPhoneNumber.PhoneNumberMatcher.Tests;
   and the brace form of Z.
 }
 
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{ The test sources are pure ASCII and spell every non ASCII character as a
+  numeric constant (#$XXXX). Without a source code page FreePascal converts
+  such a constant to an AnsiString `string` at COMPILE time through its
+  default code page and turns every character outside it into '?'. UTF-8
+  as the source code page makes that conversion lossless and matches the
+  UTF-8 string contract of the library on FreePascal. }
+{$CODEPAGE UTF8}
+{ Implicit UnicodeString <-> AnsiString conversions are the documented
+  string contract here: the runner sets the UTF-8 conversion code page, so
+  they are lossless, and the warning would bury every other one. }
+{$WARN 4105 OFF}
+{$ENDIF}
+
 interface
 
 uses
-  DUnitX.TestFramework,
+  LibPhoneNumber.TestFramework,
   LibPhoneNumber.Types,
   LibPhoneNumber.PhoneNumberMatcher;
 
 type
-  [TestFixture]
-  TPhoneNumberMatcherTests = class
+  TPhoneNumberMatcherTests = class(TTestCase)
   private
     function E164(const AMatch: TPhoneNumberMatch): string;
     function Describe(const AMatches: TPhoneNumberMatchArray): string;
@@ -106,179 +121,131 @@ type
       const AExpected: array of string);
     procedure CheckValid(const AText, ARegion: string;
       const AExpected: array of string);
-  public
+  published
     { --- basic finding -------------------------------------------------- }
-    [Test]
     procedure PlainSentence_EN_FindsBothNumbers;
 
-    [Test]
     procedure PlainSentence_DE_FindsBothNumbers;
 
-    [Test]
     procedure TwoNumbersInOneText_KeepOrderAndOffsets;
 
-    [Test]
     procedure NumberSurroundedByPunctuation_IsFound;
 
-    [Test]
     procedure EmptyText_HasNoMatches;
 
-    [Test]
     procedure TextWithoutAnyNumber_HasNoMatches;
 
-    [Test]
     procedure UnknownRegion_OnlyFindsNumbersWithTheirOwnCallingCode;
 
     { --- MATCHING_BRACKETS ---------------------------------------------- }
-    [Test]
     procedure MatchingBrackets_AcceptsBalancedAndDroppedBrackets;
 
-    [Test]
     procedure MatchingBrackets_RejectsUnbalancedBrackets;
 
-    [Test]
     procedure MatchingBrackets_RejectsUpstreamNonMatchingBracketCases;
 
     { --- dates, time stamps, publication pages -------------------------- }
-    [Test]
     procedure SlashSeparatedDates_AreNotNumbers;
 
-    [Test]
     procedure TimeStamps_AreNotNumbers;
 
-    [Test]
     procedure TimeStampWithoutTheMinuteSuffix_IsStillANumber;
 
-    [Test]
     procedure PublicationPages_AreNotNumbers;
 
     { --- Latin letter and currency context ------------------------------ }
-    [Test]
     procedure LatinLetterContext_IsRejectedFromValidOn;
 
-    [Test]
     procedure LatinLetterContext_IsAcceptedWithPossible;
 
-    [Test]
     procedure LeadClassStart_SkipsThePreviousCharacterCheck;
 
-    [Test]
     procedure CurrencyAndPercentContext_IsRejected;
 
-    [Test]
     procedure IsLatinLetter_MatchesUpstream;
 
-    [Test]
     procedure SupplementaryCharacterContext_UsesUtf16Offsets;
 
     { --- leniency ------------------------------------------------------- }
-    [Test]
     procedure Leniency_PossibleButNotValid;
 
-    [Test]
     procedure Leniency_ValidButNotStrictGrouping;
 
-    [Test]
     procedure Leniency_StrictButNotExactGrouping;
 
-    [Test]
     procedure Leniency_AcceptedByEveryLevel;
 
-    [Test]
     procedure Leniency_GroupingRejectsScatteredDigits;
 
-    [Test]
     procedure Leniency_ValidRejectsAnInvalidCarrierCodeX;
 
-    [Test]
     procedure Leniency_SlashRightAfterTheCountryCodeIsAllowed;
 
-    [Test]
     procedure Leniency_NationalPrefixIsRequiredWhenTheFormatSaysSo;
 
-    [Test]
     procedure Leniency_ExactGroupingSkipsTheExtensionGroup;
 
-    [Test]
     procedure Leniency_GroupingSkipsTheCountryCodeInTheCandidate;
 
     { --- extensions ----------------------------------------------------- }
-    [Test]
     procedure Extensions_ArePartOfTheMatch;
 
-    [Test]
     procedure ExtnPatternsForMatching_HasNoAutoDiallingAlternatives;
 
     { --- inner matches -------------------------------------------------- }
-    [Test]
     procedure InnerMatch_SpacedHyphenSplitsTheCandidate;
 
-    [Test]
     procedure InnerMatch_FullStopSplitsTheCandidate;
 
-    [Test]
     procedure InnerMatch_SpaceSplitsTheCandidate;
 
-    [Test]
     procedure InnerMatch_SpacedHyphenAlsoReleasesTheSecondNumber;
 
-    [Test]
     procedure InnerMatch_SeparatorRunInFrontOfTheGroupIsConsumed;
 
-    [Test]
     procedure InnerMatch_FindIsRepeatedOnTheSameCandidate;
 
-    [Test]
     procedure InnerMatch_MaxTriesIsSpentInsideTheInnerExtraction;
 
-    [Test]
     procedure InnerMatch_NoWhiteSpaceBetweenNumbersFindsNothing;
 
     { --- maxTries and the iterator -------------------------------------- }
-    [Test]
     procedure MaxTries_LimitsTheNumberOfCandidates;
 
-    [Test]
     procedure MaxTries_ZeroFindsNothing;
 
-    [Test]
     procedure Iterator_HasNextIsIdempotentAndNextAdvances;
 
-    [Test]
     procedure Iterator_NextRaisesAtTheEnd;
 
-    [Test]
     procedure Constructor_RejectsNegativeMaxTries;
 
     { --- mass smoke ----------------------------------------------------- }
-    [Test]
     procedure ExampleNumbersInASentence_AreFoundInBothFormats;
 
     { --- pinned Java versus oracle divergences -------------------------- }
-    [Test]
     procedure Divergence_SlashInnerMatchIsFoundLikeJava;
 
-    [Test]
     procedure Divergence_BracketInnerMatchIsFoundLikeJava;
 
-    [Test]
     procedure Divergence_DoubledOpeningBracketFallsBackToTheInnerMatch;
 
-    [Test]
     procedure Divergence_WideHyphensSplitTheCandidateLikeJava;
 
-    [Test]
     procedure Divergence_SlashRunIsConsumedAsAWholeLikeJava;
 
     { --- alternate format metadata ------------------------- }
-    [Test]
     procedure AlternateFormatsAreConsultedByTheGroupingCheck;
   end;
 
 implementation
 
 uses
+{$IFDEF FPC}
+  SysUtils,
+{$ELSE}
   System.SysUtils,
+{$ENDIF}
   LibPhoneNumber.PhoneNumberUtil;
 
 function TPhoneNumberMatcherTests.E164(
@@ -561,7 +528,8 @@ begin
     The offsets are UTF-16 offsets, which is what makes this worth pinning:
     the pair counts as TWO. }
   Bold := SupplementaryCp($1D400);
-  Assert.AreEqual(2, Length(Bold), 'surrogate pair length');
+  { Measured in UTF-16 code units: on FreePascal `string` is UTF-8. }
+  Assert.AreEqual(2, Length(UnicodeString(Bold)), 'surrogate pair length');
 
   CheckValid(Bold + '650-253-0000', 'US', ['2|650-253-0000|+16502530000']);
   CheckValid('650-253-0000' + Bold, 'US', ['0|650-253-0000|+16502530000']);
@@ -1165,7 +1133,8 @@ procedure TPhoneNumberMatcherTests.Divergence_WideHyphensSplitTheCandidateLikeJa
     Text: string;
   begin
     Text := '650-253-0000' + Cp(ACode) + '415-666-7777';
-    Assert.AreEqual(25, Length(Text), AName + ': text length');
+    { UTF-16 code units, like the match offsets (FreePascal: `string` is UTF-8). }
+    Assert.AreEqual(25, Length(UnicodeString(Text)), AName + ': text length');
     CheckValid(Text, 'US',
       ['0|650-253-0000|+16502530000',
        '13|415-666-7777|+14156667777']);
@@ -1231,6 +1200,6 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TPhoneNumberMatcherTests);
+  RegisterTest(TPhoneNumberMatcherTests);
 
 end.

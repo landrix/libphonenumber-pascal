@@ -10,14 +10,19 @@ param(
   [switch]$RequireDelphi,
   [switch]$SkipDelphiCompile,
   # Forwarded to the workflow. The FreePascal runtime check is part of the
-  # quick check by default: it takes about twenty seconds (WSL; the build
+  # quick check by default: it takes well under a minute (WSL; the build
   # dominates), which is cheap next to what it covers.
-  [switch]$SkipFpcRuntime
+  [switch]$SkipFpcRuntime,
+  # Forwarded to the workflow. The FreePascal test suite (build and run of the
+  # whole test program with FreePascal in WSL) is part of the quick check by
+  # default for the same reason: it adds well under a minute.
+  [switch]$SkipFpcTests
 )
 
 <#
   CI friendly quick gate: the full update workflow without the Delphi test RUN
-  and, by default, without the reference case refresh.
+  and, by default, without the reference case refresh. The FreePascal test
+  suite DOES run (it is cheap; -SkipFpcTests opts out).
 
   The compare step behind it reads the GENERATED metadata, so this gate also
   catches a generator or vendor drift in the possible lengths of any territory. The
@@ -25,15 +30,17 @@ param(
   and takes minutes; run
   tools/run_update_workflow.ps1 -FailOnDiff -RunMassDifferential for that.
 
-  It additionally BUILDS the DUnitX test project without running it. The
-  workflow runs with -SkipTests, which skips the Delphi compiler entirely, and
-  the test project is the only artefact that links every unit of the port
-  together with the tests, so building it - without paying for the test run -
-  proves that everything still compiles with Delphi.
+  It additionally BUILDS the Delphi test program (tests/LibPhoneNumberTests)
+  without running it. The workflow runs with -SkipTests, which skips the
+  Delphi test run, and the test program is the only artefact that links every
+  unit of the port together with the tests, so building it proves that
+  everything still compiles with Delphi.
 
   The workflow behind it also runs the FreePascal RUNTIME check
-  (tools/run_fpc_runtime_check.ps1, WSL toolchain by default): measured at
-  about twenty seconds end to end, so it stays in; -SkipFpcRuntime opts out.
+  (tools/run_fpc_runtime_check.ps1) and the FreePascal TEST SUITE
+  (tools/run_fpc_tests.ps1), both on the WSL toolchain by default; each takes
+  well under a minute end to end, so both stay in (-SkipFpcRuntime,
+  -SkipFpcTests opt out).
 
   The compile step is skipped with a warning when no Delphi installation is
   found at -StudioRoot (the GitHub runner has none); -RequireDelphi turns that
@@ -50,6 +57,7 @@ $workflowArguments = @{
   SkipTests      = $true
   RequireFpc     = $RequireFpc
   SkipFpcRuntime = $SkipFpcRuntime
+  SkipFpcTests   = $SkipFpcTests
   # The runtime check builds its Delphi reference with dcc64 from this
   # installation, so the quick check's -StudioRoot must reach it.
   StudioRoot     = $StudioRoot
@@ -68,7 +76,7 @@ if ($SkipDelphiCompile) {
 
 $rsvars = Join-Path $StudioRoot "bin\rsvars.bat"
 if (-not (Test-Path -LiteralPath $rsvars)) {
-  $message = "No Delphi installation found at '$StudioRoot'; skipping the compile-only build of the test project."
+  $message = "No Delphi installation found at '$StudioRoot'; skipping the compile-only build of the test program."
   if ($RequireDelphi) {
     throw $message
   }
@@ -78,5 +86,5 @@ if (-not (Test-Path -LiteralPath $rsvars)) {
 }
 
 Write-Host ""
-Write-Host "==> Compile the DUnitX test project (no test run)"
+Write-Host "==> Compile the Delphi test program (no test run)"
 & $delphiScript -StudioRoot $StudioRoot -Config $Config -Platform $Platform -BuildOnly

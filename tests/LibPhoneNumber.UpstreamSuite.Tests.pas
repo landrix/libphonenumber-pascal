@@ -119,10 +119,26 @@ unit LibPhoneNumber.UpstreamSuite.Tests;
   numberOfLeadingZeros field).
 }
 
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{ The test sources are pure ASCII and spell every non ASCII character as a
+  numeric constant (#$XXXX). Without a source code page FreePascal converts
+  such a constant to an AnsiString `string` at COMPILE time through its
+  default code page and turns every character outside it into '?'. UTF-8
+  as the source code page makes that conversion lossless and matches the
+  UTF-8 string contract of the library on FreePascal. }
+{$CODEPAGE UTF8}
+{ Implicit UnicodeString <-> AnsiString conversions are the documented
+  string contract here: the runner sets the UTF-8 conversion code page, so
+  they are lossless, and the warning would bury every other one. }
+{$WARN 4105 OFF}
+{$ENDIF}
+
 interface
 
 uses
-  DUnitX.TestFramework,
+  LibPhoneNumber.TestFramework,
   LibPhoneNumber.Types,
   LibPhoneNumber.Metadata.Types,
   LibPhoneNumber.Metadata,
@@ -132,8 +148,7 @@ uses
   LibPhoneNumber.PhoneNumberUtil;
 
 type
-  [TestFixture]
-  TUpstreamPhoneNumberUtilTests = class
+  TUpstreamPhoneNumberUtilTests = class(TTestCase)
   private
     { A complete, self consistent ONE TERRITORY data set, used by
       Test_MaybeStripNationalPrefix to reproduce the synthetic
@@ -174,369 +189,257 @@ type
     function ContainsRegion(const AList: TMetadataStringArray;
       const ARegion: string): Boolean;
   public
-    [Setup]
-    procedure Setup;
-    [TearDown]
-    procedure TearDown;
+    procedure Setup; override;
+    procedure TearDown; override;
 
+  published
     { --- the fixture itself -------------------------------------------- }
-    [Test]
     procedure TestingMetadata_IsActiveInsideThisFixture;
 
-    [Test]
     procedure TestingMetadata_CarriesItsOwnProvenance;
 
     { --- metadata, regions and calling codes ---------------------------- }
-    [Test]
     procedure Test_GetSupportedRegions;
 
-    [Test]
     procedure Test_GetSupportedGlobalNetworkCallingCodes;
 
-    [Test]
     procedure Test_GetSupportedCallingCodes;
 
-    [Test]
     procedure Test_GetInstanceLoadBadMetadata;
 
-    [Test]
     procedure Test_GetInstanceLoadUSMetadata;
 
-    [Test]
     procedure Test_GetInstanceLoadDEMetadata;
 
-    [Test]
     procedure Test_GetInstanceLoadARMetadata;
 
-    [Test]
     procedure Test_GetInstanceLoadInternationalTollFreeMetadata;
 
-    [Test]
     procedure Test_GetRegionCodeForCountryCode;
 
-    [Test]
     procedure Test_GetRegionCodeForNumber;
 
-    [Test]
     procedure Test_GetRegionCodesForCountryCode;
 
-    [Test]
     procedure Test_GetCountryCodeForRegion;
 
-    [Test]
     procedure Test_GetNationalDiallingPrefixForRegion;
 
-    [Test]
     procedure Test_IsNANPACountry;
 
-    [Test]
     procedure Test_IsMobileNumberPortableRegion;
 
-    [Test]
     procedure Test_GetMetadataForRegionForNonGeoEntityAndUnknownRegion;
 
     { --- normalisation -------------------------------------------------- }
-    [Test]
     procedure Test_ConvertAlphaCharactersInNumber;
 
-    [Test]
     procedure Test_NormaliseRemovePunctuation;
 
-    [Test]
     procedure Test_NormaliseReplaceAlphaCharacters;
 
-    [Test]
     procedure Test_NormaliseOtherDigits;
 
-    [Test]
     procedure Test_NormaliseStripAlphaCharacters;
 
-    [Test]
     procedure Test_NormaliseStripNonDiallableCharacters;
 
     { --- format ---------------------------------------------------------- }
-    [Test]
     procedure Test_FormatUSNumber;
 
-    [Test]
     procedure Test_FormatAUShortCodeNumber;
 
-    [Test]
     procedure Test_FormatBSNumber;
 
-    [Test]
     procedure Test_FormatGBNumber;
 
-    [Test]
     procedure Test_FormatDENumber;
 
-    [Test]
     procedure Test_FormatITNumber;
 
-    [Test]
     procedure Test_FormatAUNumber;
 
-    [Test]
     procedure Test_FormatARNumber;
 
-    [Test]
     procedure Test_FormatMXNumber;
 
-    [Test]
     procedure Test_FormatOutOfCountryCallingNumber;
 
-    [Test]
     procedure Test_FormatOutOfCountryWithInvalidRegion;
 
-    [Test]
     procedure Test_FormatOutOfCountryWithPreferredIntlPrefix;
 
-    [Test]
     procedure Test_FormatOutOfCountryKeepingAlphaChars;
 
-    [Test]
     procedure Test_FormatWithCarrierCode;
 
-    [Test]
     procedure Test_FormatWithPreferredCarrierCode;
 
-    [Test]
     procedure Test_FormatNumberForMobileDialing;
 
-    [Test]
     procedure Test_FormatByPattern;
 
-    [Test]
     procedure Test_FormatE164Number;
 
-    [Test]
     procedure Test_FormatNumberWithExtension;
 
-    [Test]
     procedure Test_FormatInOriginalFormat;
 
-    [Test]
     procedure Test_CountryWithNoNumberDesc;
 
-    [Test]
     procedure Test_UnknownCountryCallingCode;
 
     { --- typing, validity, possibility ---------------------------------- }
-    [Test]
     procedure Test_IsPremiumRate;
 
-    [Test]
     procedure Test_IsTollFree;
 
-    [Test]
     procedure Test_IsMobile;
 
-    [Test]
     procedure Test_IsFixedLine;
 
-    [Test]
     procedure Test_IsFixedLineAndMobile;
 
-    [Test]
     procedure Test_IsSharedCost;
 
-    [Test]
     procedure Test_IsVoip;
 
-    [Test]
     procedure Test_IsPersonalNumber;
 
-    [Test]
     procedure Test_IsUnknown;
 
-    [Test]
     procedure Test_IsValidNumber;
 
-    [Test]
     procedure Test_IsValidForRegion;
 
-    [Test]
     procedure Test_IsNotValidNumber;
 
-    [Test]
     procedure Test_IsPossibleNumber;
 
-    [Test]
     procedure Test_IsPossibleNumberForType_DifferentTypeLengths;
 
-    [Test]
     procedure Test_IsPossibleNumberForType_LocalOnly;
 
-    [Test]
     procedure Test_IsPossibleNumberForType_DataMissingForSizeReasons;
 
-    [Test]
     procedure Test_IsPossibleNumberForType_NumberTypeNotSupportedForRegion;
 
-    [Test]
     procedure Test_IsPossibleNumberWithReason;
 
-    [Test]
     procedure Test_IsPossibleNumberForTypeWithReason_DifferentTypeLengths;
 
-    [Test]
     procedure Test_IsPossibleNumberForTypeWithReason_LocalOnly;
 
-    [Test]
     procedure Test_IsPossibleNumberForTypeWithReason_DataMissingForSizeReasons;
 
-    [Test]
     procedure Test_IsPossibleNumberForTypeWithReason_NumberTypeNotSupportedForRegion;
 
-    [Test]
     procedure Test_IsPossibleNumberForTypeWithReason_FixedLineOrMobile;
 
-    [Test]
     procedure Test_IsNotPossibleNumber;
 
-    [Test]
     procedure Test_CanBeInternationallyDialled;
 
     { --- parse ----------------------------------------------------------- }
-    [Test]
     procedure Test_IsViablePhoneNumber;
 
-    [Test]
     procedure Test_IsViablePhoneNumberNonAscii;
 
-    [Test]
     procedure Test_ExtractPossibleNumber;
 
-    [Test]
     procedure Test_MaybeStripNationalPrefix;
 
-    [Test]
     procedure Test_ParseNationalNumber;
 
-    [Test]
     procedure Test_ParseNumberWithAlphaCharacters;
 
-    [Test]
     procedure Test_ParseMaliciousInput;
 
-    [Test]
     procedure Test_ParseWithInternationalPrefixes;
 
-    [Test]
     procedure Test_ParseNonAscii;
 
-    [Test]
     procedure Test_ParseWithLeadingZero;
 
-    [Test]
     procedure Test_ParseNationalNumberArgentina;
 
-    [Test]
     procedure Test_ParseWithXInNumber;
 
-    [Test]
     procedure Test_ParseNumbersMexico;
 
-    [Test]
     procedure Test_FailedParseOnInvalidNumbers;
 
-    [Test]
     procedure Test_ParseNumbersWithPlusWithNoRegion;
 
-    [Test]
     procedure Test_ParseNumberTooShortIfNationalPrefixStripped;
 
-    [Test]
     procedure Test_ParseExtensions;
 
-    [Test]
     procedure Test_ParseHandlesLongExtensionsWithExplicitLabels;
 
-    [Test]
     procedure Test_ParseHandlesLongExtensionsWithAutoDiallingLabels;
 
-    [Test]
     procedure Test_ParseHandlesShortExtensionsWithAmbiguousChar;
 
-    [Test]
     procedure Test_ParseHandlesShortExtensionsWhenNotSureOfLabel;
 
-    [Test]
     procedure Test_ParseAndKeepRaw;
 
-    [Test]
     procedure Test_ParseItalianLeadingZeros;
 
-    [Test]
     procedure Test_ParseWithPhoneContext;
 
     { --- isNumberMatch ---------------------------------------------------- }
-    [Test]
     procedure Test_IsNumberMatchMatches;
 
-    [Test]
     procedure Test_IsNumberMatchShortMatchIfDiffNumLeadingZeros;
 
-    [Test]
     procedure Test_IsNumberMatchIgnoresSomeFields;
 
-    [Test]
     procedure Test_IsNumberMatchNonMatches;
 
-    [Test]
     procedure Test_IsNumberMatchNsnMatches;
 
-    [Test]
     procedure Test_IsNumberMatchShortNsnMatches;
 
     { --- accessory API ---------------------------------------------------- }
-    [Test]
     procedure Test_GetSupportedTypesForRegion;
 
-    [Test]
     procedure Test_GetSupportedTypesForNonGeoEntity;
 
-    [Test]
     procedure Test_IsNumberGeographical;
 
-    [Test]
     procedure Test_GetLengthOfGeographicalAreaCode;
 
-    [Test]
     procedure Test_GetLengthOfNationalDestinationCode;
 
-    [Test]
     procedure Test_GetCountryMobileToken;
 
-    [Test]
     procedure Test_GetNationalSignificantNumber;
 
-    [Test]
     procedure Test_GetNationalSignificantNumber_ManyLeadingZeros;
 
-    [Test]
     procedure Test_GetExampleNumber;
 
-    [Test]
     procedure Test_GetInvalidExampleNumber;
 
-    [Test]
     procedure Test_GetExampleNumberForNonGeoEntity;
 
-    [Test]
     procedure Test_GetExampleNumberWithoutRegion;
 
-    [Test]
     procedure Test_TruncateTooLongNumber;
 
-    [Test]
     procedure Test_IsAlphaNumber;
   end;
 
 implementation
 
 uses
+{$IFDEF FPC}
+  SysUtils;
+{$ELSE}
   System.SysUtils;
+{$ENDIF}
 
 const
   { RegionCode.java of the upstream test suite. }
@@ -3583,6 +3486,6 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TUpstreamPhoneNumberUtilTests);
+  RegisterTest(TUpstreamPhoneNumberUtilTests);
 
 end.

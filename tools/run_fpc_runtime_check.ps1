@@ -29,7 +29,7 @@ param(
   driver tools/fpcruntime/PhoneNumbersFpcRuntime.dpr twice from the same
   source - once with dcc64, once with FreePascal - runs both and compares the
   two observation files byte for byte. The Delphi output is the reference: it
-  is the build the DUnitX suite and the mass differential vouch for. Every
+  is the build the test suite and the mass differential vouch for. Every
   differing line is a FreePascal behaviour difference of the port (regex
   dialect of TRegExpr, AnsiString/UnicodeString conversions, Char = AnsiChar,
   RTL character data) and must be fixed in src/, never excluded here.
@@ -57,6 +57,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# Toolchain resolution, Invoke-Native, the Mac transport and the build output
+# rules are shared with tools/run_fpc_tests.ps1.
+. (Join-Path $PSScriptRoot "fpc_toolchains.ps1")
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $sourceDir = Join-Path $repoRoot "src"
 $driverDir = Join-Path $PSScriptRoot "fpcruntime"
@@ -64,9 +68,6 @@ $driverName = "PhoneNumbersFpcRuntime"
 $driverFile = Join-Path $driverDir ($driverName + ".dpr")
 $aytfJson = Join-Path $repoRoot "tests\data\aytf_reference_cases.json"
 $referenceJson = Join-Path $repoRoot "tests\data\reference_cases_java_csharp.json"
-# Below the home directory of the WSL user; resolved inside WSL.
-$defaultWslFpcRelative = "fpc-3.2.4/bin/fpc"
-$macFpc = "~/remote-toolchains/macos-fpc/bin/fpc.sh"
 
 # The FreePascal options of both the local and the remote build. -Mdelphi and
 # -Sh match tools/check_fpc_compile.ps1; range and overflow checking are on in
@@ -81,14 +82,6 @@ function Write-Info {
   }
 }
 
-function Skip-OrFail {
-  param([string]$Message, [bool]$Fail)
-  if ($Fail) {
-    throw $Message
-  }
-  Write-Warning $Message
-}
-
 # The scratch directory is created and deleted recursively, so it must never be
 # a path the caller cares about. -WorkDir therefore names a PARENT directory;
 # the script appends its own uniquely named subdirectory and only ever touches
@@ -96,110 +89,14 @@ function Skip-OrFail {
 if ([string]::IsNullOrWhiteSpace($WorkDir)) {
   $WorkDir = [System.IO.Path]::GetTempPath()
 }
+# Absolute from here on: the script changes its location (Push-Location) and
+# hands paths to other processes, so a relative -WorkDir would resolve
+# against a different directory later.
+$WorkDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($WorkDir)
 $scratchDir = Join-Path $WorkDir ("libphonenumber-fpcruntime-{0}" -f $PID)
 
 if (-not (Test-Path -LiteralPath $driverFile)) {
   throw "Runtime gate driver not found: $driverFile"
-}
-
-# ---------------------------------------------------------------------------
-# Toolchain resolution. Each probe answers an empty string when the toolchain
-# is not reachable; the caller turns that into the warning or the failure.
-# ---------------------------------------------------------------------------
-
-function Invoke-Native {
-  # Runs a native command and returns its combined output as an array of lines
-  # plus the exit code. A non zero exit code is not an exception here; every
-  # caller decides itself what it means.
-  param([string]$FilePath, [string[]]$Arguments)
-  $previous = $ErrorActionPreference
-  $ErrorActionPreference = "Continue"
-  try {
-    $output = & $FilePath @Arguments 2>&1 | ForEach-Object { "$_" }
-    return [pscustomobject]@{ Output = @($output); ExitCode = $LASTEXITCODE }
-  } finally {
-    $ErrorActionPreference = $previous
-  }
-}
-
-function ConvertTo-WslPath {
-  param([string]$WindowsPath)
-  $result = Invoke-Native "wsl.exe" @("-e", "wslpath", "-u", $WindowsPath)
-  if ($result.ExitCode -ne 0 -or $result.Output.Count -eq 0) {
-    throw "wslpath could not translate '$WindowsPath'."
-  }
-  return $result.Output[0].Trim()
-}
-
-function Resolve-WslFpc {
-  $wsl = Get-Command -Name "wsl.exe" -CommandType Application -ErrorAction SilentlyContinue |
-    Select-Object -First 1
-  if ($null -eq $wsl) {
-    return ""
-  }
-  $candidate = $FpcPath
-  if ([string]::IsNullOrWhiteSpace($candidate)) {
-    # The default lives below the WSL user's home directory, so it is
-    # resolved inside WSL instead of being spelled out here.
-    $probe = Invoke-Native "wsl.exe" @("-e", "sh", "-c",
-      ('p="$HOME/{0}"; test -x "$p" && echo "$p"' -f $defaultWslFpcRelative))
-    if ($probe.ExitCode -ne 0 -or $probe.Output.Count -eq 0) {
-      return ""
-    }
-    return $probe.Output[0].Trim()
-  }
-  $probe = Invoke-Native "wsl.exe" @("-e", "test", "-x", $candidate)
-  if ($probe.ExitCode -ne 0) {
-    return ""
-  }
-  return $candidate
-}
-
-function Resolve-NativeFpc {
-  if (-not [string]::IsNullOrWhiteSpace($FpcPath)) {
-    if (-not (Test-Path -LiteralPath $FpcPath)) {
-      return ""
-    }
-    return (Resolve-Path -LiteralPath $FpcPath).Path
-  }
-  $command = Get-Command -Name "fpc" -CommandType Application -ErrorAction SilentlyContinue |
-    Select-Object -First 1
-  if ($null -eq $command) {
-    return ""
-  }
-  return $command.Source
-}
-
-function ConvertTo-RemoteShellWord {
-  # One word for the remote POSIX shell. Single quoted with the usual '\''
-  # escaping, so nothing in the value is interpreted - except a leading "~/",
-  # which must still expand to the remote home directory: it becomes "$HOME"
-  # followed by the single quoted rest.
-  param([string]$Value)
-  $prefix = ""
-  if ($Value.StartsWith("~/")) {
-    $prefix = '"$HOME"/'
-    $Value = $Value.Substring(2)
-  }
-  return $prefix + "'" + $Value.Replace("'", "'\''") + "'"
-}
-
-function Resolve-MacFpc {
-  $ssh = Get-Command -Name "ssh" -CommandType Application -ErrorAction SilentlyContinue |
-    Select-Object -First 1
-  if ($null -eq $ssh) {
-    return ""
-  }
-  $candidate = $FpcPath
-  if ([string]::IsNullOrWhiteSpace($candidate)) {
-    $candidate = $macFpc
-  }
-  $probe = Invoke-Native "ssh" @("-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
-    $MacHost, ("test -x " + (ConvertTo-RemoteShellWord $candidate)))
-  if ($probe.ExitCode -ne 0) {
-    return ""
-  }
-  return $candidate
 }
 
 # ---------------------------------------------------------------------------
@@ -267,16 +164,14 @@ function Write-DriverInput {
       (ConvertTo-EscapedField $case.name)))
   }
   # LF and ASCII, so the file reads the same on every RTL and platform.
-  [System.IO.File]::WriteAllText($Path, (($lines -join "`n") + "`n"),
-    (New-Object System.Text.ASCIIEncoding))
+  Write-LfAsciiFile -Path $Path -Lines $lines
   return ($lines.Count - 1)
 }
 
 function Write-UnixScript {
   # The build-and-run step of the Wsl and the Mac mode. Written at run time
-  # with LF line ends (the repository checks out with CRLF on Windows, which a
-  # POSIX shell would choke on) and run as "sh <script> <args>", so no
-  # $-containing one liner has to survive PowerShell, wsl.exe or ssh quoting.
+  # with LF line ends and run as "sh <script> <args>", so no $-containing one
+  # liner has to survive PowerShell, wsl.exe or ssh quoting.
   param([string]$Path)
   $options = $fpcOptions -join " "
   $script = @(
@@ -293,18 +188,8 @@ function Write-UnixScript {
     'status=$?',
     'if [ $status -ne 0 ]; then echo "driver failed (exit $status)"; exit 4; fi',
     'exit 0'
-  ) -join "`n"
-  [System.IO.File]::WriteAllText($Path, $script + "`n", (New-Object System.Text.ASCIIEncoding))
-}
-
-function Get-FpcProblems {
-  param([string[]]$BuildOutput)
-  # Same rule as the compile check: an error or a WARNING of the compiler fails
-  # the build. Hints and notes are tolerated. Case sensitive on purpose: the
-  # compiler writes "Warning:", while the Apple linker's lower case
-  # "ld: warning: ignoring duplicate libraries: '-lc'" is a known, harmless
-  # message of the macOS toolchain and not about this source.
-  return @($BuildOutput | Where-Object { $_ -cmatch "(Error|Fatal|Warning):" })
+  )
+  Write-LfAsciiFile -Path $Path -Lines $script
 }
 
 # ---------------------------------------------------------------------------
@@ -317,11 +202,7 @@ if (-not (Test-Path -LiteralPath $dcc64)) {
   return
 }
 
-switch ($Toolchain) {
-  "Wsl" { $fpc = Resolve-WslFpc }
-  "Native" { $fpc = Resolve-NativeFpc }
-  "Mac" { $fpc = Resolve-MacFpc }
-}
+$fpc = Resolve-FpcToolchain -Toolchain $Toolchain -FpcPath $FpcPath -MacHost $MacHost
 if ([string]::IsNullOrWhiteSpace($fpc)) {
   Skip-OrFail "FreePascal toolchain '$Toolchain' not reachable; skipping the FPC runtime check." $RequireFpc
   return
@@ -374,9 +255,7 @@ try {
   $watch.Restart()
   switch ($Toolchain) {
     "Native" {
-      $info = Invoke-Native $fpc @("-iV")
-      $fpcVersion = "{0} ({1}-{2})" -f $info.Output[0], (Invoke-Native $fpc @("-iTP")).Output[0],
-        (Invoke-Native $fpc @("-iTO")).Output[0]
+      $fpcVersion = Get-NativeFpcDescription $fpc
       $unitsDir = Join-Path $fpcDir "units"
       [void](New-Item -ItemType Directory -Path $unitsDir -Force)
       $build = Invoke-Native $fpc ($fpcOptions + @("-FU$unitsDir", "-FE$fpcDir", "-Fu$sourceDir", $driverFile))
@@ -411,15 +290,12 @@ try {
       $fpcVersion = "{0} ({1}-{2})" -f $info[0], $info[1], $info[2]
     }
     "Mac" {
-      $stamp = [DateTime]::UtcNow.ToString("yyyyMMddTHHmmssZ")
-      $runId = [Guid]::NewGuid().ToString("N").Substring(0, 8)
-      $remoteRun = "remote-toolchains/macos-fpc/runs/libphonenumber-$stamp-$runId"
       $unixScript = Join-Path $scratchDir "build_and_run.sh"
       Write-UnixScript -Path $unixScript
 
       # One archive with exactly what the remote build needs: the hand written
       # and generated units of src/, the driver, the generated input file and
-      # the build script. Windows ships bsdtar as tar.exe.
+      # the build script.
       $stage = Join-Path $scratchDir "mac-stage"
       [void](New-Item -ItemType Directory -Path (Join-Path $stage "src") -Force)
       [void](New-Item -ItemType Directory -Path (Join-Path $stage "driver") -Force)
@@ -427,18 +303,10 @@ try {
       Copy-Item -LiteralPath $driverFile -Destination (Join-Path $stage "driver")
       Copy-Item -LiteralPath $driverInput -Destination $stage
       Copy-Item -LiteralPath $unixScript -Destination $stage
-      $archive = Join-Path $scratchDir "mac-stage.tar.gz"
-      $tar = Invoke-Native "tar.exe" @("-czf", $archive, "-C", $stage, ".")
-      if ($tar.ExitCode -ne 0) {
-        $tar.Output | ForEach-Object { Write-Host "    $_" }
-        throw "Packing the Mac sources failed (exit code $($tar.ExitCode))."
-      }
 
-      $step = Invoke-Native "ssh" @($MacHost, "mkdir -p $remoteRun")
-      if ($step.ExitCode -ne 0) { throw "Creating the Mac run directory failed: $($step.Output -join ' ')" }
-      $step = Invoke-Native "scp" @("-q", ($archive -replace '\\', '/'), ("{0}:{1}/stage.tar.gz" -f $MacHost, $remoteRun))
-      if ($step.ExitCode -ne 0) { throw "Uploading the Mac sources failed: $($step.Output -join ' ')" }
-      $remoteCommand = ("cd $remoteRun && tar -xzf stage.tar.gz && " +
+      $remoteRun = New-MacRunDirectory -MacHost $MacHost -Prefix "libphonenumber"
+      Send-MacStage -MacHost $MacHost -RemoteRun $remoteRun -StageDir $stage -ScratchDir $scratchDir
+      $remoteCommand = ("cd $remoteRun && " +
         "sh build_and_run.sh $(ConvertTo-RemoteShellWord $fpc) `"`$PWD/src`" `"`$PWD/driver`" `"`$PWD/out`" `"`$PWD/driver_input.txt`"")
       $result = Invoke-Native "ssh" @($MacHost, $remoteCommand)
       if ($result.ExitCode -ne 0) {
@@ -446,9 +314,8 @@ try {
         throw "The Mac FreePascal build or run failed (exit code $($result.ExitCode)); run kept at ~/$remoteRun."
       }
       foreach ($name in @("observations.txt", "rtl-characters.txt", "build.log", "fpc-info.txt")) {
-        $step = Invoke-Native "scp" @("-q", ("{0}:{1}/out/{2}" -f $MacHost, $remoteRun, $name),
-          ((Join-Path $fpcDir $name) -replace '\\', '/'))
-        if ($step.ExitCode -ne 0) { throw "Downloading $name from the Mac failed: $($step.Output -join ' ')" }
+        [void](Receive-MacFile -MacHost $MacHost -RemoteRun $remoteRun -RelativePath "out/$name" `
+          -Destination (Join-Path $fpcDir $name))
       }
       $problems = Get-FpcProblems @(Get-Content -LiteralPath (Join-Path $fpcDir "build.log"))
       if ($problems.Count -gt 0) {

@@ -4,13 +4,14 @@ program PhoneNumbersFpcRuntime;
   FreePascal RUNTIME gate driver (tools/run_fpc_runtime_check.ps1).
 
   The FreePascal compile check proves that the FPC clean units of src/ COMPILE
-  with FreePascal; it never executes them, and the DUnitX suite is Delphi only.
-  This program closes that gap without a second test framework: ONE source,
+  with FreePascal; it never executes them. The test suite runs on FreePascal
+  too (tools/run_fpc_tests.ps1), but it checks expectations; this program
+  checks IDENTITY over a far larger input space: ONE source,
   compiled by Delphi and by FreePascal, walks the same deterministic inputs
   through the same library calls and writes one canonical line per
   observation. The gate script runs both builds and compares the two output
   files byte for byte. The Delphi build is the reference - it is the build the
-  DUnitX suite and the mass differential vouch for - so every line that
+  test suite and the mass differential vouch for - so every line that
   differs is a FreePascal behaviour difference of the port.
 
   Nothing in here is an expectation. Every input is derived from data the units
@@ -1427,6 +1428,29 @@ begin
     shift the group numbering), so here the rewrite leaves the quantifier. }
   RegexProbeExpect('(\d){3}', '123', '(\d){3}');
   RegexProbe('(?:(\d)x){2}', '1x2x');
+  { The EMPTY input, which regexpr 0.987 refuses before it looks at the
+    pattern; the regex layer decides it with a probe at the end of a one
+    character input instead (EmptyInputMatches). Anchors inside the pattern
+    are what such a probe can get wrong, so most of these carry one. }
+  RegexProbe('a*', '');
+  RegexProbe('a+', '');
+  RegexProbe('a*$', '');
+  RegexProbe('(?:x|$)', '');
+  RegexProbe('^$', '');
+  RegexProbe('^', '');
+  RegexProbe('$', '');
+  RegexProbe('\Aa*', '');
+  RegexProbe('(a)?b*', '');
+  RegexProbe('\b', '');
+  RegexProbe('\B', '');
+  RegexProbe('x$|y', '');
+  RegexProbe('(?:a$|b*)', '');
+  RegexProbe('a|', '');
+  RegexProbe('(\d)?(\d)?', '');
+  RegexProbe('\d{2,}', '');
+  RegexProbe('(?:\d{2}){1,}', '');
+  RegexProbe('[^]a]*', '');
+  RegexProbe('a*\Z', '');
   { The budget: a nested repetition far beyond it, a single one just over it,
     one exactly at it and a quantifier number too large for any integer. Over
     budget the ORIGINAL pattern is what gets compiled; these patterns are not

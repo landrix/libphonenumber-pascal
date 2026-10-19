@@ -1,32 +1,70 @@
 # Tests
 
-This folder contains the DUnitX test suite of the library (Delphi).
+This folder contains the test suite of the library. ONE test program,
+`LibPhoneNumberTests.dpr`, runs every test on Delphi AND on FreePascal, on a
+small test layer of its own in `framework/` - no DUnitX, no FPCUnit, nothing
+outside the repository. The compiler versions it is run with are in the
+`AGENTS.md` manifest.
 
 > Test counts, gate counts and metadata baseline sizes are NOT maintained here.
 > They live in the "Current State" manifest at the top of `AGENTS.md`; this file
 > says what is covered and where the expectations come from.
 
-Projects:
+Program and test layer:
 
-1. `DUnitXCmdTest.dpr` / `.dproj` - the console runner every script uses. It
-   links every unit of `src/`, the testing metadata included.
-2. `DUnitXGuiRunner.dpr` / `.dproj` - a VCL GUI runner for interactive use.
-3. Both projects use the DUnitX that ships with Delphi. To use another DUnitX
-   checkout, set the environment variable `DUNITX` to its source folder; the
-   projects put `$(DUNITX)` first on the unit search path.
+1. `LibPhoneNumberTests.dpr` - the console test program, one source for both
+   compilers; `LibPhoneNumberTests.dproj` builds it with Delphi (Win32/Win64,
+   range and overflow checking on). It links every unit of `src/`, the
+   testing metadata included. On FreePascal it sets
+   `SetMultiByteConversionCodePage(CP_UTF8)` and links `cwstring` on Unix, the
+   string contract of the library (KNOWN_ISSUES.md, permanent item 6).
+2. `framework/LibPhoneNumber.TestFramework.pas` - `TTestCase` (virtual `Setup`
+   / `TearDown`), the `Assert` class and the fixture registry. The tests of a
+   fixture are its PUBLISHED methods, found through the published method
+   table; the layouts of Delphi and of FreePascal 3.2 / 3.3 are handled in the
+   unit and every entry is cross-checked against `MethodAddress`. As in
+   DUnitX, one fixture instance serves all of its tests. `Assert` is source
+   compatible with the DUnitX subset the suite uses: `AreEqual` /
+   `AreNotEqual` for strings, Integer, Int64 and Boolean plus a generic
+   `AreEqual<T>` for an explicit type argument (`Assert.AreEqual<UInt64>`),
+   `IsTrue`, `IsFalse`, `Fail`, `IsNull`, `IsNotNull` - expected before actual,
+   optional message. A failure shows expected and actual. FreePascal 3.2 has
+   no implicit specialization, so a generic call always names its type
+   argument.
+3. `framework/LibPhoneNumber.TestRunner.pas` - the console runner:
+   `--filter <Fixture>[.<Test>]` (repeatable, comma separated, case
+   insensitive; a filter that matches nothing is an error), `--junit <file>`
+   (JUnit XML, UTF-8), `--verbose` (every test and its log lines), `--list`.
+   A failed assertion is a FAIL, any other exception an ERROR; the run always
+   continues. Exit code 0 only when every selected test passed, 1 for a
+   failure or an error, 2 for a usage error or a run without tests.
+4. `framework/LibPhoneNumber.TestJson.pas` - a minimal JSON reader with the
+   System.JSON class names (`TJSONObject.ParseJSONValue`, `GetValue`,
+   `GetString`, `GetBoolean`, `TryGetString`, `TJSONArray.Items`), the UTF-8
+   file reader and `FindTestDataFile`, which finds `tests/data` upwards from
+   the executable and from the current directory.
 
 Fixture conventions:
 
-1. Every fixture class carries `[TestFixture]` AND is registered explicitly in
-   the unit's `initialization` section with
-   `TDUnitX.RegisterTestFixture(TSomeTests)`. The explicit call is what keeps a
-   fixture in the run if a linker or RTTI setting ever drops the attribute.
-2. A fixture that needs the upstream TESTING metadata switches it in `Setup`
+1. A fixture derives from `TTestCase`; its tests are `published`, everything
+   else (helpers, the `Setup` / `TearDown` overrides) is `private` or
+   `public`. Every fixture is registered in its unit's `initialization`
+   section with `RegisterTest(TSomeTests)`; there is no attribute scan.
+2. Every test unit starts with the same FreePascal block: `{$MODE DELPHI}`,
+   `{$CODEPAGE UTF8}` (the sources are pure ASCII and spell non ASCII
+   characters as `#$XXXX`; without a source code page FreePascal converts such
+   a constant to `string` at compile time and loses every character outside
+   its default code page) and `{$WARN 4105 OFF}` (the implicit
+   UnicodeString / `string` conversions are the documented contract). A
+   length, index or offset that upstream measures on a Java String is measured
+   on the `UnicodeString` form in the tests too, because on FreePascal
+   `string` is UTF-8.
+3. A fixture that needs the upstream TESTING metadata switches it in `Setup`
    with `LibPhoneNumber.TestingMetadata.UseTestingMetadata` and back in
    `TearDown` with `RestoreProductionMetadata` from the same unit. Do not call
    `LibPhoneNumber.Metadata.UseProductionMetadata` directly - the pair in
    `TestingMetadata` also drops the compiled pattern cache.
-3. Metadata record pointers are source bound: a switch invalidates every
+4. Metadata record pointers are source bound: a switch invalidates every
    `PPhoneMetadataRec` handed out before it. Fetch metadata inside the test,
    never in `Setup`, and never store such a pointer in a fixture field.
 
@@ -111,18 +149,28 @@ Reference generation:
 4. The generator ABORTS WITHOUT WRITING when a case cannot be recomputed.
    `-AllowPartial` overrides this for a deliberate, documented exception.
 
-CLI test run:
+Running the suite:
 
-1. `tools\run_delphi_tests.ps1` builds and executes `DUnitXCmdTest` for
-   Win64/Debug. `-BuildOnly` compiles the project and stops; that is the Delphi
-   compile gate `run_pr_quick_check.ps1` uses.
-2. Optional custom RAD Studio root:
+1. Delphi: `tools\run_delphi_tests.ps1` builds `LibPhoneNumberTests.dproj`
+   with msbuild for Win64/Debug and runs it. `-BuildOnly` compiles and stops
+   (the Delphi compile gate of `run_pr_quick_check.ps1`); `-Filter` and
+   `-JUnit <file>` are handed to the runner; `-StudioRoot` selects another
+   RAD Studio, e.g.
    `tools\run_delphi_tests.ps1 -StudioRoot "C:\Program Files (x86)\Embarcadero\Studio\37.0"`.
-3. `DUnitXCmdTest` exits with code `1` when tests fail or error, and only
-   pauses when `--exitbehavior:Pause` is passed, so failures propagate to
-   `run_delphi_tests.ps1` and `run_update_workflow.ps1`.
+2. FreePascal: `tools\run_fpc_tests.ps1` builds the same program with
+   FreePascal and runs it: `-Toolchain Wsl` (the default, FPC 3.2.4 in WSL),
+   `Native` (the `fpc` on PATH - Windows, or Linux / macOS under `pwsh`, which
+   is what CI uses) or `Mac` (the shared Mac toolchain), plus `-FpcPath`,
+   `-Filter`, `-JUnit`, `-BuildOnly` and `-RequireFpc`.
+3. By hand, from this folder:
+   `fpc -Mdelphi -Sh -Cr -Co -Fu../src -Fuframework -FUbin/units -FEbin LibPhoneNumberTests.dpr`,
+   then `bin/LibPhoneNumberTests`; with Delphi open `LibPhoneNumberTests.dproj`.
+4. Both scripts throw on a non zero exit code of the runner, so failures
+   propagate to `run_update_workflow.ps1` and `run_pr_quick_check.ps1`. The
+   GitHub workflow runs the FreePascal suite on Ubuntu (the distribution's
+   FreePascal, x86_64) and uploads the JUnit report.
 
-The DUnitX suite is Delphi only. FreePascal behaviour is covered by the
-FreePascal runtime gate (`tools/run_fpc_runtime_check.ps1`), which runs every
-unit of `src/` on FreePascal and compares its output byte for byte with a
-Delphi build.
+The FreePascal runtime gate (`tools/run_fpc_runtime_check.ps1`) stays a gate
+of its own: the suite checks expectations, the runtime gate checks that a
+Delphi and a FreePascal build agree byte for byte over a far larger input
+space.

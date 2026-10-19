@@ -11,6 +11,8 @@ vendor/libphonenumber
 # Build output
 tests/bin
 tests/dcu
+# msbuild writes a version resource the test program does not link
+tests/LibPhoneNumberTests.res
 samples/bin
 *.dcu
 *.ppu

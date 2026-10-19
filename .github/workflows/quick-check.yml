@@ -34,11 +34,60 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      # The hosted runner has neither Delphi nor FreePascal: the DUnitX build,
-      # the FreePascal compile check and the FreePascal runtime check skip with
-      # a warning. What runs here is the metadata generator, the check that the
+      # The hosted Windows runner has neither Delphi nor FreePascal: the Delphi
+      # build of the test program and the three FreePascal steps skip with a
+      # warning. What runs here is the metadata generator, the check that the
       # committed generated units are its exact output, and the length compare
-      # gate against the upstream XML.
+      # gate against the upstream XML. The FreePascal job below covers the
+      # compilers.
       - name: Run quick check
         shell: pwsh
         run: powershell -ExecutionPolicy Bypass -File tools/run_pr_quick_check.ps1
+
+  # The library and the whole test suite on FreePascal: the FreePascal of the
+  # Ubuntu distribution (3.2.2 on ubuntu-24.04, x86_64). Every step requires
+  # the compiler, so a missing one fails the job instead of being skipped.
+  freepascal:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # fp-units-base brings the regexpr unit, fp-units-fcl SyncObjs; the RTL
+      # (SysUtils, Classes, Generics.Collections, cwstring) is fp-units-rtl.
+      # A program that links cwstring links against the C library: libc6-dev
+      # for the libraries, gcc for crtbegin.o / crtend.o (both are on the
+      # hosted runner anyway; listed so the job does not depend on it - a
+      # missing crtbegin.o is a linker WARNING, which fails the build).
+      - name: Install FreePascal
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends fp-compiler fp-units-rtl fp-units-base fp-units-fcl libc6-dev gcc
+          echo "FreePascal $(fpc -iV) ($(fpc -iTP)-$(fpc -iTO))"
+
+      - name: FreePascal compile check
+        shell: pwsh
+        run: ./tools/check_fpc_compile.ps1 -RequireFpc
+
+      # tools/run_fpc_tests.ps1 in its Native mode is the fpc on PATH of this
+      # runner; the runner of the test program writes the JUnit report.
+      - name: FreePascal test suite
+        shell: pwsh
+        run: ./tools/run_fpc_tests.ps1 -Toolchain Native -RequireFpc -JUnit test-results/freepascal-junit.xml
+
+      - name: Upload the JUnit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: freepascal-test-results
+          path: test-results/freepascal-junit.xml
+          if-no-files-found: warn
+
+      # The command line of samples/README.md, plus a run of the program.
+      - name: Build and run the sample
+        working-directory: samples
+        run: |
+          mkdir -p bin/units
+          fpc -Mdelphi -Sh -Fu../src -FUbin/units -FEbin PhoneNumberDemo.dpr
+          ./bin/PhoneNumberDemo

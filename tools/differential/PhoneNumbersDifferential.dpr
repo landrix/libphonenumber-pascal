@@ -15,8 +15,8 @@ program PhoneNumbersDifferential;
   tools/run_mass_differential.ps1 then asks the C# NuGet oracle the same
   questions about the same inputs and diffs the two answer sets.
 
-  A separate console program rather than a DUnitX mode on purpose: this is not
-  a test - it has no expected values of its own - and a DUnitX fixture that
+  A separate console program rather than a test fixture on purpose: this is
+  not a test - it has no expected values of its own - and a fixture that
   writes a data file and always passes would be a test in name only. The
   program links the very same units under src/ that the library ships, so the
   answers are the shipped ones.

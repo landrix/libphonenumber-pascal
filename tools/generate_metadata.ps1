@@ -1299,8 +1299,8 @@ function Invoke-PhoneMetadataBuild {
 
 $phoneMetadata = Invoke-PhoneMetadataBuild -XmlPath $MetadataXmlPath -UnitNamespace "LibPhoneNumber.Metadata" -GeneratorLabel $generatorVersion
 
-# The upstream TEST data set. Only the DUnitX test project
-# links these units; no unit under src/ references them, so a production
+# The upstream TEST data set. Only the test programs
+# link these units; no unit under src/ references them, so a production
 # binary never pulls them in.
 $testingMetadata = Invoke-PhoneMetadataBuild -XmlPath $TestingMetadataXmlPath -UnitNamespace "LibPhoneNumber.TestingMetadata" -GeneratorLabel $testingGeneratorVersion
 

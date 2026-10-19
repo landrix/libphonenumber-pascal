@@ -96,6 +96,11 @@ unit LibPhoneNumber.Regex;
                     \A(?:<pattern>)$      (FreePascal, ModifierM = False)
     lookingAt() ->  \A(?:<pattern>)
 
+  An EMPTY input is decided by a probe on regexpr 0.987 (EmptyInputMatches,
+  which also lists the two pattern shapes that probe answers wrongly: a
+  '(?-m)' group and a '(?#...)' comment containing '[' before '\A' - neither
+  occurs in any metadata pattern; KNOWN_ISSUES.md, permanent item 8).
+
   Wrapping in a non capturing group is required: without it an alternation at
   the top level of an upstream pattern - which is the most common shape of a
   nationalNumberPattern - would bind the anchors to the first respectively the
@@ -103,9 +108,9 @@ unit LibPhoneNumber.Regex;
 
   RISK - FPC regex dialect
   ------------------------
-  The generator side dialect gate (tools/generate_metadata.ps1) and the DUnitX
-  dialect test only prove that every upstream pattern compiles for .NET regex
-  and for the Delphi engine. TRegExpr is a different implementation with a
+  The generator side dialect gate (tools/generate_metadata.ps1) and the Delphi
+  run of the dialect test only prove that every upstream pattern compiles for
+  .NET regex and for the Delphi engine. TRegExpr is a different implementation with a
   smaller feature set; upstream metadata patterns currently use only literals,
   character classes, bounded quantifiers, alternation and non capturing groups,
   all of which TRegExpr supports. The FreePascal RUNTIME gate
@@ -765,8 +770,10 @@ begin
     AExpanded := APattern;
 end;
 
-{ Caller must hold GLock. }
-function AcquireIndex(const AWrapped: string): Integer;
+{ Caller must hold GLock. AMultiLine is for the empty input probe of
+  regexpr 0.987 only (EmptyInputMatches); every other caller compiles with
+  java.util.regex defaults. }
+function AcquireIndex(const AWrapped: string; AMultiLine: Boolean = False): Integer;
 {$IFDEF FPC}
 var
   Expr: TRegExpr;
@@ -798,7 +805,7 @@ begin
       folding. ModifierM = False is LOAD BEARING here: WrapFull ends a full
       match with '$' on FreePascal (see there), and only without multiline
       mode does '$' mean "end of input" rather than "end of any line". }
-    Expr.ModifierM := False;
+    Expr.ModifierM := AMultiLine;
     { RegExprString is AnsiString or UnicodeString depending on how the FPC
       distribution compiled the regexpr unit; the explicit cast keeps both
       configurations warning free. Metadata patterns are pure ASCII.
@@ -834,6 +841,126 @@ begin
   Inc(GCount);
 end;
 
+{$IFDEF FPC}
+{ The empty input on regexpr 0.987 (the TRegExpr of FreePascal 3.2.2).
+
+  That engine answers False for an EMPTY input before it looks at the pattern
+  (TRegExpr.ExecPrim: "if fInputString = '' then Exit"). java.util.regex -
+  like PCRE and regexpr 1.x - matches a pattern that can match the empty
+  string against "": Matcher.matches(), lookingAt() and find() all succeed
+  with the zero length match at offset 0. On an empty input that is the only
+  possible match for every operation of this unit, so the question is only
+  whether the pattern can match the empty string.
+
+  It is asked at the END of the one character input #10, with the match
+  started there (ExecPos(2), which 0.987 allows: "for matching empty string
+  after last char") and the pattern compiled in multi line mode as
+  ^(?:<pattern>)$. At that position the rest of the input is empty, '^' and
+  '$' both match (after a line break, at the end), '\b' fails and '\B'
+  succeeds - exactly as at offset 0 of an empty input. The one anchor that
+  cannot match there is '\A', so every '\A' of the pattern outside a
+  character class is rewritten to '^' for the probe (RewriteStartAnchors).
+  regexpr 0.987 has no lookahead or lookbehind, so no other construct can
+  see the line break. Its '\Z' is an end anchor (OP_EOL, like '$') and
+  answers at the probe position as on an empty input; its '\z' is not an
+  anchor at all but the literal letter (see WrapFull), on an empty input as
+  everywhere else. An earlier probe that put a sentinel character AFTER the
+  pattern got every end anchor inside the pattern wrong ('a*$', '(?:x|$)').
+
+  Known limitation, deliberately not rewritten for this legacy engine: two
+  shapes still answer differently on an EMPTY input. (1) An inline modifier
+  group that switches multi line mode OFF, e.g. '(?-m)^$' or '(?-m)\A',
+  answers False instead of True, because the probe relies on multi line '^'.
+  (2) A '(?#...)' comment containing '[' in front of a '\A' leaves
+  RewriteStartAnchors in its character class state, so that '\A' is not
+  rewritten and the probe answers False. '(?#...)' is not java.util.regex
+  syntax, so (2) is outside the contract of a port of Java patterns anyway.
+  No metadata pattern contains either shape; only a caller supplied pattern,
+  on FreePascal 3.2.2 (regexpr below 1.0), with an empty input can hit them.
+
+  Found by the FreePascal run of the test suite (MetadataCore
+  EmptyInput_MatchesAPatternThatAllowsIt) on FPC 3.2.2; regexpr 1.x needs no
+  detour and does not take it. }
+function NeedsEmptyInputProbe(const AInput: string): Boolean;
+begin
+  Result := (AInput = '') and (TRegExpr.VersionMajor < 1);
+end;
+
+{ '\A' outside a character class becomes '^'; everything else, escapes and
+  classes included, is copied unchanged. A ']' right after '[' or '[^' is a
+  literal member of the class, as in every regex dialect. }
+function RewriteStartAnchors(const APattern: string): string;
+var
+  I, Len: Integer;
+  InClass: Boolean;
+begin
+  Result := '';
+  I := 1;
+  Len := Length(APattern);
+  InClass := False;
+  while I <= Len do
+  begin
+    if APattern[I] = '\' then
+    begin
+      if (not InClass) and (I < Len) and (APattern[I + 1] = 'A') then
+        Result := Result + '^'
+      else
+        Result := Result + Copy(APattern, I, 2);
+      Inc(I, 2);
+      Continue;
+    end;
+    if InClass then
+    begin
+      if APattern[I] = ']' then
+        InClass := False;
+    end
+    else if APattern[I] = '[' then
+    begin
+      InClass := True;
+      Result := Result + APattern[I];
+      Inc(I);
+      if (I <= Len) and (APattern[I] = '^') then
+      begin
+        Result := Result + APattern[I];
+        Inc(I);
+      end;
+      if (I <= Len) and (APattern[I] = ']') then
+      begin
+        Result := Result + APattern[I];
+        Inc(I);
+      end;
+      Continue;
+    end;
+    Result := Result + APattern[I];
+    Inc(I);
+  end;
+end;
+
+{ Caller must hold GLock. The cache key starts with '^(?:', which none of the
+  regular wrappings (WrapFull, WrapPrefix, WrapRaw) produce, so the multi line
+  probe never shares an entry with a regular compile of the same text. }
+function EmptyInputMatches(const APattern: string): Boolean;
+var
+  Index: Integer;
+  Expr: TRegExpr;
+begin
+  Index := AcquireIndex('^(?:' + RewriteStartAnchors(APattern) + ')$', True);
+  Expr := GEntries[Index].Expr;
+  Expr.InputString := RegExprString(#10);
+  Result := Expr.ExecPos(2);
+end;
+
+function LockedEmptyInputMatches(const APattern: string): Boolean;
+begin
+  GLock.Enter;
+  try
+    Result := EmptyInputMatches(APattern);
+  finally
+    GLock.Leave;
+  end;
+end;
+{$ENDIF}
+
 function ExecuteMatch(const AWrapped, AInput: string): Boolean;
 var
   Index: Integer;
@@ -860,6 +987,10 @@ begin
     Result := False;
     Exit;
   end;
+{$IFDEF FPC}
+  if NeedsEmptyInputProbe(AInput) then
+    Exit(LockedEmptyInputMatches(APattern));
+{$ENDIF}
   Result := ExecuteMatch(WrapFull(APattern), AInput);
 end;
 
@@ -870,6 +1001,10 @@ begin
     Result := False;
     Exit;
   end;
+{$IFDEF FPC}
+  if NeedsEmptyInputProbe(AInput) then
+    Exit(LockedEmptyInputMatches(APattern));
+{$ENDIF}
   Result := ExecuteMatch(WrapPrefix(APattern), AInput);
 end;
 
@@ -936,20 +1071,36 @@ begin
     Index := AcquireIndex(WrapPrefix(APattern));
   {$IFDEF FPC}
     Expr := GEntries[Index].Expr;
-    if not Expr.Exec(RegExprString(AInput)) then
+    if NeedsEmptyInputProbe(AInput) then
     begin
-      Result := False;
-      Exit;
-    end;
-    AMatch.MatchEnd := Expr.MatchPos[0] + Expr.MatchLen[0];
-    AMatch.GroupMatched[0] := True;
-    AMatch.GroupValue[0] := string(Expr.Match[0]);
-    for I := 1 to Groups do
-      if (I <= Expr.SubExprMatchCount) and (Expr.MatchLen[I] > 0) then
+      { The zero length match at offset 0: every group is empty or unset,
+        and neither counts as matched (see the participation rule above). }
+      if not EmptyInputMatches(APattern) then
       begin
-        AMatch.GroupMatched[I] := True;
-        AMatch.GroupValue[I] := string(Expr.Match[I]);
+        Result := False;
+        Exit;
       end;
+      AMatch.MatchEnd := 1;
+      AMatch.GroupMatched[0] := True;
+      AMatch.GroupValue[0] := '';
+    end
+    else
+    begin
+      if not Expr.Exec(RegExprString(AInput)) then
+      begin
+        Result := False;
+        Exit;
+      end;
+      AMatch.MatchEnd := Expr.MatchPos[0] + Expr.MatchLen[0];
+      AMatch.GroupMatched[0] := True;
+      AMatch.GroupValue[0] := string(Expr.Match[0]);
+      for I := 1 to Groups do
+        if (I <= Expr.SubExprMatchCount) and (Expr.MatchLen[I] > 0) then
+        begin
+          AMatch.GroupMatched[I] := True;
+          AMatch.GroupValue[I] := string(Expr.Match[I]);
+        end;
+    end;
   {$ELSE}
     M := GEntries[Index].Expr.Match(AInput);
     if not M.Success then
@@ -1001,11 +1152,20 @@ begin
     Index := AcquireIndex(WrapRaw(APattern));
   {$IFDEF FPC}
     Expr := GEntries[Index].Expr;
-    Result := Expr.Exec(RegExprString(AInput));
-    if Result then
+    if NeedsEmptyInputProbe(AInput) then
     begin
-      AMatchStart := Expr.MatchPos[0];
-      AMatchValue := string(Expr.Match[0]);
+      Result := EmptyInputMatches(APattern);
+      if Result then
+        AMatchStart := 1;
+    end
+    else
+    begin
+      Result := Expr.Exec(RegExprString(AInput));
+      if Result then
+      begin
+        AMatchStart := Expr.MatchPos[0];
+        AMatchValue := string(Expr.Match[0]);
+      end;
     end;
   {$ELSE}
     M := GEntries[Index].Expr.Match(AInput);
@@ -1095,6 +1255,7 @@ var
   Found: Boolean;
 {$IFDEF FPC}
   Expr: TRegExpr;
+  EmptyProbe: Boolean;
 {$ELSE}
   M: TMatch;
   G: TGroup;
@@ -1121,7 +1282,11 @@ begin
     Index := AcquireIndex(WrapRaw(APattern));
   {$IFDEF FPC}
     Expr := GEntries[Index].Expr;
-    Found := Expr.Exec(RegExprString(AInput));
+    EmptyProbe := NeedsEmptyInputProbe(AInput);
+    if EmptyProbe then
+      Found := EmptyInputMatches(APattern)
+    else
+      Found := Expr.Exec(RegExprString(AInput));
   {$ELSE}
     M := GEntries[Index].Expr.Match(AInput);
     Found := M.Success;
@@ -1129,13 +1294,24 @@ begin
     while Found do
     begin
     {$IFDEF FPC}
-      MatchStart := Expr.MatchPos[0];
-      MatchLength := Expr.MatchLen[0];
-      for I := 0 to Groups do
-        if I <= Expr.SubExprMatchCount then
-          Values[I] := string(Expr.Match[I])
-        else
+      if EmptyProbe then
+      begin
+        { The one zero length match of an empty input. }
+        MatchStart := 1;
+        MatchLength := 0;
+        for I := 0 to Groups do
           Values[I] := '';
+      end
+      else
+      begin
+        MatchStart := Expr.MatchPos[0];
+        MatchLength := Expr.MatchLen[0];
+        for I := 0 to Groups do
+          if I <= Expr.SubExprMatchCount then
+            Values[I] := string(Expr.Match[I])
+          else
+            Values[I] := '';
+      end;
     {$ELSE}
       MatchStart := M.Index;
       MatchLength := M.Length;
@@ -1164,7 +1340,10 @@ begin
         Break;
 
     {$IFDEF FPC}
-      Found := Expr.ExecNext;
+      if EmptyProbe then
+        Found := False
+      else
+        Found := Expr.ExecNext;
     {$ELSE}
       M := M.NextMatch;
       Found := M.Success;

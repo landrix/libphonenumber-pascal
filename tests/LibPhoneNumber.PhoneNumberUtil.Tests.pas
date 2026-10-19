@@ -1,17 +1,36 @@
 unit LibPhoneNumber.PhoneNumberUtil.Tests;
 
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{ The test sources are pure ASCII and spell every non ASCII character as a
+  numeric constant (#$XXXX). Without a source code page FreePascal converts
+  such a constant to an AnsiString `string` at COMPILE time through its
+  default code page and turns every character outside it into '?'. UTF-8
+  as the source code page makes that conversion lossless and matches the
+  UTF-8 string contract of the library on FreePascal. }
+{$CODEPAGE UTF8}
+{ Implicit UnicodeString <-> AnsiString conversions are the documented
+  string contract here: the runner sets the UTF-8 conversion code page, so
+  they are lossless, and the warning would bury every other one. }
+{$WARN 4105 OFF}
+{$ENDIF}
+
 interface
 
 uses
+{$IFDEF FPC}
+  Generics.Collections,
+{$ELSE}
   System.Generics.Collections,
-  DUnitX.TestFramework,
+{$ENDIF}
+  LibPhoneNumber.TestFramework,
   LibPhoneNumber.Types,
   LibPhoneNumber.Metadata.Types,
   LibPhoneNumber.MetadataFormat;
 
 type
-  [TestFixture]
-  TPhoneNumberUtilTests = class
+  TPhoneNumberUtilTests = class(TTestCase)
   private
     function FindGoldenCasesFile: string;
     function FindReferenceCasesFile: string;
@@ -23,428 +42,299 @@ type
     { Builds a string from code points so the non ASCII test data does
       not have to be written into this file. }
     function CodePoints(const ACodes: array of Integer): string;
-  public
-    [Test]
+  published
     procedure Parse_ReturnsFalse_WhenInputHasNoDigits;
 
-    [Test]
     procedure Parse_StripsNonDigits_AndStoresNationalNumber;
 
-    [Test]
     procedure Parse_SeparatesExtension_FromNationalNumber;
 
-    [Test]
     procedure Parse_ExtensionMarkersFollowTheUpstreamExtnPattern;
 
-    [Test]
     procedure Parse_HandlesInternationalPrefix00;
 
-    [Test]
     procedure Parse_HandlesInternationalPrefix011_ForUS;
 
-    [Test]
     procedure Parse_HandlesInternationalPrefix011_ForCA;
 
-    [Test]
     procedure Parse_ParsesNationalInput_ForCA;
 
-    [Test]
     procedure IsValidNumber_ReturnsTrue_WhenDigitsExist;
 
-    [Test]
     procedure IsValidNumber_ReturnsFalse_WhenLengthIsInvalidForRegion;
 
-    [Test]
     procedure IsPossibleNumber_ReturnsTrue_WhenLengthMatchesRegion;
 
-    [Test]
     procedure IsPossibleNumber_ReturnsFalse_WhenLengthDoesNotMatchRegion;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForUSPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForCAPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForGBPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForDEPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForFRPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForITPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForESPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForNLPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForCHPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForATPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForAUPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForJPPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForINPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForPLPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForSEPattern;
 
-    [Test]
     procedure IsValidNumber_IsStricterThanIsPossibleNumber_ForPTPattern;
 
-    [Test]
     procedure Parse_PreservesLeadingZeroDigits_ForIT;
 
-    [Test]
     procedure Format_E164_ReturnsPlusCountryCodeAndNationalNumber;
 
-    [Test]
     procedure Format_International_US_ReturnsGrouped;
 
-    [Test]
     procedure Format_International_CA_ReturnsGrouped;
 
-    [Test]
     procedure Format_National_US_ReturnsParenthesized;
 
-    [Test]
     procedure Format_National_CA_ReturnsParenthesized;
 
-    [Test]
     procedure Format_International_GB_ReturnsGrouped;
 
-    [Test]
     procedure Format_National_GB_ReturnsWithTrunkZero;
 
-    [Test]
     procedure Format_International_DE_ReturnsGrouped;
 
-    [Test]
     procedure Format_International_DE_FixedLine_ReturnsGrouped;
 
-    [Test]
     procedure Format_InternationalLegacy_DE_ReturnsLegacyDisplay;
 
-    [Test]
     procedure Format_InternationalLegacy_DE_FixedLine_ReturnsLegacyDisplay;
 
-    [Test]
     procedure Format_National_DE_ReturnsWithTrunkZero;
 
-    [Test]
     procedure Format_International_FR_ReturnsGrouped;
 
-    [Test]
     procedure Format_National_FR_ReturnsWithTrunkZero;
 
-    [Test]
     procedure Format_International_IT_ReturnsGrouped;
 
-    [Test]
     procedure Format_National_IT_ReturnsGrouped;
 
-    [Test]
     procedure Format_International_ES_ReturnsGrouped;
 
-    [Test]
     procedure Format_National_ES_ReturnsGrouped;
 
-    [Test]
     procedure Format_International_NL_ReturnsGrouped;
 
-    [Test]
     procedure Format_National_NL_ReturnsWithTrunkZero;
 
-    [Test]
     procedure Format_International_CH_ReturnsGrouped;
 
-    [Test]
     procedure Format_National_CH_ReturnsWithTrunkZero;
 
-    [Test]
     procedure Format_International_AT_ReturnsGrouped;
 
-    [Test]
     procedure Format_International_PT_ReturnsGrouped;
 
-    [Test]
     procedure Format_International_BE_ReturnsGrouped;
 
-    [Test]
     procedure Format_International_IE_ReturnsGrouped;
 
-    [Test]
     procedure Format_National_AT_ReturnsWithTrunkZero;
 
-    [Test]
     procedure Format_National_PT_ReturnsGrouped;
 
-    [Test]
     procedure Format_National_BE_ReturnsWithTrunkZero;
 
-    [Test]
     procedure Format_National_IE_ReturnsWithTrunkZero;
 
-    [Test]
     procedure Format_Rfc3966_US_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_GB_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_DE_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_FR_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_IT_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_ES_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_NL_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_CH_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_AT_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_JP_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_AU_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_IN_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_PL_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_SE_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_CA_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_PT_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_BE_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_IE_ReturnsTelUri;
 
-    [Test]
     procedure Format_Rfc3966_WithExtension_AppendsExtParameter;
 
     { Metadata driven formatting }
-    [Test]
     procedure Format_International_WithExtension_AppendsTheExtensionPrefix;
 
-    [Test]
     procedure Format_UsesTheMetadata_ForRegionsOutsideTheLegacyFormatterSet;
 
-    [Test]
     procedure GoldenCases_FromJson;
 
-    [Test]
     procedure ReferenceCases_JavaCSharp_AreConsistent;
 
-    [Test]
     procedure ReferenceCases_JavaCSharp_DifferentialAgainstPort;
 
-    [Test]
     procedure GeneratedMetadata_ProvenanceIsPresent;
 
-    [Test]
     procedure GeneratedMetadata_CallingCodeTablesAreConsistent;
 
-    [Test]
     procedure AlternateFormats_TableIsConsistent;
 
-    [Test]
     procedure Parse_KeepsCallerRegion_ForSharedCallingCode;
 
-    [Test]
     procedure Parse_ReturnsTooShortAfterIdd_WhenOnlyCallingCodePresent;
 
-    [Test]
     procedure Parse_RejectsATrailingHashWithoutExtensionDigits;
 
-    [Test]
     procedure Format_International_DE_Munich_ReturnsTwoDigitArea;
 
-    [Test]
     procedure Format_National_DE_Munich_ReturnsTwoDigitArea;
 
-    [Test]
     procedure IsValidNumber_RejectsNanpN11Codes;
 
-    [Test]
     procedure Parse_DoesNotTreat00AsIdd_ForNanp;
 
-    [Test]
     procedure Parse_ReturnsTooLongNsn_WhenDigitsExceedCapacity;
 
     { Metadata driven national prefix handling }
-    [Test]
     procedure Parse_KeepsSignificantLeadingZero_WhenTerritoryHasNoNationalPrefix;
 
-    [Test]
     procedure Parse_StripsNationalPrefix_WhenTerritoryDeclaresOne;
 
-    [Test]
     procedure Parse_UsesMetadataIddPrefixes;
 
     { ParseAndKeepRawInput / CountryCodeSource }
-    [Test]
     procedure ParseAndKeepRawInput_ReportsPlusSignSource;
 
-    [Test]
     procedure ParseAndKeepRawInput_ReportsIddSource;
 
-    [Test]
     procedure ParseAndKeepRawInput_ReportsSourceWithoutPlusSign;
 
-    [Test]
     procedure ParseAndKeepRawInput_ReportsDefaultCountrySource;
 
-    [Test]
     procedure Parse_LeavesCountryCodeSourceUnspecified;
 
-    [Test]
     procedure Parse_LeavesRawInputEmpty;
 
-    [Test]
     procedure Parse_UsesMainRegionMetadataAfterExplicitCallingCode;
 
-    [Test]
     procedure Parse_RollsBackANationalPrefixStripThatIsTooShort;
 
     { Extended formatter API }
-    [Test]
     procedure FormatOutOfCountryCallingNumber_MatchesTheOracle;
 
-    [Test]
     procedure FormatOutOfCountryCallingNumber_NormalizesTheRegionArgument;
 
-    [Test]
     procedure FormatNationalNumberWithCarrierCode_MatchesTheOracle;
 
-    [Test]
     procedure FormatNationalNumberWithPreferredCarrierCode_PrefersTheParsedCode;
 
-    [Test]
     procedure FormatByPattern_MatchesTheOracle;
 
-    [Test]
     procedure FormatInOriginalFormat_MatchesTheOracle;
 
-    [Test]
     procedure ReferenceCases_OutOfCountryComposesTheOracleStrings;
 
-    [Test]
     procedure ReferenceCases_CarrierCodeFreeNationalFormatMatchesTheOracle;
 
-    [Test]
     procedure ReferenceCases_InOriginalFormatMatchesTheOracle;
 
     { Entry path of parseHelper and isNumberMatch }
-    [Test]
     procedure Parse_AppliesExtractPossibleNumber;
 
-    [Test]
     procedure Parse_AppliesTheViabilityGate;
 
-    [Test]
     procedure Parse_HandlesRfc3966PhoneContext;
 
-    [Test]
     procedure Parse_AcceptsUnicodeDecimalDigits;
 
-    [Test]
     procedure Parse_FillsTheExtensionFromEveryExtnBranch;
 
-    [Test]
     procedure IsNumberMatch_CompareTwoNumbers;
 
-    [Test]
     procedure IsNumberMatch_CompareTwoStrings;
 
-    [Test]
     procedure IsNumberMatch_CompareNumberAndString;
 
     { Parse driver details }
-    [Test]
     procedure Parse_RetriesCountryCodeExtractionWithoutPlus;
 
-    [Test]
     procedure Parse_SupplementaryCharactersFollowJavaNotTheOracle;
 
-    [Test]
     procedure Parse_ExtensionLabelsUseTheJavaCaseFoldingClosure;
 
-    [Test]
     procedure IsNumberMatch_CanonicalisesItsOperands;
 
     { Accessory API. Every expected value below was read off the NuGet oracle
       libphonenumber-csharp 9.0.41 against the PRODUCTION metadata (the probe
       parses "+<cc><nsn>" in region ZZ, which is what these tests do as
       well); the one Java only method is checked by its contract. }
-    [Test]
     procedure Accessory_ExampleNumbersMatchTheOracle;
 
-    [Test]
     procedure Accessory_InvalidExampleNumberKeepsItsContract;
 
-    [Test]
     procedure Accessory_SupportedTypesMatchTheOracle;
 
-    [Test]
     procedure Accessory_GeographyAndCodeLengthsMatchTheOracle;
 
-    [Test]
     procedure Accessory_TruncateTooLongNumberMatchesTheOracle;
 
-    [Test]
     procedure Accessory_AlphaNumberMobileTokenAndNsnMatchTheOracle;
 
-    [Test]
     procedure Accessory_RegionArgumentsAreCanonicalised;
 
-    [Test]
     procedure Accessory_NationalSignificantNumberMatchesTheOracle;
   end;
 
 implementation
 
 uses
+{$IFDEF FPC}
+  SysUtils,
+  Classes,
+  StrUtils,
+{$ELSE}
   System.SysUtils,
   System.Classes,
   System.StrUtils,
-  System.IOUtils,
-  System.JSON,
+{$ENDIF}
+  LibPhoneNumber.TestJson,
   LibPhoneNumber.PhoneNumberUtil,
   LibPhoneNumber.Metadata,
   LibPhoneNumber.MetadataCore,
@@ -457,27 +347,12 @@ uses
 function TPhoneNumberUtilTests.FindGoldenCasesFile: string;
 const
   FileName = 'core_golden_cases.json';
-var
-  BaseDir: string;
-  Candidate: string;
-  I: Integer;
 begin
-  BaseDir := ExcludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
-
-  for I := 0 to 6 do
-  begin
-    Candidate := TPath.Combine(TPath.Combine(BaseDir, 'data'), FileName);
-    if FileExists(Candidate) then
-      Exit(Candidate);
-
-    Candidate := TPath.Combine(TPath.Combine(TPath.Combine(BaseDir, 'tests'), 'data'), FileName);
-    if FileExists(Candidate) then
-      Exit(Candidate);
-
-    BaseDir := ExcludeTrailingPathDelimiter(TPath.GetDirectoryName(BaseDir));
-    if BaseDir = '' then
-      Break;
-  end;
+  { tests/data is searched upwards from the executable and from the
+    current directory (LibPhoneNumber.TestJson.FindTestDataFile). }
+  Result := FindTestDataFile(FileName);
+  if Result <> '' then
+    Exit;
 
   Assert.Fail('Golden case file not found: tests/data/' + FileName);
   Result := '';
@@ -486,27 +361,12 @@ end;
 function TPhoneNumberUtilTests.FindReferenceCasesFile: string;
 const
   FileName = 'reference_cases_java_csharp.json';
-var
-  BaseDir: string;
-  Candidate: string;
-  I: Integer;
 begin
-  BaseDir := ExcludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
-
-  for I := 0 to 6 do
-  begin
-    Candidate := TPath.Combine(TPath.Combine(BaseDir, 'data'), FileName);
-    if FileExists(Candidate) then
-      Exit(Candidate);
-
-    Candidate := TPath.Combine(TPath.Combine(TPath.Combine(BaseDir, 'tests'), 'data'), FileName);
-    if FileExists(Candidate) then
-      Exit(Candidate);
-
-    BaseDir := ExcludeTrailingPathDelimiter(TPath.GetDirectoryName(BaseDir));
-    if BaseDir = '' then
-      Break;
-  end;
+  { tests/data is searched upwards from the executable and from the
+    current directory (LibPhoneNumber.TestJson.FindTestDataFile). }
+  Result := FindTestDataFile(FileName);
+  if Result <> '' then
+    Exit;
 
   Assert.Fail('Reference case file not found: tests/data/' + FileName);
   Result := '';
@@ -580,7 +440,7 @@ var
   ParseResult: Boolean;
 begin
   FilePath := FindGoldenCasesFile;
-  RawJson := TFile.ReadAllText(FilePath, TEncoding.UTF8);
+  RawJson := ReadUtf8File(FilePath);
   JsonValue := TJSONObject.ParseJSONValue(RawJson);
   try
     Assert.IsNotNull(JsonValue, 'Could not parse JSON in ' + FilePath);
@@ -594,18 +454,18 @@ begin
       Assert.IsTrue(Cases.Items[I] is TJSONObject, 'Each case must be a JSON object.');
       CaseObj := Cases.Items[I] as TJSONObject;
 
-      CaseName := CaseObj.GetValue<string>('name');
-      Input := CaseObj.GetValue<string>('input');
-      Country := CaseObj.GetValue<string>('country');
-      ShouldParse := CaseObj.GetValue<Boolean>('shouldParse');
-      ShouldBeValid := CaseObj.GetValue<Boolean>('shouldBeValid');
-      ExpectedRegion := CaseObj.GetValue<string>('expectedRegion');
+      CaseName := CaseObj.GetString('name');
+      Input := CaseObj.GetString('input');
+      Country := CaseObj.GetString('country');
+      ShouldParse := CaseObj.GetBoolean('shouldParse');
+      ShouldBeValid := CaseObj.GetBoolean('shouldBeValid');
+      ExpectedRegion := CaseObj.GetString('expectedRegion');
       // expectedNationalNumber is the national SIGNIFICANT number exactly as
       // Java/C# report it, so it is compared as a digit string first. The
       // numeric comparison alone would silently accept a lost leading zero.
-      ExpectedNationalNumberDigits := CaseObj.GetValue<string>('expectedNationalNumber');
+      ExpectedNationalNumberDigits := CaseObj.GetString('expectedNationalNumber');
       ExpectedNationalNumber := StrToUInt64Def(ExpectedNationalNumberDigits, 0);
-      ExpectedError := ParseExpectedError(CaseObj.GetValue<string>('expectedError'));
+      ExpectedError := ParseExpectedError(CaseObj.GetString('expectedError'));
 
       ParseResult := TPhoneNumberUtil.Parse(Input, Country, Parsed, ParseError);
 
@@ -644,7 +504,7 @@ var
   CSharpRfc3966: string;
 begin
   FilePath := FindReferenceCasesFile;
-  RawJson := TFile.ReadAllText(FilePath, TEncoding.UTF8);
+  RawJson := ReadUtf8File(FilePath);
   JsonValue := TJSONObject.ParseJSONValue(RawJson);
   try
     Assert.IsNotNull(JsonValue, 'Could not parse JSON in ' + FilePath);
@@ -657,20 +517,20 @@ begin
       Assert.IsTrue(Cases.Items[I] is TJSONObject, 'Each case must be a JSON object.');
       CaseObj := Cases.Items[I] as TJSONObject;
 
-      CaseName := CaseObj.GetValue<string>('name');
-      JavaE164 := CaseObj.GetValue<string>('javaE164');
-      CSharpE164 := CaseObj.GetValue<string>('csharpE164');
-      if not CaseObj.TryGetValue<string>('javaInternational', JavaInternational) then
+      CaseName := CaseObj.GetString('name');
+      JavaE164 := CaseObj.GetString('javaE164');
+      CSharpE164 := CaseObj.GetString('csharpE164');
+      if not CaseObj.TryGetString('javaInternational', JavaInternational) then
         JavaInternational := '';
-      if not CaseObj.TryGetValue<string>('csharpInternational', CSharpInternational) then
+      if not CaseObj.TryGetString('csharpInternational', CSharpInternational) then
         CSharpInternational := '';
-      if not CaseObj.TryGetValue<string>('javaNational', JavaNational) then
+      if not CaseObj.TryGetString('javaNational', JavaNational) then
         JavaNational := '';
-      if not CaseObj.TryGetValue<string>('csharpNational', CSharpNational) then
+      if not CaseObj.TryGetString('csharpNational', CSharpNational) then
         CSharpNational := '';
-      if not CaseObj.TryGetValue<string>('javaRfc3966', JavaRfc3966) then
+      if not CaseObj.TryGetString('javaRfc3966', JavaRfc3966) then
         JavaRfc3966 := '';
-      if not CaseObj.TryGetValue<string>('csharpRfc3966', CSharpRfc3966) then
+      if not CaseObj.TryGetString('csharpRfc3966', CSharpRfc3966) then
         CSharpRfc3966 := '';
 
       Assert.IsTrue(JavaE164.StartsWith('+'), CaseName + ' invalid javaE164 value');
@@ -725,7 +585,7 @@ var
   Divergences: TStringList;
 begin
   FilePath := FindReferenceCasesFile;
-  RawJson := TFile.ReadAllText(FilePath, TEncoding.UTF8);
+  RawJson := ReadUtf8File(FilePath);
   JsonValue := TJSONObject.ParseJSONValue(RawJson);
   Divergences := TStringList.Create;
   try
@@ -736,11 +596,11 @@ begin
     for I := 0 to Cases.Count - 1 do
     begin
       CaseObj := Cases.Items[I] as TJSONObject;
-      CaseName := CaseObj.GetValue<string>('name');
+      CaseName := CaseObj.GetString('name');
 
       ParseResult := TPhoneNumberUtil.Parse(
-        CaseObj.GetValue<string>('input'),
-        CaseObj.GetValue<string>('country'),
+        CaseObj.GetString('input'),
+        CaseObj.GetString('country'),
         Parsed,
         ParseError
       );
@@ -758,22 +618,22 @@ begin
       // the complete national significant number), not formatting, so the
       // "auto cases are no formatter parity gate" rule does not apply to it.
       // This is the broad regression guard for the trunk zero class of defect.
-      Assert.AreEqual(CaseObj.GetValue<string>('javaE164'), PortE164, CaseName + ' port E164 mismatch');
+      Assert.AreEqual(CaseObj.GetString('javaE164'), PortE164, CaseName + ' port E164 mismatch');
 
       // The same holds for the three FORMATTED representations: the metadata
       // driven engine covers every territory, so every case of the corpus is a
       // formatter parity gate. Divergences are collected
       // instead of asserted one by one so a single run reports the complete
       // picture.
-      if CaseObj.TryGetValue<string>('javaInternational', JavaInternational)
+      if CaseObj.TryGetString('javaInternational', JavaInternational)
         and (JavaInternational <> '') and (JavaInternational <> PortInternational) then
         Divergences.Add(CaseName + ' INTERNATIONAL: expected [' + JavaInternational
           + '] but got [' + PortInternational + ']');
-      if CaseObj.TryGetValue<string>('javaNational', JavaNational)
+      if CaseObj.TryGetString('javaNational', JavaNational)
         and (JavaNational <> '') and (JavaNational <> PortNational) then
         Divergences.Add(CaseName + ' NATIONAL: expected [' + JavaNational
           + '] but got [' + PortNational + ']');
-      if CaseObj.TryGetValue<string>('javaRfc3966', JavaRfc3966)
+      if CaseObj.TryGetString('javaRfc3966', JavaRfc3966)
         and (JavaRfc3966 <> '') and (JavaRfc3966 <> PortRfc3966) then
         Divergences.Add(CaseName + ' RFC3966: expected [' + JavaRfc3966
           + '] but got [' + PortRfc3966 + ']');
@@ -2492,23 +2352,23 @@ var
 begin
   FilePath := FindReferenceCasesFile;
   JsonValue := TJSONObject.ParseJSONValue(
-    TFile.ReadAllText(FilePath, TEncoding.UTF8));
+    ReadUtf8File(FilePath));
   Divergences := TStringList.Create;
   try
     Cases := JsonValue as TJSONArray;
     for I := 0 to Cases.Count - 1 do
     begin
       CaseObj := Cases.Items[I] as TJSONObject;
-      Assert.IsTrue(TPhoneNumberUtil.Parse(CaseObj.GetValue<string>('input'),
-        CaseObj.GetValue<string>('country'), Parsed, ParseError));
+      Assert.IsTrue(TPhoneNumberUtil.Parse(CaseObj.GetString('input'),
+        CaseObj.GetString('country'), Parsed, ParseError));
 
       { An empty carrier code is Java's "national format without any carrier
         code", so the result must be the recorded NATIONAL string. }
       Actual := TPhoneNumberUtil.FormatNationalNumberWithCarrierCode(Parsed,
         '');
-      if Actual <> CaseObj.GetValue<string>('javaNational') then
-        Divergences.Add(CaseObj.GetValue<string>('name') + ': expected ['
-          + CaseObj.GetValue<string>('javaNational') + '] but got ['
+      if Actual <> CaseObj.GetString('javaNational') then
+        Divergences.Add(CaseObj.GetString('name') + ': expected ['
+          + CaseObj.GetString('javaNational') + '] but got ['
           + Actual + ']');
     end;
 
@@ -2550,7 +2410,7 @@ var
 begin
   FilePath := FindReferenceCasesFile;
   JsonValue := TJSONObject.ParseJSONValue(
-    TFile.ReadAllText(FilePath, TEncoding.UTF8));
+    ReadUtf8File(FilePath));
   Divergences := TStringList.Create;
   try
     Cases := JsonValue as TJSONArray;
@@ -2558,11 +2418,11 @@ begin
     for I := 0 to Cases.Count - 1 do
     begin
       CaseObj := Cases.Items[I] as TJSONObject;
-      CaseName := CaseObj.GetValue<string>('name');
-      JavaNational := CaseObj.GetValue<string>('javaNational');
-      JavaInternational := CaseObj.GetValue<string>('javaInternational');
-      Assert.IsTrue(TPhoneNumberUtil.Parse(CaseObj.GetValue<string>('input'),
-        CaseObj.GetValue<string>('country'), Parsed, ParseError));
+      CaseName := CaseObj.GetString('name');
+      JavaNational := CaseObj.GetString('javaNational');
+      JavaInternational := CaseObj.GetString('javaInternational');
+      Assert.IsTrue(TPhoneNumberUtil.Parse(CaseObj.GetString('input'),
+        CaseObj.GetString('country'), Parsed, ParseError));
 
       { Every INTERNATIONAL string starts with "+<cc> " because
         prefixNumberWithCountryCallingCode always writes that head. }
@@ -2642,7 +2502,7 @@ var
 begin
   FilePath := FindReferenceCasesFile;
   JsonValue := TJSONObject.ParseJSONValue(
-    TFile.ReadAllText(FilePath, TEncoding.UTF8));
+    ReadUtf8File(FilePath));
   Divergences := TStringList.Create;
   RawFallbacks := TStringList.Create;
   try
@@ -2650,22 +2510,22 @@ begin
     for I := 0 to Cases.Count - 1 do
     begin
       CaseObj := Cases.Items[I] as TJSONObject;
-      CaseName := CaseObj.GetValue<string>('name');
-      JavaE164 := CaseObj.GetValue<string>('javaE164');
+      CaseName := CaseObj.GetString('name');
+      JavaE164 := CaseObj.GetString('javaE164');
 
       { The E164 string is used as the input on purpose: it makes every case a
         FROM_NUMBER_WITH_PLUS_SIGN case, so the expectation is the recorded
         INTERNATIONAL string - unless there is no formatting pattern, in which
         case upstream returns the raw input unchanged. }
       Assert.IsTrue(TPhoneNumberUtil.ParseAndKeepRawInput(JavaE164,
-        CaseObj.GetValue<string>('country'), Parsed, ParseError));
+        CaseObj.GetString('country'), Parsed, ParseError));
       Assert.AreEqual(Ord(pnccsFromNumberWithPlusSign),
         Ord(Parsed.CountryCodeSource), CaseName);
 
       HasFormat := ChooseFormattingPatternForCallingCode(Parsed.CountryCode,
         Parsed.NationalNumberDigits) <> nil;
       if HasFormat then
-        Expected := CaseObj.GetValue<string>('javaInternational')
+        Expected := CaseObj.GetString('javaInternational')
       else
       begin
         Expected := JavaE164;
@@ -2673,7 +2533,7 @@ begin
       end;
 
       Actual := TPhoneNumberUtil.FormatInOriginalFormat(Parsed,
-        CaseObj.GetValue<string>('country'));
+        CaseObj.GetString('country'));
       if Actual <> Expected then
         Divergences.Add(CaseName + ': expected [' + Expected + '] but got ['
           + Actual + ']');
@@ -2715,13 +2575,16 @@ function TPhoneNumberUtilTests.CodePoints(
   const ACodes: array of Integer): string;
 var
   I: Integer;
+  Wide: UnicodeString;
 begin
   { Non ASCII test data is built from code points instead of being written
     into the source, so this file stays pure ASCII - the same rule the port
-    itself follows. }
-  SetLength(Result, Length(ACodes));
+    itself follows. Built as UTF-16 and converted once: on FreePascal
+    `string` is UTF-8, where one code unit per character does not hold. }
+  SetLength(Wide, Length(ACodes));
   for I := 0 to High(ACodes) do
-    Result[I + 1] := WideChar(ACodes[I]);
+    Wide[I + 1] := WideChar(ACodes[I]);
+  Result := string(Wide);
 end;
 
 procedure TPhoneNumberUtilTests.Parse_AppliesExtractPossibleNumber;
@@ -3618,6 +3481,6 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TPhoneNumberUtilTests);
+  RegisterTest(TPhoneNumberUtilTests);
 
 end.

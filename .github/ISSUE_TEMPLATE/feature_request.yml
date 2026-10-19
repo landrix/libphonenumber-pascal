@@ -1,0 +1,22 @@
+name: Feature request
+description: Port a part of upstream libphonenumber that is missing, or improve the tooling.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The port is literal: new behaviour is ported from the Java original.
+        Please name the upstream class or method where there is one.
+  - type: textarea
+    id: what
+    attributes:
+      label: What is missing
+      description: The upstream class / method, or the tooling change.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Use case
+    validations:
+      required: true

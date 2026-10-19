@@ -1,0 +1,67 @@
+name: Bug report (port)
+description: The port behaves differently from Google's libphonenumber.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is for bugs of the Pascal PORT. Wrong number DATA (a number
+        that Google's libphonenumber rejects, misclassifies or misformats as
+        well) is an upstream metadata issue - please report it upstream, see
+        CONTRIBUTING.md ("Wrong number data? Report it upstream").
+  - type: checkboxes
+    id: upstream-check
+    attributes:
+      label: Upstream check
+      options:
+        - label: I verified that Google's libphonenumber (the demo at https://libphonenumber.appspot.com/ or the Java library) gives the expected result for the same input.
+          required: true
+  - type: input
+    id: input
+    attributes:
+      label: Input
+      description: The exact input string (spell non ASCII characters as U+XXXX if in doubt).
+    validations:
+      required: true
+  - type: input
+    id: region
+    attributes:
+      label: Region
+      description: The default region / region code passed in (e.g. DE, US, ZZ).
+    validations:
+      required: true
+  - type: input
+    id: api
+    attributes:
+      label: API called
+      description: e.g. TPhoneNumberUtil.Parse, Format(pnfNational), FindNumbers, TAsYouTypeFormatter.InputDigit
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result (what Google's libphonenumber returns)
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result (what this port returns)
+    validations:
+      required: true
+  - type: input
+    id: compiler
+    attributes:
+      label: Compiler and version
+      description: e.g. Delphi 13 Win64, FreePascal 3.2.2 x86_64-linux
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Repository version
+      description: Commit or release you are using.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else

@@ -21,7 +21,7 @@ unit LibPhoneNumber.TestingMetadata;
 
   Who links it
   ------------
-  ONLY the DUnitX test project. No unit under src/ uses this unit, and this
+  ONLY the test programs. No unit under src/ uses this unit, and this
   unit is the only one that names the three generated testing units, so a
   production binary cannot pull the test tables in - not even indirectly. That
   is the whole reason the switch works through a registration call instead of

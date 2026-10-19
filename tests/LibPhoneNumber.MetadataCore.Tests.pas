@@ -19,18 +19,37 @@ unit LibPhoneNumber.MetadataCore.Tests;
      LibPhoneNumber.Regex relies on.
 }
 
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{ The test sources are pure ASCII and spell every non ASCII character as a
+  numeric constant (#$XXXX). Without a source code page FreePascal converts
+  such a constant to an AnsiString `string` at COMPILE time through its
+  default code page and turns every character outside it into '?'. UTF-8
+  as the source code page makes that conversion lossless and matches the
+  UTF-8 string contract of the library on FreePascal. }
+{$CODEPAGE UTF8}
+{ Implicit UnicodeString <-> AnsiString conversions are the documented
+  string contract here: the runner sets the UTF-8 conversion code page, so
+  they are lossless, and the warning would bury every other one. }
+{$WARN 4105 OFF}
+{$ENDIF}
+
 interface
 
 uses
+{$IFDEF FPC}
+  Classes,
+{$ELSE}
   System.Classes,
-  DUnitX.TestFramework,
+{$ENDIF}
+  LibPhoneNumber.TestFramework,
   LibPhoneNumber.Metadata.Types,
   LibPhoneNumber.Metadata,
   LibPhoneNumber.MetadataCore;
 
 type
-  [TestFixture]
-  TMetadataCoreTests = class
+  TMetadataCoreTests = class(TTestCase)
   private
     function FindReferenceCasesFile: string;
     function BuildE164(ACountryCode: Integer; const ANsn: string): string;
@@ -45,215 +64,155 @@ type
     function CapturingGroupBody(const APattern: string; AIndex: Integer): string;
     procedure Report(const AMessage: string);
     procedure ReportList(const ACaption: string; const AItems: array of string);
-  public
+  published
     { Regex abstraction }
-    [Test]
     procedure MatchFull_RequiresTheWholeInput;
 
-    [Test]
     procedure MatchFull_AnchorsTopLevelAlternations;
 
-    [Test]
     procedure MatchPrefix_AcceptsAProperPrefixOnly;
 
-    [Test]
     procedure EmptyPattern_NeverMatches;
 
-    [Test]
     procedure EmptyInput_MatchesAPatternThatAllowsIt;
 
-    [Test]
     procedure PatternCache_ReusesCompiledPatterns;
 
     { Regex abstraction - replace operations }
-    [Test]
     procedure ReplaceAll_SubstitutesEveryMatch;
 
-    [Test]
     procedure ReplaceAll_ExpandsGroupReferencesLikeJava;
 
-    [Test]
     procedure ReplaceFirst_SubstitutesTheFirstMatchOnly;
 
-    [Test]
     procedure ReplaceFirst_AppliesTheNationalPrefixRuleToAFormatTemplate;
 
-    [Test]
     procedure ReplaceAll_IsLenientAboutMalformedTemplates;
 
-    [Test]
     procedure ReplaceAll_TreatsAnEmptyPatternAsANoOp;
 
     { Format engine }
-    [Test]
     procedure FormatEngine_PicksThePatternByLeadingDigitsAndFullMatch;
 
-    [Test]
     procedure FormatEngine_FallsBackToTheRawNsn_WhenNoPatternMatches;
 
-    [Test]
     procedure FormatEngine_UsesTheIntlFormatsForInternationalAndRfc3966;
 
-    [Test]
     procedure FormatEngine_AppendsTheExtensionPerFormat;
 
-    [Test]
     procedure FormatEngine_FormatsNonGeographicalEntities;
 
-    [Test]
     procedure FormatEngine_SupportsTheCarrierCodePath;
 
     { Extended formatter API }
-    [Test]
     procedure FormatEngine_SingleInternationalPrefix_MatchesTheUpstreamPattern;
 
-    [Test]
     procedure FormatEngine_FormatsOutOfCountryCallingNumbers;
 
-    [Test]
     procedure FormatEngine_FormatsOutOfCountryWithPreferredIntlPrefix;
 
-    [Test]
     procedure FormatEngine_FormatsNationalNumbersWithACarrierCode;
 
-    [Test]
     procedure FormatEngine_ChoosesUserDefinedFormatsByLeadingDigits;
 
-    [Test]
     procedure FormatEngine_FormatsByPattern;
 
-    [Test]
     procedure FormatEngine_DoesNotThrowOnAnUncompilableUserPattern;
 
-    [Test]
     procedure FormatEngine_ScansSeparatorsAsCodePoints;
 
     { Example numbers - upstream guarantees }
-    [Test]
     procedure ExampleNumbers_AreValid_ForEveryTerritory;
 
-    [Test]
     procedure ExampleNumbers_HaveAKnownType_ForEveryTerritory;
 
-    [Test]
     procedure ExampleNumbers_ArePossible_ForEveryTerritory;
 
-    [Test]
     procedure ExampleNumbers_ResolveToACandidateRegion;
 
-    [Test]
     procedure ExampleNumbers_ResolveExactly_ForMajorRegions;
 
-    [Test]
     procedure ExampleNumbers_ResolveToNonGeoId_ForGlobalNetworkCodes;
 
     { Reference corpus }
-    [Test]
     procedure ReferenceCases_AreValidOnTheMetadataPath;
 
-    [Test]
     procedure ReferenceCases_E164MatchesTheOracle;
 
-    [Test]
     procedure ExampleNumbers_RoundTripThroughTheParser;
 
     { Format engine gate over the whole example number
       inventory. }
-    [Test]
     procedure ExampleNumbers_FormatThroughTheEngine;
 
     { testNumberLength semantics }
-    [Test]
     procedure TooShortNumber_IsReportedAsTooShort;
 
-    [Test]
     procedure TooLongNumber_IsReportedAsTooLong;
 
-    [Test]
     procedure LocalOnlyLength_IsReportedAsLocalOnly;
 
-    [Test]
     procedure UnsupportedCallingCode_IsReportedAsInvalidCountryCode;
 
-    [Test]
     procedure TypeWithoutMetadata_IsReportedAsInvalidLength;
 
-    [Test]
     procedure FixedLineOrMobile_MergesBothLengthLists;
 
-    [Test]
     procedure FixedLineOrMobile_FallsBackToMobile_WhenNoFixedLineData;
 
-    [Test]
     procedure LocalOnlyLengths_ExistAndBehaveConsistently;
 
     { getNumberType / isValidNumberForRegion spot checks }
-    [Test]
     procedure GermanNumbers_AreTypedLikeUpstream;
 
-    [Test]
     procedure UnitedStatesNumbers_AreFixedLineOrMobile;
 
-    [Test]
     procedure IsValidNumberForRegion_RejectsMismatchedRegion;
 
-    [Test]
     procedure IsValidNumberForRegion_AcceptsSiblingRegionsOfSharedCallingCode;
 
     { Parsing helpers }
-    [Test]
     procedure ExtractCountryCode_TakesTheKnownCallingCodePrefix;
 
-    [Test]
     procedure ParsePrefixAsIdd_UsesTheMetadataInternationalPrefix;
 
-    [Test]
     procedure MaybeStripNationalPrefix_LeavesTerritoriesWithoutNationalPrefixAlone;
 
-    [Test]
     procedure MaybeStripNationalPrefix_StripsWhatTheMetadataDeclares;
 
-    [Test]
     procedure MaybeStripNationalPrefix_KeepsTheNumberViable;
 
-    [Test]
     procedure MaybeStripNationalPrefix_AppliesTheTransformRule;
 
-    [Test]
     procedure NationalPrefixForParsing_HasNoGroupThatCanMatchEmpty;
 
     { Entry path of parseHelper }
-    [Test]
     procedure UnicodeDecimalDigits_CoverTheBmpNdRuns;
 
-    [Test]
     procedure NormalizeDigits_MapsNonAsciiDigitsToAscii;
 
-    [Test]
     procedure ExtractPossibleNumber_PortsTheUpstreamSteps;
 
-    [Test]
     procedure ExtractPossibleNumber_TreatsALoneSurrogateAsUnwanted;
 
-    [Test]
     procedure IsViablePhoneNumber_PortsValidPhoneNumber;
 
-    [Test]
     procedure MaybeStripExtension_PortsTheExtnPattern;
 
-    [Test]
     procedure PhoneContext_FollowsTheRfc3966Syntax;
 
-    [Test]
     procedure BuildNationalNumberForParsing_HandlesTelUris;
   end;
 
 implementation
 
 uses
+{$IFDEF FPC}
+  SysUtils,
+{$ELSE}
   System.SysUtils,
-  System.IOUtils,
-  System.JSON,
+{$ENDIF}
+  LibPhoneNumber.TestJson,
   LibPhoneNumber.Types,
   LibPhoneNumber.PhoneNumberUtil,
   LibPhoneNumber.MetadataFormat,
@@ -370,6 +329,9 @@ end;
 function TMetadataCoreTests.DescKindName(
   AKind: TPhoneNumberDescKind): string;
 begin
+  { Every kind has a name; the default only keeps the compilers from
+    disagreeing about whether an else branch is reachable. }
+  Result := 'unknown';
   case AKind of
     pdkGeneralDesc: Result := 'generalDesc';
     pdkFixedLine: Result := 'fixedLine';
@@ -383,8 +345,6 @@ begin
     pdkUan: Result := 'uan';
     pdkVoicemail: Result := 'voicemail';
     pdkNoInternationalDialling: Result := 'noInternationalDialling';
-  else
-    Result := 'unknown';
   end;
 end;
 
@@ -424,27 +384,12 @@ end;
 function TMetadataCoreTests.FindReferenceCasesFile: string;
 const
   FileName = 'reference_cases_java_csharp.json';
-var
-  BaseDir: string;
-  Candidate: string;
-  I: Integer;
 begin
-  BaseDir := ExcludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
-
-  for I := 0 to 6 do
-  begin
-    Candidate := TPath.Combine(TPath.Combine(BaseDir, 'data'), FileName);
-    if FileExists(Candidate) then
-      Exit(Candidate);
-
-    Candidate := TPath.Combine(TPath.Combine(TPath.Combine(BaseDir, 'tests'), 'data'), FileName);
-    if FileExists(Candidate) then
-      Exit(Candidate);
-
-    BaseDir := ExcludeTrailingPathDelimiter(TPath.GetDirectoryName(BaseDir));
-    if BaseDir = '' then
-      Break;
-  end;
+  { tests/data is searched upwards from the executable and from the
+    current directory (LibPhoneNumber.TestJson.FindTestDataFile). }
+  Result := FindTestDataFile(FileName);
+  if Result <> '' then
+    Exit;
 
   Assert.Fail('Reference case file not found: tests/data/' + FileName);
   Result := '';
@@ -490,6 +435,10 @@ begin
 end;
 
 procedure TMetadataCoreTests.EmptyInput_MatchesAPatternThatAllowsIt;
+var
+  Match: TRegexPrefixMatch;
+  Value: string;
+  Start: Integer;
 begin
   { Java Matcher.matches() accepts an empty input when the pattern can match
     the empty string. The Delphi engine must therefore not be created with
@@ -500,6 +449,49 @@ begin
   Assert.IsTrue(TryMatchFull('(?:x)?', ''), 'An optional group must match the empty input.');
   Assert.IsTrue(TryMatchPrefix('a*', ''), 'lookingAt must behave the same way.');
   Assert.IsFalse(TryMatchFull('a+', ''), 'a+ must not match the empty input.');
+  Assert.IsFalse(TryMatchPrefix('a+', ''), 'lookingAt: a+ must not match the empty input.');
+
+  { The other three operations on an empty input. The TRegExpr of FreePascal
+    3.2.2 refused every empty input before it looked at the pattern; the
+    FreePascal run of this suite found that, and the regex layer works around
+    it (see EmptyInputMatches in LibPhoneNumber.Regex). Java:
+    Pattern.compile("(a)?b*").matcher("").lookingAt() is true with group 1
+    null, find() on "x*" finds the empty match at 0, "".replaceAll("x*", "Y")
+    is "Y", "".replaceAll("x+", "Y") is "". }
+  Assert.IsTrue(TryMatchPrefixEx('(a)?b*', '', Match), 'lookingAt with groups.');
+  Assert.AreEqual(1, Match.MatchEnd, 'zero length match at the start');
+  Assert.IsTrue(Match.GroupMatched[0], 'group 0 always matches');
+  Assert.AreEqual('', Match.GroupValue[0], 'group 0 is empty');
+  Assert.IsFalse(Match.GroupMatched[1], 'group 1 did not participate');
+  Assert.IsFalse(TryMatchPrefixEx('(a)b*c', '', Match), 'lookingAt: c is required.');
+
+  Assert.IsTrue(TryFindFirst('x*', '', Value, Start), 'find() on an empty input.');
+  Assert.AreEqual('', Value, 'find(): empty match');
+  Assert.AreEqual(1, Start, 'find(): at the start');
+  Assert.IsFalse(TryFindFirst('x+', '', Value, Start), 'find(): x+ needs a character.');
+
+  Assert.AreEqual('Y', ReplaceAll('x*', '', 'Y'), 'replaceAll of the empty match');
+  Assert.AreEqual('Y', ReplaceFirst('x*', '', 'Y'), 'replaceFirst of the empty match');
+  Assert.AreEqual('', ReplaceAll('x+', '', 'Y'), 'replaceAll without a match');
+
+  { Anchors INSIDE the pattern, the shapes an empty input probe can get wrong.
+    Java: "".matches(p) is true for a*$, (?:x|$), ^$, \Aa*, (?:a$|b*), \B
+    and false for \b and x$|y; "".replaceAll("(?:x|$)", "Y") is "Y". (\z is
+    not probed: regexpr 0.987 reads it as the letter z on every input, see
+    WrapFull in LibPhoneNumber.Regex.) }
+  Assert.IsTrue(TryMatchFull('a*$', ''), 'a*$ on the empty input');
+  Assert.IsTrue(TryMatchFull('(?:x|$)', ''), '(?:x|$) on the empty input');
+  Assert.IsTrue(TryMatchFull('^$', ''), '^$ on the empty input');
+  Assert.IsTrue(TryMatchPrefix('\Aa*', ''), '\Aa* on the empty input');
+  Assert.IsTrue(TryMatchFull('(?:a$|b*)', ''), '(?:a$|b*) on the empty input');
+  Assert.IsTrue(TryMatchFull('\B', ''), '\B on the empty input');
+  Assert.IsFalse(TryMatchFull('\b', ''), '\b on the empty input');
+  Assert.IsFalse(TryMatchFull('x$|y', ''), 'x$|y on the empty input');
+  Assert.IsTrue(TryFindFirst('x*$', '', Value, Start), 'find(): x*$');
+  Assert.AreEqual(1, Start, 'find(): x*$ at the start');
+  Assert.AreEqual('Y', ReplaceAll('(?:x|$)', '', 'Y'), 'replaceAll of an anchored empty match');
+  Assert.IsTrue(TryMatchPrefixEx('(a)?$', '', Match), 'lookingAt with an end anchor');
+  Assert.IsFalse(Match.GroupMatched[1], 'lookingAt: group 1 did not participate');
 end;
 
 procedure TMetadataCoreTests.PatternCache_ReusesCompiledPatterns;
@@ -1369,7 +1361,7 @@ begin
   Failures := TStringList.Create;
   ParseFailures := TStringList.Create;
   try
-    RawJson := TFile.ReadAllText(FindReferenceCasesFile, TEncoding.UTF8);
+    RawJson := ReadUtf8File(FindReferenceCasesFile);
     JsonValue := TJSONObject.ParseJSONValue(RawJson);
     try
       Assert.IsTrue(JsonValue is TJSONArray, 'Root JSON value must be an array.');
@@ -1379,9 +1371,9 @@ begin
       for I := 0 to Cases.Count - 1 do
       begin
         CaseObj := Cases.Items[I] as TJSONObject;
-        CaseName := CaseObj.GetValue<string>('name');
-        Input := CaseObj.GetValue<string>('input');
-        Country := CaseObj.GetValue<string>('country');
+        CaseName := CaseObj.GetString('name');
+        Input := CaseObj.GetString('input');
+        Country := CaseObj.GetString('country');
 
         { A parse failure and a metadata rejection are tracked separately: a
           parser regression on a case that is already an accepted metadata
@@ -1443,7 +1435,7 @@ begin
   Divergences := TStringList.Create;
   try
     Compared := 0;
-    RawJson := TFile.ReadAllText(FindReferenceCasesFile, TEncoding.UTF8);
+    RawJson := ReadUtf8File(FindReferenceCasesFile);
     JsonValue := TJSONObject.ParseJSONValue(RawJson);
     try
       Assert.IsTrue(JsonValue is TJSONArray, 'Root JSON value must be an array.');
@@ -1453,10 +1445,10 @@ begin
       for I := 0 to Cases.Count - 1 do
       begin
         CaseObj := Cases.Items[I] as TJSONObject;
-        CaseName := CaseObj.GetValue<string>('name');
-        Input := CaseObj.GetValue<string>('input');
-        Country := CaseObj.GetValue<string>('country');
-        ExpectedE164 := CaseObj.GetValue<string>('csharpE164');
+        CaseName := CaseObj.GetString('name');
+        Input := CaseObj.GetString('input');
+        Country := CaseObj.GetString('country');
+        ExpectedE164 := CaseObj.GetString('csharpE164');
 
         Inc(Compared);
         if not TPhoneNumberUtil.Parse(Input, Country, Parsed, ParseError) then
@@ -2513,11 +2505,9 @@ begin
 end;
 
 initialization
-  { Explicit registration, like every other fixture of this suite. The
-    [TestFixture] attribute alone is enough for DUnitX's RTTI scan, but half
-    the units registering explicitly and half relying on the scan is one
-    convention too many - and the explicit call is what keeps a fixture in the
-    run when a linker or an RTTI setting drops the attribute. }
-  TDUnitX.RegisterTestFixture(TMetadataCoreTests);
+  { Explicit registration, like every other fixture of this suite: the test
+    layer has no attribute scan, the call is what puts the fixture in the
+    run. }
+  RegisterTest(TMetadataCoreTests);
 
 end.

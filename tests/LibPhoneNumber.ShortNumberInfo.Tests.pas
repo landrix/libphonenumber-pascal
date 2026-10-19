@@ -32,10 +32,26 @@ unit LibPhoneNumber.ShortNumberInfo.Tests;
   its parsed PhoneNumber via GetNationalSignificantNumber.
 }
 
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{ The test sources are pure ASCII and spell every non ASCII character as a
+  numeric constant (#$XXXX). Without a source code page FreePascal converts
+  such a constant to an AnsiString `string` at COMPILE time through its
+  default code page and turns every character outside it into '?'. UTF-8
+  as the source code page makes that conversion lossless and matches the
+  UTF-8 string contract of the library on FreePascal. }
+{$CODEPAGE UTF8}
+{ Implicit UnicodeString <-> AnsiString conversions are the documented
+  string contract here: the runner sets the UTF-8 conversion code page, so
+  they are lossless, and the warning would bury every other one. }
+{$WARN 4105 OFF}
+{$ENDIF}
+
 interface
 
 uses
-  DUnitX.TestFramework,
+  LibPhoneNumber.TestFramework,
   LibPhoneNumber.Metadata.Types,
   LibPhoneNumber.ShortMetadata.Data,
   LibPhoneNumber.ShortMetadata.Descs,
@@ -43,98 +59,69 @@ uses
   LibPhoneNumber.ShortNumberInfo;
 
 type
-  [TestFixture]
-  TShortNumberInfoTests = class
+  TShortNumberInfoTests = class(TTestCase)
   private
     function CostName(ACost: TShortNumberCost): string;
     procedure CheckCost(ACountryCode: Integer; const ANationalNumber,
       ARegion: string; AExpected: TShortNumberCost);
-  public
+  published
     { --- generated short number metadata ------------------------------- }
-    [Test]
     procedure ShortMetadataProvenance_IsEmbedded;
 
-    [Test]
     procedure ShortMetadataInventory_MatchesPinnedUpstreamBaseline;
 
-    [Test]
     procedure ShortRegionCodes_AreOrdinallySortedAndUnique;
 
-    [Test]
     procedure EveryShortTerritory_IsResolvableByRegionCode;
 
-    [Test]
     procedure UnknownRegions_HaveNoShortMetadata;
 
-    [Test]
     procedure ShortCodeLengths_AreAlwaysInheritedFromTheGeneralDesc;
 
-    [Test]
     procedure TypedDescLengths_AreCoveredByTheGeneralDesc;
 
-    [Test]
     procedure ShortMetadataTableStructure_IsInternallyConsistent;
 
-    [Test]
     procedure AbsentDescriptions_UseTheUpstreamMinusOneEncoding;
 
-    [Test]
     procedure ShortNumberPatterns_CompileWithTheDelphiEngine;
 
     { --- ShortNumberInfo ----------------------------------------------- }
-    [Test]
     procedure IsEmergencyNumber_MatchesExactlyInSeveralRegions;
 
-    [Test]
     procedure ConnectsToEmergencyNumber_AllowsAppendedDigits;
 
-    [Test]
     procedure ConnectsToEmergencyNumber_IsExactInBrazilChileAndNicaragua;
 
-    [Test]
     procedure EmergencyNumbers_RejectALeadingPlusAndUnknownRegions;
 
-    [Test]
     procedure EmergencyNumbers_TolerateFormattingCharacters;
 
-    [Test]
     procedure RegionArguments_AreCanonicalised;
 
-    [Test]
     procedure IsPossibleShortNumber_IsMoreLenientThanIsValid;
 
-    [Test]
     procedure IsPossibleShortNumber_IsTheUnionOverAllRegionsOfTheCallingCode;
 
-    [Test]
     procedure ShortNumbers_AreOnlyPossibleInTheirOwnCallingCode;
 
-    [Test]
     procedure GetExpectedCostForRegion_CoversAllFourCostCategories;
 
-    [Test]
     procedure GetExpectedCostForRegion_TreatsEmergencyNumbersAsTollFree;
 
-    [Test]
     procedure GetExpectedCost_MergesTheRegionsOfASharedCallingCode;
 
-    [Test]
     procedure GetExpectedCost_IsUnknownForAnUnknownCallingCode;
 
-    [Test]
     procedure SharedCallingCode_IsValidInAnyOfItsRegions;
 
-    [Test]
     procedure IsCarrierSpecific_FollowsTheCarrierSpecificDescription;
 
-    [Test]
     procedure IsSmsServiceForRegion_FollowsTheSmsServicesDescription;
 
-    [Test]
     procedure ExampleShortNumbers_AreReadOffTheMetadata;
 
     { --- mass gate ------------------------------------------------------ }
-    [Test]
     procedure EveryShortCodeExampleNumber_IsAValidShortNumberInItsRegion;
   end;
 
@@ -875,6 +862,6 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TShortNumberInfoTests);
+  RegisterTest(TShortNumberInfoTests);
 
 end.

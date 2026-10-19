@@ -236,6 +236,25 @@ unit.
   TRegExpr. regexpr 0.987 (FreePascal 3.2.2) does not know `\z` and reads it as
   a literal `z`; `$` with `ModifierM = False` is end of input without trailing
   newline tolerance in every TRegExpr version, which is exactly `\z`.
+- **Empty input.** regexpr 0.987 answers "no match" for an EMPTY input before
+  it looks at the pattern; java.util.regex (and PCRE, and regexpr 1.x) match a
+  pattern that can match the empty string against `""` in all four
+  operations. On an empty input the only possible match is the zero length
+  one at offset 0, so for an engine older than 1.0 the layer asks whether the
+  pattern can match the empty string (`EmptyInputMatches`): at the END of the
+  one character input `#10` (`ExecPos(2)`), compiled in multi line mode as
+  `^(?:p)$`, with every `\A` of `p` outside a class rewritten to `^`. There
+  `^`, `$`, `\b` and `\B` answer exactly as at offset 0 of an empty input,
+  and 0.987 has no lookaround that could see the line break; its `\Z` is an
+  end anchor like `$`, its `\z` the letter `z` on every input (see
+  Anchoring). An earlier sentinel AFTER the pattern got anchors inside it
+  wrong (`a*$`, `(?:x|$)`); the suite and the runtime gate's regex probes pin
+  anchored shapes on the empty input. Found by the FreePascal run of the test
+  suite on FPC 3.2.2. Known limitation, deliberately not rewritten for this
+  legacy engine (KNOWN_ISSUES.md, permanent item 8): a `(?-m)` group
+  (`(?-m)^$`, `(?-m)\A`) and a `(?#...)` comment containing `[` before a
+  `\A` answer False instead of True on an empty input. No metadata pattern
+  has either shape.
 - **Counted quantifier rewrite.** regexpr 0.987 evaluates counted quantifiers
   wrongly in shapes the metadata uses everywhere (`(\d{3})(\d{3})` on `712345`
   reports group 1 = `712345`). For an engine older than 1.0 every `A{n}`,
@@ -348,17 +367,31 @@ has to switch the metadata the same way and say so in its header.
 
 | gate | what it proves |
 | --- | --- |
-| DUnitX suite (`tools/run_delphi_tests.ps1`) | ported upstream suites, oracle based production tests, parser gates over the reference corpus and every example number |
+| test suite on Delphi (`tools/run_delphi_tests.ps1`) | ported upstream suites, oracle based production tests, parser gates over the reference corpus and every example number |
+| test suite on FreePascal (`tools/run_fpc_tests.ps1`) | the same program and the same expectations, built with FreePascal |
 | generated unit check (`run_update_workflow.ps1 -FailOnDiff`) | the committed generated units are the exact output of the generator plus the pinned XMLs |
 | length compare gate | the possible-length model of the generated units equals the upstream XML, per territory, in both directions |
 | mass differential (`-RunMassDifferential`) | every example number agrees with the oracle on parse, four formats, possible, valid, type and region |
 | FreePascal compile check | every hand written unit of `src/` compiles with FreePascal; any warning fails |
 | FreePascal runtime check | a Delphi and a FreePascal build of `tools/fpcruntime/PhoneNumbersFpcRuntime.dpr` write byte identical observation files |
 
+The test suite is ONE program (`tests/LibPhoneNumberTests.dpr`) on a test
+layer of its own (`tests/framework/`): fixtures derive from `TTestCase`, their
+tests are their published methods (found through the published method table,
+whose layout the layer handles per compiler), and the `Assert` class is source
+compatible with the DUnitX subset the suite was written against. No
+attributes, no RTTI unit and no external framework, which is what lets the
+same source run on FreePascal 3.2. Two FreePascal specific rules of the test
+sources follow from the string contract: `{$CODEPAGE UTF8}` in every test
+unit, so a `#$XXXX` constant reaches a UTF-8 `string` intact, and Java String
+lengths and offsets measured on the `UnicodeString` form. The GitHub workflow
+runs the FreePascal suite on Ubuntu with the distribution's FreePascal
+(x86_64) and publishes its JUnit report.
+
 The runtime gate's mandatory toolchain is FreePascal 3.2.4 in WSL;
-`-Toolchain Native` (Windows FPC) and `-Toolchain Mac` are extra runs. The DUnitX
-suite itself is Delphi only; the runtime driver is what runs every unit on
-FreePascal. It refuses to pass vacuously: every section counter must be
+`-Toolchain Native` (Windows FPC) and `-Toolchain Mac` are extra runs. It
+checks identity rather than expectations, over a far larger input space than
+the suite. It refuses to pass vacuously: every section counter must be
 positive and the exception, pattern failure, rewrite mismatch and expansion
 probe counters must be zero.
 

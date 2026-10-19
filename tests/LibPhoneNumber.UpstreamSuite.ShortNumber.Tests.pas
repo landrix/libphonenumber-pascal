@@ -38,10 +38,26 @@ unit LibPhoneNumber.UpstreamSuite.ShortNumber.Tests;
   All 28 test methods of ShortNumberInfoTest are ported; nothing is left out.
 }
 
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{ The test sources are pure ASCII and spell every non ASCII character as a
+  numeric constant (#$XXXX). Without a source code page FreePascal converts
+  such a constant to an AnsiString `string` at COMPILE time through its
+  default code page and turns every character outside it into '?'. UTF-8
+  as the source code page makes that conversion lossless and matches the
+  UTF-8 string contract of the library on FreePascal. }
+{$CODEPAGE UTF8}
+{ Implicit UnicodeString <-> AnsiString conversions are the documented
+  string contract here: the runner sets the UTF-8 conversion code page, so
+  they are lossless, and the warning would bury every other one. }
+{$WARN 4105 OFF}
+{$ENDIF}
+
 interface
 
 uses
-  DUnitX.TestFramework,
+  LibPhoneNumber.TestFramework,
   LibPhoneNumber.Types,
   LibPhoneNumber.Metadata,
   LibPhoneNumber.TestingMetadata,
@@ -49,8 +65,7 @@ uses
   LibPhoneNumber.PhoneNumberUtil;
 
 type
-  [TestFixture]
-  TUpstreamShortNumberInfoTests = class
+  TUpstreamShortNumberInfoTests = class(TTestCase)
   private
     { Upstream ShortNumberInfoTest.parse: the test data must always parse. }
     function ParseOk(const ANumber, ARegion: string): TPhoneNumber;
@@ -59,73 +74,48 @@ type
     procedure CheckCostNoRegion(ACountryCode: Integer; const ANsn: string;
       AExpected: TShortNumberCost);
   public
-    [Setup]
-    procedure Setup;
-    [TearDown]
-    procedure TearDown;
+    procedure Setup; override;
+    procedure TearDown; override;
 
-    [Test]
+  published
     procedure Test_IsPossibleShortNumber;
-    [Test]
     procedure Test_IsValidShortNumber;
-    [Test]
     procedure Test_IsCarrierSpecific;
-    [Test]
     procedure Test_IsSmsService;
-    [Test]
     procedure Test_GetExpectedCost;
-    [Test]
     procedure Test_GetExpectedCostForSharedCountryCallingCode;
-    [Test]
     procedure Test_ExampleShortNumberPresence;
-    [Test]
     procedure Test_ConnectsToEmergencyNumber_US;
-    [Test]
     procedure Test_ConnectsToEmergencyNumberLongNumber_US;
-    [Test]
     procedure Test_ConnectsToEmergencyNumberWithFormatting_US;
-    [Test]
     procedure Test_ConnectsToEmergencyNumberWithPlusSign_US;
-    [Test]
     procedure Test_ConnectsToEmergencyNumber_BR;
-    [Test]
     procedure Test_ConnectsToEmergencyNumberLongNumber_BR;
-    [Test]
     procedure Test_ConnectsToEmergencyNumber_CL;
-    [Test]
     procedure Test_ConnectsToEmergencyNumberLongNumber_CL;
-    [Test]
     procedure Test_ConnectsToEmergencyNumber_AO;
-    [Test]
     procedure Test_ConnectsToEmergencyNumber_ZW;
-    [Test]
     procedure Test_IsEmergencyNumber_US;
-    [Test]
     procedure Test_IsEmergencyNumberLongNumber_US;
-    [Test]
     procedure Test_IsEmergencyNumberWithFormatting_US;
-    [Test]
     procedure Test_IsEmergencyNumberWithPlusSign_US;
-    [Test]
     procedure Test_IsEmergencyNumber_BR;
-    [Test]
     procedure Test_IsEmergencyNumberLongNumber_BR;
-    [Test]
     procedure Test_IsEmergencyNumber_AO;
-    [Test]
     procedure Test_IsEmergencyNumber_ZW;
-    [Test]
     procedure Test_EmergencyNumberForSharedCountryCallingCode;
-    [Test]
     procedure Test_OverlappingNANPANumber;
-    [Test]
     procedure Test_CountryCallingCodeIsNotIgnored;
   end;
 
 implementation
 
 uses
+{$IFDEF FPC}
+  SysUtils;
+{$ELSE}
   System.SysUtils;
+{$ENDIF}
 
 const
   RC_AD = 'AD';
@@ -492,6 +482,6 @@ begin
 end;
 
 initialization
-  TDUnitX.RegisterTestFixture(TUpstreamShortNumberInfoTests);
+  RegisterTest(TUpstreamShortNumberInfoTests);
 
 end.

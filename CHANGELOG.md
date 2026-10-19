@@ -2,6 +2,70 @@
 
 All notable changes to this repository are documented in this file.
 
+## Unreleased
+
+### Tests on Delphi and FreePascal
+
+- DUnitX is gone. The suite runs on a small test layer of its own in
+  `tests/framework/`: `TTestCase` with virtual `Setup` / `TearDown`, tests as
+  PUBLISHED methods found through the published method table (the Delphi
+  layout and the packed / aligned layouts of FreePascal 3.2 / 3.3 are handled
+  and cross-checked against `MethodAddress`), explicit `RegisterTest`, an
+  `Assert` class source compatible with the DUnitX subset the suite uses, a
+  console runner (`--filter`, `--junit`, `--verbose`, `--list`; exit code 0
+  only when everything passed) and a minimal JSON reader that replaces
+  `System.JSON`.
+- One test program, `tests/LibPhoneNumberTests.dpr` (+ `.dproj`), for both
+  compilers; it replaces `DUnitXCmdTest` and `DUnitXGuiRunner`. The test units
+  were converted mechanically (attributes dropped, tests moved to `published`,
+  `Setup` / `TearDown` as overrides). Beyond that: `{$MODE DELPHI}`,
+  `{$CODEPAGE UTF8}` and `{$WARN 4105 OFF}` for FreePascal in every test unit;
+  `System.IOUtils` / `System.JSON` replaced by the test layer; the data file
+  lookup shared (`FindTestDataFile`, which also searches from the current
+  directory); `TRegEx` in `LibPhoneNumber.Metadata.Tests` replaced by the
+  port's regex layer on FreePascal only; and a handful of test-local lengths
+  and offsets (the `CodePoints` helper, two string length preconditions, the
+  match region of the upstream matcher helper) measured on the UTF-16 form,
+  because on FreePascal `string` is UTF-8.
+- `tools/run_fpc_tests.ps1` builds and runs the suite with FreePascal
+  (`-Toolchain Wsl | Native | Mac`, `-FpcPath`, `-JUnit`, `-Filter`,
+  `-BuildOnly`, `-RequireFpc`); `Native` also works under `pwsh` on Linux and
+  macOS. The toolchain helpers it shares with `run_fpc_runtime_check.ps1`
+  moved into `tools/fpc_toolchains.ps1`. `tools/run_delphi_tests.ps1` builds
+  the new program and takes `-JUnit` and `-Filter`.
+- `run_update_workflow.ps1` runs the FreePascal suite as a step of its own
+  (`-SkipFpcTests`; `-RequireFpc` applies), and so does
+  `run_pr_quick_check.ps1`.
+- CI: a second job on Ubuntu 24.04 installs the distribution's FreePascal
+  (3.2.2, x86_64) and runs the compile check, the whole suite with its JUnit
+  report as an artifact, and the sample.
+
+### Contributing
+
+- `CONTRIBUTING.md` (where data issues go, the rules for changes, the checks
+  before a pull request, Apache-2.0 inbound = outbound), issue templates for
+  port bugs and feature requests with a contact link that routes metadata
+  problems upstream (`.github/ISSUE_TEMPLATE/`), and a pull request template.
+
+### Fixed
+
+- Regex layer on FreePascal 3.2.2: regexpr 0.987 answers "no match" for an
+  EMPTY input whatever the pattern, while java.util.regex matches a pattern
+  that can match the empty string against `""`. For an engine older than 1.0
+  the layer now decides the empty input with a probe at the end of a one
+  character input in multi line mode (`EmptyInputMatches`; `\A` rewritten to
+  `^`), which keeps anchors inside the pattern exact, in all four operations.
+  Found by the FreePascal run of `EmptyInput_MatchesAPatternThatAllowsIt`,
+  which now also covers the prefix match with groups, `find()`, both replace
+  operations and anchored shapes (`a*$`, `(?:x|$)`, `^$`, `\Aa*`, `\b`,
+  `\B`); the runtime gate driver probes the same shapes on Delphi and
+  FreePascal. Delphi and regexpr 1.x are unchanged.
+- Test runner: `--filter` without a non-empty entry is a usage error; an
+  inherited published test runs once, as the concrete fixture's method.
+  Relative `-WorkDir` / `-JUnit` paths of the FreePascal scripts (and of
+  `run_delphi_tests.ps1`, `run_mass_differential.ps1`, `run_benchmark.ps1`)
+  are made absolute first.
+
 ## 0.1.0 - unreleased
 
 Initial import of the Pascal port of libphonenumber, built from upstream

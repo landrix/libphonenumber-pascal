@@ -10,9 +10,16 @@ param(
   # observation files byte for byte. A step of its own right after the compile
   # check; -SkipFpcRuntime is the only way to skip it.
   [switch]$SkipFpcRuntime,
-  # Forwarded to tools/check_fpc_compile.ps1 AND tools/run_fpc_runtime_check.ps1:
-  # turn a missing FreePascal compiler from a warning into a failure.
+  # The FreePascal TEST SUITE (tools/run_fpc_tests.ps1): the whole test
+  # program built and run with FreePascal (WSL toolchain by default). A step
+  # of its own after the runtime check; -SkipFpcTests is the only way to skip
+  # it, -SkipTests skips the Delphi run only.
+  [switch]$SkipFpcTests,
+  # Forwarded to tools/check_fpc_compile.ps1, tools/run_fpc_runtime_check.ps1
+  # AND tools/run_fpc_tests.ps1: turn a missing FreePascal compiler from a
+  # warning into a failure.
   [switch]$RequireFpc,
+  # Skips the Delphi test run.
   [switch]$SkipTests,
   [switch]$FailOnDiff,
   # The mass differential runner parses and
@@ -166,6 +173,17 @@ if (-not $SkipFpcRuntime) {
   Write-Host "Skipping the FreePascal runtime check (-SkipFpcRuntime)."
 }
 
+if (-not $SkipFpcTests) {
+  Invoke-Step "FreePascal test suite" {
+    # The same test program the Delphi step runs, built and run with
+    # FreePascal (default toolchain: WSL). A soft skip with a warning when the
+    # toolchain is missing; -RequireFpc makes that a failure.
+    & (Join-Path $PSScriptRoot "run_fpc_tests.ps1") -RequireFpc:$RequireFpc
+  }
+} else {
+  Write-Host "Skipping the FreePascal test suite (-SkipFpcTests)."
+}
+
 # The compare gate: it diffs the GENERATED metadata - the actual runtime
 # data - against the upstream XML, per territory and over the whole
 # possible-length set.
@@ -202,7 +220,7 @@ if ($diffTotal -gt 0 -and $FailOnDiff) {
 }
 
 if (-not $SkipTests) {
-  Invoke-Step "Run Delphi test suite" {
+  Invoke-Step "Delphi test suite" {
     & (Join-Path $PSScriptRoot "run_delphi_tests.ps1") -StudioRoot $StudioRoot -Config $Config -Platform $Platform
   }
 } else {

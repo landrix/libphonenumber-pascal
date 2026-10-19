@@ -27,98 +27,98 @@ unit LibPhoneNumber.AsYouTypeFormatter.Tests;
   of this port (ASCII digits only).
 }
 
+{$IFDEF FPC}
+{$MODE DELPHI}
+{$H+}
+{ The test sources are pure ASCII and spell every non ASCII character as a
+  numeric constant (#$XXXX). Without a source code page FreePascal converts
+  such a constant to an AnsiString `string` at COMPILE time through its
+  default code page and turns every character outside it into '?'. UTF-8
+  as the source code page makes that conversion lossless and matches the
+  UTF-8 string contract of the library on FreePascal. }
+{$CODEPAGE UTF8}
+{ Implicit UnicodeString <-> AnsiString conversions are the documented
+  string contract here: the runner sets the UTF-8 conversion code page, so
+  they are lossless, and the warning would bury every other one. }
+{$WARN 4105 OFF}
+{$ENDIF}
+
 interface
 
 uses
+{$IFDEF FPC}
+  Classes,
+{$ELSE}
   System.Classes,
-  DUnitX.TestFramework;
+{$ENDIF}
+  LibPhoneNumber.TestFramework;
 
 type
-  [TestFixture]
-  TAsYouTypeFormatterTests = class
+  TAsYouTypeFormatterTests = class(TTestCase)
   private
     function FindReferenceFile: string;
     function LoadDocument: TObject;
     procedure Report(const AMessage: string);
     procedure ReportList(const ACaption: string; AItems: TStringList);
-  public
+  published
     { Oracle anchored: AsYouTypeFormatter }
-    [Test]
     procedure AytfSequences_MatchTheOracleCharacterByCharacter;
 
-    [Test]
     procedure AytfRememberedPosition_MatchesTheOracle;
 
-    [Test]
     procedure AytfClearAndReuse_MatchesTheOracle;
 
-    [Test]
     procedure AytfSmoke_ExampleNumbersOfManyRegions_MatchTheOracle;
 
     { Oracle anchored: the two remaining PhoneNumberUtil format entry points }
-    [Test]
     procedure FormatNumberForMobileDialing_MatchesTheOracle;
 
-    [Test]
     procedure FormatOutOfCountryKeepingAlphaChars_MatchesTheOracle;
 
     { Ported scanners and helpers }
-    [Test]
     procedure IsFormatEligible_AcceptsTheUpstreamGrammarOnly;
 
-    [Test]
     procedure IsFormatEligible_RejectsEveryBaselineFormatItShould;
 
-    [Test]
     procedure NationalPrefixHasSeparator_FindsDashAndSpace;
 
-    [Test]
     procedure FormattingRuleHasFirstGroupOnly_MatchesTheUpstreamPattern;
 
-    [Test]
     procedure MapAlphaCharacterToDigit_IsTheDialPadTable;
 
-    [Test]
     procedure ConvertAlphaCharactersInNumber_KeepsEverythingElse;
 
-    [Test]
     procedure NormalizeAlphaPhoneOrDigits_NeedsThreeLettersToConvert;
 
-    [Test]
     procedure NormalizeAllPlusNumberGroupingSymbols_KeepsGroupingOnly;
 
-    [Test]
     procedure TryFindFirst_ReturnsTheLeftmostUnanchoredMatch;
 
-    [Test]
     procedure IsViablePhoneNumber_GuardsTheExtensionStrip;
 
-    [Test]
     procedure KeepingAlphaChars_DoesNotStripAnExtensionFromAnUnviablePrefix;
 
-    [Test]
     procedure CanBeInternationallyDialled_FollowsNoInternationalDialling;
 
     { Behaviour of the class itself }
-    [Test]
     procedure Clear_ResetsTheFormatterForReuse;
 
-    [Test]
     procedure NonAsciiDigits_AreNormalisedLikeUpstream;
 
-    [Test]
     procedure UnknownRegion_StillFormatsNumbersEnteredWithPlus;
 
-    [Test]
     procedure ConstructorRegion_IsCanonicalised;
   end;
 
 implementation
 
 uses
+{$IFDEF FPC}
+  SysUtils,
+{$ELSE}
   System.SysUtils,
-  System.IOUtils,
-  System.JSON,
+{$ENDIF}
+  LibPhoneNumber.TestJson,
   LibPhoneNumber.Types,
   LibPhoneNumber.Metadata.Types,
   LibPhoneNumber.Metadata,
@@ -134,7 +134,7 @@ const
 
 procedure TAsYouTypeFormatterTests.Report(const AMessage: string);
 begin
-  TDUnitX.CurrentRunner.Log(TLogLevel.Information, AMessage);
+  LogMessage(AMessage);
 end;
 
 procedure TAsYouTypeFormatterTests.ReportList(const ACaption: string;
@@ -153,26 +153,12 @@ begin
 end;
 
 function TAsYouTypeFormatterTests.FindReferenceFile: string;
-var
-  BaseDir, Candidate: string;
-  I: Integer;
 begin
-  BaseDir := ExcludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
-  for I := 0 to 6 do
-  begin
-    Candidate := TPath.Combine(TPath.Combine(BaseDir, 'data'), ReferenceFileName);
-    if FileExists(Candidate) then
-      Exit(Candidate);
-
-    Candidate := TPath.Combine(TPath.Combine(TPath.Combine(BaseDir, 'tests'),
-      'data'), ReferenceFileName);
-    if FileExists(Candidate) then
-      Exit(Candidate);
-
-    BaseDir := ExcludeTrailingPathDelimiter(TPath.GetDirectoryName(BaseDir));
-    if BaseDir = '' then
-      Break;
-  end;
+  { tests/data is searched upwards from the executable and from the
+    current directory (LibPhoneNumber.TestJson.FindTestDataFile). }
+  Result := FindTestDataFile(ReferenceFileName);
+  if Result <> '' then
+    Exit;
 
   Assert.Fail('Reference case file not found: tests/data/' + ReferenceFileName);
   Result := '';
@@ -183,7 +169,7 @@ var
   RawJson: string;
   Value: TJSONValue;
 begin
-  RawJson := TFile.ReadAllText(FindReferenceFile, TEncoding.UTF8);
+  RawJson := ReadUtf8File(FindReferenceFile);
   Value := TJSONObject.ParseJSONValue(RawJson);
   Assert.IsTrue(Value is TJSONObject,
     'Root JSON value of ' + ReferenceFileName + ' must be an object.');
@@ -248,9 +234,9 @@ begin
       for I := 0 to Cases.Count - 1 do
       begin
         CaseObj := Cases.Items[I] as TJSONObject;
-        Name := CaseObj.GetValue<string>('name');
-        Region := CaseObj.GetValue<string>('region');
-        Input := CaseObj.GetValue<string>('input');
+        Name := CaseObj.GetString('name');
+        Region := CaseObj.GetString('region');
+        Input := CaseObj.GetString('input');
         Expected := JsonStringArray(CaseObj, 'outputs');
 
         RunSequence(Region, Input, Outputs);
@@ -308,9 +294,9 @@ begin
       for I := 0 to Cases.Count - 1 do
       begin
         CaseObj := Cases.Items[I] as TJSONObject;
-        Name := CaseObj.GetValue<string>('name');
-        Region := CaseObj.GetValue<string>('region');
-        Input := CaseObj.GetValue<string>('input');
+        Name := CaseObj.GetString('name');
+        Region := CaseObj.GetString('region');
+        Input := CaseObj.GetString('input');
         RememberIndices := JsonStringArray(CaseObj, 'rememberIndices');
         ExpectedOutputs := JsonStringArray(CaseObj, 'outputs');
         ExpectedPositions := JsonStringArray(CaseObj, 'positions');
@@ -382,10 +368,10 @@ begin
       for I := 0 to Cases.Count - 1 do
       begin
         CaseObj := Cases.Items[I] as TJSONObject;
-        Name := CaseObj.GetValue<string>('name');
-        Region := CaseObj.GetValue<string>('region');
-        FirstInput := CaseObj.GetValue<string>('firstInput');
-        SecondInput := CaseObj.GetValue<string>('secondInput');
+        Name := CaseObj.GetString('name');
+        Region := CaseObj.GetString('region');
+        FirstInput := CaseObj.GetString('firstInput');
+        SecondInput := CaseObj.GetString('secondInput');
         ExpectedFirst := JsonStringArray(CaseObj, 'firstOutputs');
         ExpectedSecond := JsonStringArray(CaseObj, 'secondOutputs');
 
@@ -457,9 +443,9 @@ begin
       for I := 0 to Cases.Count - 1 do
       begin
         CaseObj := Cases.Items[I] as TJSONObject;
-        Region := CaseObj.GetValue<string>('region');
-        Input := CaseObj.GetValue<string>('input');
-        Expected := CaseObj.GetValue<string>('expected');
+        Region := CaseObj.GetString('region');
+        Input := CaseObj.GetString('input');
+        Expected := CaseObj.GetString('expected');
 
         RunSequence(Region, Input, Outputs);
         Assert.IsTrue(Outputs.Count > 0, Region + ': no output at all.');
@@ -514,13 +500,13 @@ begin
       for I := 0 to Cases.Count - 1 do
       begin
         CaseObj := Cases.Items[I] as TJSONObject;
-        Name := CaseObj.GetValue<string>('name');
-        Input := CaseObj.GetValue<string>('input');
-        Region := CaseObj.GetValue<string>('region');
-        From := CaseObj.GetValue<string>('regionCallingFrom');
-        WithFormatting := CaseObj.GetValue<Boolean>('withFormatting');
-        KeepRaw := CaseObj.GetValue<Boolean>('keepRawInput');
-        Expected := CaseObj.GetValue<string>('expected');
+        Name := CaseObj.GetString('name');
+        Input := CaseObj.GetString('input');
+        Region := CaseObj.GetString('region');
+        From := CaseObj.GetString('regionCallingFrom');
+        WithFormatting := CaseObj.GetBoolean('withFormatting');
+        KeepRaw := CaseObj.GetBoolean('keepRawInput');
+        Expected := CaseObj.GetString('expected');
 
         if KeepRaw then
           Parsed := TPhoneNumberUtil.ParseAndKeepRawInput(Input, Region,
@@ -581,11 +567,11 @@ begin
       for I := 0 to Cases.Count - 1 do
       begin
         CaseObj := Cases.Items[I] as TJSONObject;
-        Name := CaseObj.GetValue<string>('name');
-        RawInput := CaseObj.GetValue<string>('rawInput');
-        Region := CaseObj.GetValue<string>('region');
-        From := CaseObj.GetValue<string>('regionCallingFrom');
-        Expected := CaseObj.GetValue<string>('expected');
+        Name := CaseObj.GetString('name');
+        RawInput := CaseObj.GetString('rawInput');
+        Region := CaseObj.GetString('region');
+        From := CaseObj.GetString('regionCallingFrom');
+        Expected := CaseObj.GetString('expected');
 
         if not TPhoneNumberUtil.ParseAndKeepRawInput(RawInput, Region, Number,
           ParseError) then
@@ -1054,11 +1040,9 @@ begin
 end;
 
 initialization
-  { Explicit registration, like every other fixture of this suite. The
-    [TestFixture] attribute alone is enough for DUnitX's RTTI scan, but half
-    the units registering explicitly and half relying on the scan is one
-    convention too many - and the explicit call is what keeps a fixture in the
-    run when a linker or an RTTI setting drops the attribute. }
-  TDUnitX.RegisterTestFixture(TAsYouTypeFormatterTests);
+  { Explicit registration, like every other fixture of this suite: the test
+    layer has no attribute scan, the call is what puts the fixture in the
+    run. }
+  RegisterTest(TAsYouTypeFormatterTests);
 
 end.
