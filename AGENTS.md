@@ -10,8 +10,8 @@ libphonenumber-pascal is a literal Object Pascal port of Google's
 libphonenumber for Delphi AND FreePascal: `src/` holds the library (hand
 written units plus generated metadata units), `tests/` the test suite (one
 program on a test layer of its own in `tests/framework/`, for Delphi and
-FreePascal), `tools/` the generator and the gates, `samples/` a console
-sample.
+FreePascal), `tools/` the generator and the gates, `samples/` the sample
+programs with their expected output, `docs/GUIDE.md` the user guide.
 
 ## Current State
 
@@ -22,13 +22,14 @@ nowhere else. `README.md`, `docs/ARCHITECTURE.md`, `tools/README.md` and
 many there are; a number repeated in one of them is a bug in that file. Update
 this block, with its date, in the same change that moves a number.
 
-As of 2026-10-19 (the facade takes a parsed `TPhoneNumber` for every validation, typing and region method upstream offers on a `PhoneNumber`, four tests more; the parse driver steps `maybeStripInternationalPrefixAndNormalize` and `maybeExtractCountryCode` are public, their two upstream tests are ported, and an empty international prefix is a zero length IDD match as upstream - CO of the testing metadata parses differently, production does not; the regex layer validates every pattern unwrapped as well; the workflow and the quick check run the FreePascal runtime gate and test suite on WSL FreePascal 3.2.4 AND 3.2.2 by default):
+As of 2026-10-19 (user documentation: the user guide `docs/GUIDE.md`, the sample programs with golden outputs checked by `tools/run_samples.ps1` on Delphi and every FreePascal toolchain - a step of the workflow, the quick check and the CI FreePascal job -, the README restructured for users; before that: the facade takes a parsed `TPhoneNumber` for every validation, typing and region method upstream offers on a `PhoneNumber`, four tests more; the parse driver steps `maybeStripInternationalPrefixAndNormalize` and `maybeExtractCountryCode` are public, their two upstream tests are ported, and an empty international prefix is a zero length IDD match as upstream - CO of the testing metadata parses differently, production does not; the regex layer validates every pattern unwrapped as well; the workflow and the quick check run the FreePascal runtime gate and test suite on WSL FreePascal 3.2.4 AND 3.2.2 by default):
 
 | item | value |
 | --- | --- |
 | Test suite (Delphi + FreePascal) | 567 tests in 10 fixtures, one program `tests/LibPhoneNumberTests.dpr`, all green on Delphi 13 Win64 (`tools/run_delphi_tests.ps1`) and on FreePascal 3.2.4 aarch64-linux (WSL, the default), 3.2.2 aarch64-linux (WSL distribution package), 3.3.1 aarch64-linux (WSL), 3.3.1 aarch64-win64 and 3.2.4 aarch64-darwin (Mac), plus 3.2.2 x86_64-linux (Ubuntu 24.04 distribution package, verified in an emulated container; CI) |
 | FreePascal test suite gate | `tools/run_fpc_tests.ps1`: build + run about 25-30 s on WSL, 8 s Native, 7 s on the Mac; a step of `run_update_workflow.ps1` (`-SkipFpcTests`) and of `run_pr_quick_check.ps1`, run once per `-FpcToolchains` entry - by default WSL 3.2.4 AND WSL 3.2.2 (`/usr/bin/fpc`); the whole quick check about 110 s with both toolchains on an otherwise idle machine |
-| CI | `.github/workflows/quick-check.yml`: job `quick-check` (windows-latest; generator, generated unit check, compare gate - no compiler) and job `freepascal` (ubuntu-24.04, distribution FPC 3.2.2 x86_64: compile check, the whole suite with a JUnit artifact, the sample). `.github/workflows/upstream-release-check.yml` (ubuntu-latest, weekly and manual): `tools/check_upstream_release.ps1` opens an issue when google/libphonenumber has a release newer than `Get-OraclePin` |
+| Samples | 8 programs in `samples/`, each with a golden output `samples/expected/<name>.txt` (ASCII, LF). `tools/run_samples.ps1` builds, runs and compares them; identical output on Delphi 13 Win64, FreePascal 3.2.4 aarch64-linux (WSL), 3.2.2 aarch64-linux (WSL), 3.3.1 aarch64-win64 and 3.2.4 aarch64-darwin (Mac). Build + run of all 8 about 4-7 s per compiler. A step of `run_update_workflow.ps1` and `run_pr_quick_check.ps1` (`-SkipSamples`): Delphi once, then each `-FpcToolchains` entry |
+| CI | `.github/workflows/quick-check.yml`: job `quick-check` (windows-latest; generator, generated unit check, compare gate - no compiler) and job `freepascal` (ubuntu-24.04, distribution FPC 3.2.2 x86_64: compile check, the whole suite with a JUnit artifact, every sample built, run and compared with its golden output). `.github/workflows/upstream-release-check.yml` (ubuntu-latest, weekly and manual): `tools/check_upstream_release.ps1` opens an issue when google/libphonenumber has a release newer than `Get-OraclePin` |
 | Generator inputs | 4 upstream XMLs |
 | Generated units | 9 (`Metadata.{Data,Descs,Formats}`, `ShortMetadata.{Data,Descs}`, `TestingMetadata.{Data,Descs,Formats}`, `AlternateFormats.Data`) |
 | Hand written `src/` units | 13 |
@@ -184,8 +185,8 @@ out the pinned commits. To refresh upstream:
    WITHOUT `-FailOnDiff`: the regenerated units are not committed yet, and the
    generated-unit check compares against the committed state. This run
    regenerates the units, restores the new oracle and refreshes the reference
-   cases, and runs the FreePascal checks, the length compare, the Delphi tests
-   and the mass differential. Without `-FailOnDiff` a non-zero compare or a
+   cases, and runs the FreePascal checks, the samples, the length compare, the
+   Delphi tests and the mass differential. Without `-FailOnDiff` a non-zero compare or a
    finding does not stop the run, so read the compare summary and
    `tests/data/mass_differential_findings.json`. If the example number corpus
    changed size, the mass differential throws: update the `-ExpectedCaseCount`
@@ -193,6 +194,12 @@ out the pinned commits. To refresh upstream:
    `tests/data/aytf_reference_cases.json` (`tools/generate_aytf_cases.ps1`) is
    a separate, conscious step.
 4. Review the diffs, update the manifest above and `CHANGELOG.md`, commit.
+   The samples step of the workflow fails when a refresh changed a value a
+   sample prints (an example number, a format): review the difference,
+   rewrite the golden files with
+   `pwsh -NoProfile -File tools/run_samples.ps1 -UpdateExpected`, re-run the
+   samples on the FreePascal toolchains, and update the values
+   `docs/GUIDE.md` (and the README quick start) quote from them.
 5. `pwsh -NoProfile -ExecutionPolicy Bypass -File tools/run_update_workflow.ps1 -FailOnDiff -RunMassDifferential`
    verifies the committed state; `tools/run_pr_quick_check.ps1` is the cheap
    variant.
@@ -203,29 +210,31 @@ with `-FailOnDiff` verify with `git status --porcelain` that the nine generated
 units equal the committed state, the FreePascal compile check
 (`-SkipFpcCheck`), the FreePascal runtime check (`-SkipFpcRuntime`), the
 FreePascal test suite (`tools/run_fpc_tests.ps1`; `-SkipFpcTests`), the
-length compare gate (export snapshot, extract upstream rules, compare; with
+samples (`tools/run_samples.ps1`, Delphi and every FreePascal toolchain;
+`-SkipSamples`), the length compare gate (export snapshot, extract upstream rules, compare; with
 `-FailOnDiff` a non-zero counter fails), the Delphi test suite (`-SkipTests`,
 which skips the Delphi run only) and, with `-RunMassDifferential`, the mass
-differential (a hard gate with `-FailOnDiff`). The runtime check and the
-FreePascal test suite run once per entry of `-FpcToolchains` (`<Toolchain>` or
+differential (a hard gate with `-FailOnDiff`). The runtime check, the
+FreePascal test suite and the FreePascal half of the samples run once per
+entry of `-FpcToolchains` (`<Toolchain>` or
 `<Toolchain>=<compiler path>`; default `Wsl`, `Wsl=/usr/bin/fpc`, i.e. the WSL
 FreePascal 3.2.4 and the 3.2.2 of the distribution package, whose regexpr
 0.987 takes code paths of its own in the regex layer); every runtime run is
 compared against the same Delphi reference, which is built once. Pass one
-entry to restrict both steps (`-FpcToolchains Wsl`). `-RequireFpc` turns a
-missing FreePascal into a failure in all three FreePascal steps, for EVERY
+entry to restrict these steps (`-FpcToolchains Wsl`). `-RequireFpc` turns a
+missing FreePascal into a failure in every FreePascal step, for EVERY
 configured toolchain; without it an unreachable toolchain is skipped with a
 warning and the others still run. The workflow needs
 Delphi for the Delphi test run and for the mass
 differential (`run_delphi_tests.ps1` throws without it); a missing Delphi only
-skips the FreePascal runtime check with a warning, and the workflow has no
-`-RequireDelphi`. The `-FailOnDiff` check compares against the committed state:
+skips the FreePascal runtime check and the samples on Delphi with a warning,
+and the workflow has no `-RequireDelphi`. The `-FailOnDiff` check compares against the committed state:
 a generated unit that is not committed yet (for example before the first
 commit) counts as differing.
 
 `run_pr_quick_check.ps1` is the workflow with `-FailOnDiff -SkipTests
--SkipReference` - so the FreePascal test suite DOES run (`-SkipFpcTests` opts
-out) - plus a compile-only build of the Delphi test program
+-SkipReference` - so the FreePascal test suite and the samples DO run
+(`-SkipFpcTests`, `-SkipSamples` opt out) - plus a compile-only build of the Delphi test program
 (`run_delphi_tests.ps1 -BuildOnly`); missing Delphi or FreePascal are warnings
 (`-RequireDelphi`, `-RequireFpc`). The GitHub workflow
 `.github/workflows/quick-check.yml` has two jobs: `quick-check` runs the quick
@@ -233,7 +242,9 @@ check on a hosted Windows runner, which has neither compiler (it fetches the
 pinned upstream commit first); `freepascal` installs the FreePascal of the
 Ubuntu distribution and runs `check_fpc_compile.ps1 -RequireFpc`,
 `run_fpc_tests.ps1 -Toolchain Native -RequireFpc` with the JUnit report
-uploaded as an artifact, and the FreePascal build and run of the sample.
+uploaded as an artifact, and `run_samples.ps1 -Compiler Fpc -Toolchain
+Native -RequireFpc` (every sample built, run and compared with its golden
+output).
 Neither runner has WSL, so the WSL toolchains of `-FpcToolchains` are skipped
 there with a warning.
 
@@ -304,6 +315,7 @@ built.
 10. `tools/run_update_workflow.ps1`, `tools/run_pr_quick_check.ps1`, `tools/run_delphi_tests.ps1`, `tools/run_fpc_tests.ps1`
 11. `tools/check_fpc_compile.ps1`, `tools/run_fpc_runtime_check.ps1` + `tools/fpcruntime/PhoneNumbersFpcRuntime.dpr`, `tools/fpc_toolchains.ps1` (the FreePascal toolchain helpers both FreePascal scripts dot-source)
 11a. `.github/workflows/quick-check.yml` (the Windows quick check job and the Ubuntu FreePascal job)
+11b. `samples/*.dpr` + `samples/expected/*.txt` (golden outputs, LF) and `tools/run_samples.ps1`; `docs/GUIDE.md` quotes the golden outputs, the README quick start is `samples/QuickStart.dpr`
 12. `tools/run_mass_differential.ps1` + `tools/differential/PhoneNumbersDifferential.dpr`
 13. `tools/export_generated_metadata_snapshot.ps1`, `tools/extract_upstream_length_rules.ps1`, `tools/compare_generated_metadata_with_upstream.ps1`
 14. `vendor/versions.md`, `docs/ARCHITECTURE.md`, `KNOWN_ISSUES.md`, `CHANGELOG.md`

@@ -17,9 +17,15 @@ param(
   # whole test program with FreePascal in WSL) is part of the quick check by
   # default for the same reason: it adds well under a minute per toolchain.
   [switch]$SkipFpcTests,
-  # Forwarded to the workflow when given: the toolchains of the runtime check
-  # and the test suite ("<Toolchain>" or "<Toolchain>=<compiler path>"). The
-  # default - WSL FreePascal 3.2.4 and 3.2.2 - is defined there, not here.
+  # Forwarded to the workflow. The samples (tools/run_samples.ps1: every
+  # program of samples/ built and run with Delphi and the FreePascal
+  # toolchains, output compared with samples/expected) take a few seconds per
+  # compiler.
+  [switch]$SkipSamples,
+  # Forwarded to the workflow when given: the toolchains of the runtime check,
+  # the test suite and the samples ("<Toolchain>" or
+  # "<Toolchain>=<compiler path>"). The default - WSL FreePascal 3.2.4 and
+  # 3.2.2 - is defined there, not here.
   [string[]]$FpcToolchains
 )
 
@@ -44,7 +50,9 @@ param(
   (tools/run_fpc_runtime_check.ps1) and the FreePascal TEST SUITE
   (tools/run_fpc_tests.ps1), both on the WSL FreePascal 3.2.4 AND 3.2.2 by
   default (-FpcToolchains); each run takes well under a minute end to end, so
-  both stay in (-SkipFpcRuntime, -SkipFpcTests opt out).
+  both stay in (-SkipFpcRuntime, -SkipFpcTests opt out). The SAMPLES are
+  built, run and compared with their expected output on Delphi and on the
+  same FreePascal toolchains (-SkipSamples opts out).
 
   The compile step is skipped with a warning when no Delphi installation is
   found at -StudioRoot (the GitHub runner has none); -RequireDelphi turns that
@@ -62,6 +70,7 @@ $workflowArguments = @{
   RequireFpc     = $RequireFpc
   SkipFpcRuntime = $SkipFpcRuntime
   SkipFpcTests   = $SkipFpcTests
+  SkipSamples    = $SkipSamples
   # The runtime check builds its Delphi reference with dcc64 from this
   # installation, so the quick check's -StudioRoot must reach it.
   StudioRoot     = $StudioRoot

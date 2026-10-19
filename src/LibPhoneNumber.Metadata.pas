@@ -85,7 +85,10 @@ uses
     there. }
   LibPhoneNumber.Metadata.Types;
 
-{ Provenance of the ACTIVE data set }
+{ Provenance of the ACTIVE data set: the label of the generator that wrote
+  the tables ("metadata-v1"), the upstream libphonenumber commit and the
+  upstream file they were generated from. vendor/versions.md maps the commit
+  to the upstream release. }
 function MetadataVersion: string;
 function MetadataUpstreamCommit: string;
 function MetadataSourceName: string;
@@ -109,7 +112,12 @@ function IsProductionMetadataActive: Boolean;
 function GetTerritoryCount: Integer;
 function GetTerritory(AIndex: Integer): PPhoneMetadataRec;
 
-{ Region / country calling code lookup }
+{ Region / country calling code lookup. Upstream getSupportedRegions,
+  getSupportedCallingCodes, getSupportedGlobalNetworkCallingCodes,
+  getRegionCodesForCountryCode (the main region first) and
+  getCountryCodeForRegion (0 for an unknown region). Region codes are matched
+  EXACTLY: pass upper case CLDR codes ('DE', not 'de'); "001" is the non
+  geographical entity, 'ZZ' the unknown region. }
 function TryGetMetadataForRegion(const ARegionCode: string;
   out AMetadata: PPhoneMetadataRec): Boolean;
 function TryGetMetadataForNonGeoEntity(ACountryCode: Integer;

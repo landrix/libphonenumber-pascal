@@ -1,0 +1,38 @@
+== FindNumbers (region CH, leniency pnlValid)
+  Call 044 668 18 00 or +1 650-253-0000 before 6 pm.
+  [5..18) "044 668 18 00" -> +41446681800
+  [22..37) "+1 650-253-0000" -> +16502530000
+
+== Leniency levels (region US)
+  Call 650 253 0000, 650 2530000, 65 02 53 00 00 or 253 0000.
+pnlPossible      :
+  [5..17) "650 253 0000" -> +16502530000
+  [19..30) "650 2530000" -> +16502530000
+  [32..46) "65 02 53 00 00" -> +16502530000
+  [50..58) "253 0000" -> +12530000
+pnlValid         :
+  [5..17) "650 253 0000" -> +16502530000
+  [19..30) "650 2530000" -> +16502530000
+  [32..46) "65 02 53 00 00" -> +16502530000
+pnlStrictGrouping:
+  [5..17) "650 253 0000" -> +16502530000
+  [19..30) "650 2530000" -> +16502530000
+pnlExactGrouping :
+  [5..17) "650 253 0000" -> +16502530000
+
+== TPhoneNumberMatcher (region ZZ: only numbers with a calling code)
+  Call +41 44 668 18 00 or 044 668 18 00, or +1 650-253-0000.
+  5: +41 44 668 18 00
+  43: +1 650-253-0000
+  Next after the last match raises EPhoneNumberMatcher
+
+== Offsets are UTF-16 code units
+  text: "Tel. <U+00FC><U+00E4> 044 668 18 00", 21 UTF-16 code units
+  Start = 8, EndIndex = 21
+  slice: "044 668 18 00"
+
+== maxTries (region CH)
+  Codes: 11-22, 33-44, 55-66, 77-88. Call 044 668 18 00.
+  maxTries 3: nothing found
+  maxTries 4: nothing found
+  maxTries 5: found "044 668 18 00"

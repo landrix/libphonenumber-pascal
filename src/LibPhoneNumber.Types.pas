@@ -8,20 +8,43 @@ unit LibPhoneNumber.Types;
 interface
 
 type
+  { The output format of TPhoneNumberUtil.Format. Port of
+    PhoneNumberUtil.PhoneNumberFormat plus one display variant of this port.
+    The examples are the Swiss number 044 668 18 00. }
   TPhoneNumberFormat = (
+    { E164: "+41446681800". }
     pnfE164,
+    { INTERNATIONAL: "+41 44 668 18 00". }
     pnfInternational,
+    { Not upstream: INTERNATIONAL with the space separated group after the
+      calling code in parentheses, "+41 (44) 668 18 00"; unchanged when
+      there is no such group ("+1 650-253-0000"). }
     pnfInternationalLegacy,
+    { NATIONAL: "044 668 18 00". }
     pnfNational,
+    { RFC3966: "tel:+41-44-668-18-00". }
     pnfRfc3966
   );
 
+  { Why TPhoneNumberUtil.Parse failed. Port of
+    NumberParseException.ErrorType; upstream throws, this port returns False
+    and reports the reason here. }
   TPhoneNumberParseError = (
+    { Parsing succeeded. }
     pnpeNone,
+    { NOT_A_NUMBER: the input does not look like a phone number at all. }
     pnpeNotANumber,
+    { INVALID_COUNTRY_CODE: the calling code is unknown, or the number has no
+      calling code and the default region is empty or unknown. }
     pnpeInvalidCountryCode,
+    { TOO_SHORT_AFTER_IDD: nothing usable follows the international dialling
+      prefix ("011" in US). }
     pnpeTooShortAfterIdd,
+    { TOO_SHORT_NSN: the national significant number is shorter than any
+      number can be. }
     pnpeTooShortNsn,
+    { TOO_LONG: the input or its national significant number is longer than
+      any number can be. }
     pnpeTooLongNsn
   );
 

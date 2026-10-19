@@ -91,6 +91,20 @@ All notable changes to this repository are documented in this file.
   No duplicates (matched by title); an open issue for an older release is
   closed as superseded only when it carries the script's hidden body marker.
   `-DryRun` shows what it would do.
+- New `tools/run_samples.ps1`: builds every program of `samples/` with Delphi
+  (`-Compiler Delphi`) or with a FreePascal toolchain (`-Compiler Fpc
+  -Toolchain Wsl|Native|Mac`), runs it and compares its output with
+  `samples/expected/<name>.txt`. A build warning, a non zero exit code, non
+  ASCII output or a differing line fails it; `-UpdateExpected` rewrites the
+  golden files. The golden files are ASCII with LF line ends
+  (`.gitattributes`); the comparison turns CRLF into LF first.
+- `tools/run_update_workflow.ps1` and `tools/run_pr_quick_check.ps1` run the
+  samples as a step of their own (`-SkipSamples`): once on Delphi (a missing
+  Delphi is a warning) and once per `-FpcToolchains` entry (`-RequireFpc`
+  applies).
+- The FreePascal job of `.github/workflows/quick-check.yml` builds, runs and
+  compares every sample (`run_samples.ps1 -Compiler Fpc -Toolchain Native
+  -RequireFpc`) instead of only running the one sample.
 
 ### Documentation
 
@@ -100,6 +114,35 @@ All notable changes to this repository are documented in this file.
   low level unit functions of `LibPhoneNumber.Metadata`, `MetadataCore`,
   `MetadataFormat` and `ShortMetadata` take region codes exactly, like
   upstream.
+- New user guide `docs/GUIDE.md`: installation for Delphi and Lazarus /
+  FreePascal (including what an LCL application already does for UTF-8), the
+  units and what they hold, core concepts (the `TPhoneNumber` fields, region
+  codes, possible versus valid, no exceptions), parsing and the parse errors,
+  validation, number types, every formatter, regions and example numbers,
+  as-you-type formatting, short numbers, finding numbers in text, comparing,
+  strings on both compilers, thread safety, a Java/C# to Pascal mapping,
+  differences from upstream and a FAQ. Every output it shows is the checked
+  output of a sample.
+- New samples next to `PhoneNumberDemo.dpr`, one task each, all with a golden
+  output: `QuickStart`, `ParseAndValidate`, `FormatNumbers`, `AsYouType`,
+  `FindNumbersInText`, `ShortNumbers`, `RegionsAndExamples`.
+  `PhoneNumberDemo` prints the parse error by name, validates the parsed
+  record instead of parsing again and uses `NumberTypeToString`.
+  `samples/README.md` lists them and states the rules for the samples.
+- README restructured for users: installation, a quick start that is
+  `samples/QuickStart.dpr` and compiles with both compilers (the old Delphi
+  snippet used `System.SysUtils`, which FreePascal does not have), the
+  FreePascal rule, links. The tests and gates, the toolchain matrix and the
+  tooling requirements moved to `CONTRIBUTING.md` ("Running the tests and
+  gates"); the metadata update procedure is replaced by a link to the
+  maintained copy in `AGENTS.md`.
+- Short user doc comments on the public declarations that had none:
+  `TPhoneNumberUtil.Parse` and `Format`, every value of `TPhoneNumberFormat`
+  and `TPhoneNumberParseError`, the validation, typing and lookup functions
+  of `LibPhoneNumber.MetadataCore` and `LibPhoneNumber.Metadata`. The comment
+  of the string `IsValidNumber` says that its region is only the default
+  region of the parse. The `TAsYouTypeFormatter` constructor no longer claims
+  that every public entry point canonicalises regions.
 
 ## 0.1.0 - 2026-10-19
 

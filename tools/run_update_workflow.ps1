@@ -15,20 +15,29 @@ param(
   # of its own after the runtime check; -SkipFpcTests is the only way to skip
   # it, -SkipTests skips the Delphi run only.
   [switch]$SkipFpcTests,
-  # The FreePascal toolchains of the runtime check AND the test suite: each
-  # step runs once per entry, in this order. An entry is "<Toolchain>" or
-  # "<Toolchain>=<compiler path>" (Toolchain Wsl, Native or Mac as in
-  # tools/fpc_toolchains.ps1; the path becomes -FpcPath). The default is the
-  # WSL FreePascal 3.2.4 (the default compiler) AND the 3.2.2 of the WSL
-  # distribution package: 3.2.2 ships regexpr 0.987, for which the regex layer
-  # has code paths of its own. Pass one entry to restrict the steps to it.
+  # The SAMPLES (tools/run_samples.ps1): every program of samples/ built and
+  # run with Delphi and with each FreePascal toolchain of -FpcToolchains, its
+  # output compared with samples/expected. A step of its own after the
+  # FreePascal test suite; -SkipSamples is the only way to skip it. A missing
+  # Delphi is a warning there, a missing FreePascal as well unless
+  # -RequireFpc is given.
+  [switch]$SkipSamples,
+  # The FreePascal toolchains of the runtime check, the test suite and the
+  # samples: each step runs once per entry, in this order. An entry is
+  # "<Toolchain>" or "<Toolchain>=<compiler path>" (Toolchain Wsl, Native or
+  # Mac as in tools/fpc_toolchains.ps1; the path becomes -FpcPath). The
+  # default is the WSL FreePascal 3.2.4 (the default compiler) AND the 3.2.2
+  # of the WSL distribution package: 3.2.2 ships regexpr 0.987, for which the
+  # regex layer has code paths of its own. Pass one entry to restrict the
+  # steps to it.
   # Comma separated entries in one string work too ("powershell -File").
   [string[]]$FpcToolchains = @("Wsl", "Wsl=/usr/bin/fpc"),
-  # Forwarded to tools/check_fpc_compile.ps1, tools/run_fpc_runtime_check.ps1
-  # AND tools/run_fpc_tests.ps1: turn a missing FreePascal compiler from a
-  # warning into a failure. In the runtime check and the test suite that holds
-  # for EVERY toolchain of -FpcToolchains; without it an unreachable one is
-  # skipped with a warning and the others still run.
+  # Forwarded to tools/check_fpc_compile.ps1, tools/run_fpc_runtime_check.ps1,
+  # tools/run_fpc_tests.ps1 AND tools/run_samples.ps1: turn a missing
+  # FreePascal compiler from a warning into a failure. In the runtime check,
+  # the test suite and the samples that holds for EVERY toolchain of
+  # -FpcToolchains; without it an unreachable one is skipped with a warning
+  # and the others still run.
   [switch]$RequireFpc,
   # Skips the Delphi test run.
   [switch]$SkipTests,
@@ -104,8 +113,8 @@ Write-Host "Repo: $repoRoot"
 
 # Parsed up front, so a misspelt toolchain fails before any step runs.
 $fpcToolchainList = @(ConvertFrom-FpcToolchainList -Entries $FpcToolchains)
-if ($fpcToolchainList.Count -eq 0 -and -not ($SkipFpcRuntime -and $SkipFpcTests)) {
-  throw "-FpcToolchains is empty; use -SkipFpcRuntime / -SkipFpcTests to skip the FreePascal steps."
+if ($fpcToolchainList.Count -eq 0 -and -not ($SkipFpcRuntime -and $SkipFpcTests -and $SkipSamples)) {
+  throw "-FpcToolchains is empty; use -SkipFpcRuntime / -SkipFpcTests / -SkipSamples to skip the FreePascal steps."
 }
 
 if (-not $SkipReference) {
@@ -223,6 +232,29 @@ if (-not $SkipFpcTests) {
   }
 } else {
   Write-Host "Skipping the FreePascal test suite (-SkipFpcTests)."
+}
+
+if (-not $SkipSamples) {
+  Invoke-Step "Samples" {
+    # Every program of samples/ built and run with Delphi and then once per
+    # -FpcToolchains entry; all of them must print exactly
+    # samples/expected/<name>.txt. A metadata refresh can change an example
+    # value: review the diff, rewrite the golden files with
+    # tools/run_samples.ps1 -UpdateExpected and check the values docs/GUIDE.md
+    # quotes. Missing compilers are soft skips with a warning, like the other
+    # FreePascal steps (-RequireFpc).
+    Write-Host ""
+    Write-Host "--- samples on Delphi"
+    & (Join-Path $PSScriptRoot "run_samples.ps1") -Compiler Delphi -StudioRoot $StudioRoot
+    foreach ($entry in $fpcToolchainList) {
+      Write-Host ""
+      Write-Host "--- samples on $($entry.Label)"
+      & (Join-Path $PSScriptRoot "run_samples.ps1") -Compiler Fpc -Toolchain $entry.Toolchain `
+        -FpcPath $entry.FpcPath -RequireFpc:$RequireFpc
+    }
+  }
+} else {
+  Write-Host "Skipping the samples (-SkipSamples)."
 }
 
 # The compare gate: it diffs the GENERATED metadata - the actual runtime

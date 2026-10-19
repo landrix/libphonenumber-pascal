@@ -1,0 +1,30 @@
+== Regions and calling codes
+GetCountryCodeForRegion('DE')                 : 49
+GetCountryCodeForRegion('de')                 : 0
+GetCountryCodeForRegion(CanonicalRegion('de')): 49
+GetRegionCodeForCountryCode(1)                : US
+GetRegionCodeForCountryCode(999)              : ZZ
+GetRegionCodesForCountryCode(44)              : GB GG IM JE
+IsSupportedRegion('CH')                       : True
+IsSupportedRegion('ZZ')                       : False
+IsSupportedCallingCode(800)                   : True
+IsNanpaCountry('CA')                          : True
+GetNddPrefixForRegion('DE', True)             : "0"
+GetNddPrefixForRegion('US', True)             : "1"
+GetNddPrefixForRegion('IT', True)             : ""
+mobile number portable region DE              : True
+
+== Supported number types
+DE : FIXED_LINE MOBILE TOLL_FREE PREMIUM_RATE SHARED_COST PERSONAL_NUMBER PAGER UAN VOICEMAIL
+800: TOLL_FREE
+
+== Example numbers
+TryGetExampleNumber(DE)               : +49 30 123456
+TryGetExampleNumberForType(DE, MOBILE): +49 1512 3456789
+TryGetExampleNumberForNonGeoEntity(800): +800 1234 5678, region 001
+TryGetInvalidExampleNumber(DE)        : +493012, valid False
+TryGetExampleNumber(ZZ) succeeds      : False
+
+== Metadata
+MetadataVersion   : metadata-v1
+MetadataSourceName: resources/PhoneNumberMetadata.xml

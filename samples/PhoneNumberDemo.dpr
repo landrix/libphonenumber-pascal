@@ -35,22 +35,18 @@ uses
   LibPhoneNumber.AsYouTypeFormatter,
   LibPhoneNumber.PhoneNumberMatcher;
 
-function NumberTypeName(AType: TMetadataNumberType): string;
+{ The library has no name function for the parse error (upstream has an
+  exception instead); a program that wants to print one keeps its own. }
+function ParseErrorName(AError: TPhoneNumberParseError): string;
 begin
-  case AType of
-    mntFixedLine: Result := 'FIXED_LINE';
-    mntMobile: Result := 'MOBILE';
-    mntFixedLineOrMobile: Result := 'FIXED_LINE_OR_MOBILE';
-    mntTollFree: Result := 'TOLL_FREE';
-    mntPremiumRate: Result := 'PREMIUM_RATE';
-    mntSharedCost: Result := 'SHARED_COST';
-    mntVoip: Result := 'VOIP';
-    mntPersonalNumber: Result := 'PERSONAL_NUMBER';
-    mntPager: Result := 'PAGER';
-    mntUan: Result := 'UAN';
-    mntVoicemail: Result := 'VOICEMAIL';
-  else
-    Result := 'UNKNOWN';
+  Result := '';
+  case AError of
+    pnpeNone: Result := 'NONE';
+    pnpeNotANumber: Result := 'NOT_A_NUMBER';
+    pnpeInvalidCountryCode: Result := 'INVALID_COUNTRY_CODE';
+    pnpeTooShortAfterIdd: Result := 'TOO_SHORT_AFTER_IDD';
+    pnpeTooShortNsn: Result := 'TOO_SHORT_NSN';
+    pnpeTooLongNsn: Result := 'TOO_LONG';
   end;
 end;
 
@@ -62,15 +58,14 @@ begin
   WriteLn('Input            : ', AInput, ' (region ', ARegion, ')');
   if not TPhoneNumberUtil.Parse(AInput, ARegion, Number, Error) then
   begin
-    WriteLn('  parse failed, error ', Ord(Error));
+    WriteLn('  parse failed   : ', ParseErrorName(Error));
     Exit;
   end;
   WriteLn('  calling code   : ', Number.CountryCode);
   WriteLn('  national number: ', Number.NationalNumberDigits);
   WriteLn('  region         : ', Number.RegionCode);
-  WriteLn('  valid          : ', BoolToStr(TPhoneNumberUtil.IsValidNumber(AInput, ARegion), True));
-  WriteLn('  type           : ', NumberTypeName(
-    GetNumberType(Number.CountryCode, Number.NationalNumberDigits)));
+  WriteLn('  valid          : ', BoolToStr(TPhoneNumberUtil.IsValidNumber(Number), True));
+  WriteLn('  type           : ', NumberTypeToString(TPhoneNumberUtil.GetNumberType(Number)));
   WriteLn('  E164           : ', TPhoneNumberUtil.Format(Number, pnfE164));
   WriteLn('  INTERNATIONAL  : ', TPhoneNumberUtil.Format(Number, pnfInternational));
   WriteLn('  NATIONAL       : ', TPhoneNumberUtil.Format(Number, pnfNational));
@@ -119,6 +114,8 @@ begin
     ShowNumber('+1 650-253-0000', 'US');
     WriteLn;
     ShowNumber('030 123456', 'DE');
+    WriteLn;
+    ShowNumber('030 123456', '');
     WriteLn;
     ShowAsYouType('6502530000', 'US');
     WriteLn;

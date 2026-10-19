@@ -44,9 +44,10 @@ jobs:
         shell: pwsh
         run: powershell -ExecutionPolicy Bypass -File tools/run_pr_quick_check.ps1
 
-  # The library and the whole test suite on FreePascal: the FreePascal of the
-  # Ubuntu distribution (3.2.2 on ubuntu-24.04, x86_64). Every step requires
-  # the compiler, so a missing one fails the job instead of being skipped.
+  # The library, the whole test suite and the samples on FreePascal: the
+  # FreePascal of the Ubuntu distribution (3.2.2 on ubuntu-24.04, x86_64).
+  # Every step requires the compiler, so a missing one fails the job instead
+  # of being skipped.
   freepascal:
     runs-on: ubuntu-24.04
 
@@ -84,10 +85,9 @@ jobs:
           path: test-results/freepascal-junit.xml
           if-no-files-found: warn
 
-      # The command line of samples/README.md, plus a run of the program.
-      - name: Build and run the sample
-        working-directory: samples
-        run: |
-          mkdir -p bin/units
-          fpc -Mdelphi -Sh -Fu../src -FUbin/units -FEbin PhoneNumberDemo.dpr
-          ./bin/PhoneNumberDemo
+      # Every program of samples/ built with the fpc on PATH, run, and its
+      # output compared with samples/expected/<name>.txt (the same golden
+      # files the Delphi and the local FreePascal builds must reproduce).
+      - name: Build, run and compare the samples
+        shell: pwsh
+        run: ./tools/run_samples.ps1 -Compiler Fpc -Toolchain Native -RequireFpc

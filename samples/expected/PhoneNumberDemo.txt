@@ -1,0 +1,54 @@
+Input            : 044 668 18 00 (region CH)
+  calling code   : 41
+  national number: 446681800
+  region         : CH
+  valid          : True
+  type           : FIXED_LINE
+  E164           : +41446681800
+  INTERNATIONAL  : +41 44 668 18 00
+  NATIONAL       : 044 668 18 00
+  RFC3966        : tel:+41-44-668-18-00
+  dialled from US: 011 41 44 668 18 00
+
+Input            : +1 650-253-0000 (region US)
+  calling code   : 1
+  national number: 6502530000
+  region         : US
+  valid          : True
+  type           : FIXED_LINE_OR_MOBILE
+  E164           : +16502530000
+  INTERNATIONAL  : +1 650-253-0000
+  NATIONAL       : (650) 253-0000
+  RFC3966        : tel:+1-650-253-0000
+  dialled from US: 1 (650) 253-0000
+
+Input            : 030 123456 (region DE)
+  calling code   : 49
+  national number: 30123456
+  region         : DE
+  valid          : True
+  type           : FIXED_LINE
+  E164           : +4930123456
+  INTERNATIONAL  : +49 30 123456
+  NATIONAL       : 030 123456
+  RFC3966        : tel:+49-30-123456
+  dialled from US: 011 49 30 123456
+
+Input            : 030 123456 (region )
+  parse failed   : INVALID_COUNTRY_CODE
+
+As you type (region US):
+  6
+  65
+  650
+  650-2
+  650-25
+  650-253
+  650-2530
+  (650) 253-00
+  (650) 253-000
+  (650) 253-0000
+
+Numbers in "Call 044 668 18 00 or +1 650-253-0000 before 6 pm.":
+  [5..18) 044 668 18 00 -> +41446681800
+  [22..37) +1 650-253-0000 -> +16502530000

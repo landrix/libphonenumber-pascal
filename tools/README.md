@@ -54,7 +54,7 @@ FreePascal runtime check:
 8. Parameters: `-Toolchain`, `-FpcPath`, `-StudioRoot`, `-MacHost`, `-WorkDir`, `-ReferenceDir`, `-MaxDiffLines`, `-RequireFpc`, `-RequireDelphi`, `-KeepWorkDir`, `-Quiet`. `-WorkDir` names the PARENT directory; the script creates and removes only its own `libphonenumber-fpcruntime-<pid>` subdirectory below it (and keeps it on a failure). The Delphi build output goes there too, never into the repository.
 8a. `-ReferenceDir` names a directory, owned by the caller, for a reusable Delphi reference: the observation file, the RTL sweep, the compiler line and a fingerprint (SHA-256 over the generated driver input, the driver source, every unit of `src/`, the `dcc64` identity - path, file version, size, time stamp - and the Delphi build options). When the stored fingerprint matches, the Delphi build is skipped and the log says `reference reused from <dir>`; otherwise the reference is built and stored there. The script never deletes that directory. `run_update_workflow.ps1` uses it so that the runs on several toolchains share one Delphi build.
 9. The compiler versions and targets of both builds are printed in the log, never written into the compared file.
-10. The toolchain resolution (`Resolve-FpcToolchain` and the three resolvers), `Invoke-Native`, the build output rule (`Get-FpcProblems`), the LF script writer and the Mac transport (`New-MacRunDirectory`, `Send-MacStage`, `Receive-MacFile`) live in `fpc_toolchains.ps1`, which this script and `run_fpc_tests.ps1` dot-source.
+10. The toolchain resolution (`Resolve-FpcToolchain` and the three resolvers), `Invoke-Native`, the build output rule (`Get-FpcProblems`), the LF script writer and the Mac transport (`New-MacRunDirectory`, `Send-MacStage`, `Receive-MacFile`) live in `fpc_toolchains.ps1`, which this script, `run_fpc_tests.ps1` and `run_samples.ps1` dot-source.
 
 FreePascal test suite:
 
@@ -63,6 +63,15 @@ FreePascal test suite:
 3. `-JUnit <file>` copies the JUnit XML report of the run there, `-Filter` hands a `--filter` to the runner, `-BuildOnly` compiles and stops.
 4. A toolchain that is not reachable is a warning and a no-op; `-RequireFpc` turns it into a failure.
 5. Parameters: `-Toolchain`, `-FpcPath`, `-MacHost`, `-WorkDir`, `-JUnit`, `-Filter`, `-BuildOnly`, `-RequireFpc`, `-KeepWorkDir`, `-Quiet`. `-WorkDir` names the PARENT directory; the script creates and removes only its own `libphonenumber-fpctests-<pid>` subdirectory below it (and keeps it on a failure).
+
+Samples:
+
+1. `run_samples.ps1` builds every program of `samples/` with ONE compiler, runs it and compares its standard output with `samples/expected/<name>.txt`. `-Compiler Delphi` (the default) uses `dcc64` of `-StudioRoot` (`-Q -$R+ -$Q+`); `-Compiler Fpc` uses the FreePascal of `-Toolchain` (`Wsl`, `Native`, `Mac`, `-FpcPath`, `-MacHost` as for the test suite; options `-Mdelphi -Sh -Cr -Co`). Units and programs go to a scratch directory, never into the repository.
+2. A sample fails when it does not build, when the build reports a warning or an error (FreePascal: `Get-FpcProblems`; Delphi: a `W`/`E`/`F` message code, because `dcc64` localises the message words), when it exits with a non zero exit code or writes to standard error, when its output is not printable ASCII (TAB, LF and CR are allowed), or when the output differs from the golden file. The first differing lines are printed; the work directory is kept on a failure.
+3. The golden files are ASCII with LF line ends (`.gitattributes` pins `samples/expected/*.txt` to LF). The comparison turns CRLF into LF on both sides first - a Delphi program on Windows writes CRLF - and is byte exact otherwise, the final line end included. The same golden files hold for every compiler.
+4. `-UpdateExpected` writes the output of the run as the new golden files instead of comparing (and reports which changed); review the diff. `-Sample <name>[,<name>]` restricts the run. Without `-Sample` a golden file without a program fails the run.
+5. A compiler that is not reachable is a warning and a no-op; `-RequireDelphi` / `-RequireFpc` turn it into a failure.
+6. Parameters: `-Compiler`, `-Toolchain`, `-FpcPath`, `-MacHost`, `-StudioRoot`, `-Sample`, `-UpdateExpected`, `-WorkDir`, `-MaxDiffLines`, `-RequireFpc`, `-RequireDelphi`, `-KeepWorkDir`, `-Quiet`. `-WorkDir` names the PARENT directory; the script creates and removes only its own `libphonenumber-samples-<pid>` subdirectory below it.
 
 Upstream release check:
 
@@ -111,7 +120,8 @@ Current utility:
 	- the FreePascal compile check as a STEP OF ITS OWN (`-SkipFpcCheck` to skip it, `-RequireFpc` to make a missing compiler a failure). It does not depend on the generator step, so `-SkipMetadataGen` does not skip it.
 	- the FreePascal RUNTIME check (`run_fpc_runtime_check.ps1`) right after it, as a step of its own as well (`-SkipFpcRuntime` to skip it; `-RequireFpc` applies to it too), once per `-FpcToolchains` entry. Every run is compared against the SAME Delphi reference: the first run builds it into a scratch directory of the workflow (`-ReferenceDir`), the later runs reuse it
 	- the FreePascal TEST SUITE (`run_fpc_tests.ps1`), a step of its own (`-SkipFpcTests` to skip it; `-RequireFpc` applies; `-SkipTests` does NOT skip it), once per `-FpcToolchains` entry as well
-	- `-FpcToolchains` lists the toolchains of those two steps, in order; an entry is `<Toolchain>` or `<Toolchain>=<compiler path>` (the path becomes `-FpcPath`), several entries may also come comma separated in one string (`powershell -File` passes them that way). Default: `Wsl`, `Wsl=/usr/bin/fpc` - the WSL FreePascal 3.2.4 and the 3.2.2 of the WSL distribution package. 3.2.2 is in by default because it ships regexpr 0.987, for which the regex layer has code paths of its own (the counted quantifier rewrite, the empty input probe); a regexpr 0.987 crash once passed the 3.2.4 suite and workflow unnoticed. The test suite runs on both as well: it reaches regex paths the runtime driver does not, and a run costs about half a minute. `-FpcToolchains Wsl` restricts both steps to 3.2.4; an unknown toolchain name fails before any step runs
+	- the SAMPLES (`run_samples.ps1`), a step of its own after the test suite (`-SkipSamples` to skip it): once with Delphi (a missing Delphi is a warning) and once per `-FpcToolchains` entry (`-RequireFpc` applies). A metadata refresh can change an example value in a sample: review the diff, rewrite the golden files with `run_samples.ps1 -UpdateExpected` and check the values `docs/GUIDE.md` quotes
+	- `-FpcToolchains` lists the toolchains of those three steps, in order; an entry is `<Toolchain>` or `<Toolchain>=<compiler path>` (the path becomes `-FpcPath`), several entries may also come comma separated in one string (`powershell -File` passes them that way). Default: `Wsl`, `Wsl=/usr/bin/fpc` - the WSL FreePascal 3.2.4 and the 3.2.2 of the WSL distribution package. 3.2.2 is in by default because it ships regexpr 0.987, for which the regex layer has code paths of its own (the counted quantifier rewrite, the empty input probe); a regexpr 0.987 crash once passed the 3.2.4 suite and workflow unnoticed. The test suite runs on both as well: it reaches regex paths the runtime driver does not, and a run costs about half a minute. `-FpcToolchains Wsl` restricts the three steps to 3.2.4; an unknown toolchain name fails before any step runs
 	- `-RequireFpc` holds for every configured toolchain: without it an unreachable one (no WSL, no compiler at the path) is skipped with a warning and the others still run; with it the step fails
 	- export the generated metadata snapshot
 	- extract upstream length rules
@@ -121,10 +131,10 @@ Current utility:
 	- the reference refresh and the mass differential run as child `pwsh` processes, so the workflow can be started from Windows PowerShell as well
 	- every step aborts the workflow on failure, including failing Delphi tests
 8. `run_pr_quick_check.ps1` runs a CI-friendly quick gate:
-	- the full workflow with `-FailOnDiff -SkipTests`, i.e. compare gate, generated-unit verification, the FPC compile and runtime checks and the FreePascal TEST SUITE, but no Delphi test RUN
+	- the full workflow with `-FailOnDiff -SkipTests`, i.e. compare gate, generated-unit verification, the FPC compile and runtime checks, the FreePascal TEST SUITE and the SAMPLES (Delphi and FreePascal; `-SkipSamples` opts out), but no Delphi test RUN
 	- skip reference refresh by default (enable via `-RefreshReference`)
 	- then BUILD the Delphi test program without running it (`run_delphi_tests.ps1 -BuildOnly`). That is the only artefact that links every unit of the port together with the tests, so it proves the Delphi side compiles; the FreePascal side is covered by the FPC compile and runtime checks and the FreePascal test suite. It is skipped with a warning when no Delphi is found at `-StudioRoot` (the public CI runner has none); `-RequireDelphi` makes that a failure and `-SkipDelphiCompile` opts out.
-	- `-RequireFpc` is forwarded to all three FreePascal steps; the runtime check and the FreePascal test suite are part of the quick check because each run takes well under a minute on a WSL toolchain (timings in the `AGENTS.md` manifest) (`-SkipFpcRuntime`, `-SkipFpcTests` opt out). `-FpcToolchains` is forwarded when given; otherwise the workflow default (WSL 3.2.4 and 3.2.2) applies
+	- `-RequireFpc` is forwarded to every FreePascal step (the samples included); the runtime check and the FreePascal test suite are part of the quick check because each run takes well under a minute on a WSL toolchain (timings in the `AGENTS.md` manifest) (`-SkipFpcRuntime`, `-SkipFpcTests` opt out). `-FpcToolchains` is forwarded when given; otherwise the workflow default (WSL 3.2.4 and 3.2.2) applies
 9. JSON snapshots are only rewritten when semantic content changes; volatile timestamps are ignored where configured.
 10. Individual scripts support `-ForceWrite` to intentionally rewrite output files even when content is unchanged.
 11. `generate_reference_cases.ps1` supports `-IncludeAllRegions` to auto-add one example case per supported upstream region.
@@ -173,6 +183,11 @@ Usage examples:
 	- `pwsh -NoProfile -ExecutionPolicy Bypass -File tools/run_fpc_tests.ps1 -Filter TMetadataTests -JUnit junit.xml`
 13. The test suite on Delphi:
 	- `powershell -ExecutionPolicy Bypass -File tools/run_delphi_tests.ps1`
+13a. The samples on Delphi, on the WSL FreePascal 3.2.4 and 3.2.2, and new golden files after a reviewed change:
+	- `pwsh -NoProfile -File tools/run_samples.ps1`
+	- `pwsh -NoProfile -File tools/run_samples.ps1 -Compiler Fpc`
+	- `pwsh -NoProfile -File tools/run_samples.ps1 -Compiler Fpc -FpcPath /usr/bin/fpc`
+	- `pwsh -NoProfile -File tools/run_samples.ps1 -UpdateExpected`
 14. The quick check with the FreePascal steps on 3.2.4 only, or on another set of toolchains:
 	- `powershell -ExecutionPolicy Bypass -File tools/run_pr_quick_check.ps1 -FpcToolchains Wsl`
 	- `pwsh -NoProfile -ExecutionPolicy Bypass -File tools/run_pr_quick_check.ps1 -FpcToolchains Wsl,Wsl=/usr/bin/fpc,Native` (one comma separated string, no spaces)

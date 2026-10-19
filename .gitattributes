@@ -1,0 +1,3 @@
+# The expected outputs of the samples are compared byte for byte (after a
+# CRLF to LF normalisation, see tools/run_samples.ps1); keep them LF.
+samples/expected/*.txt text eol=lf

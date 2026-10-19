@@ -1,0 +1,46 @@
+== Parse
+"044 668 18 00" in "CH": OK +41 digits 446681800 number 446681800 region CH
+"044 668 18 00" in " ch ": OK +41 digits 446681800 number 446681800 region CH
+"+39 02 1234 5678" in "ZZ": OK +39 digits 0212345678 number 212345678 region IT
+"030 123456 ext. 42" in "DE": OK +49 digits 30123456 number 30123456 ext 42 region DE
+"1-800-FLOWERS" in "US": OK +1 digits 8003569377 number 8003569377 region US
+"tel:+41-44-668-18-00" in "": OK +41 digits 446681800 number 446681800 region CH
+"0049 30 123456" in "DE": OK +49 digits 30123456 number 30123456 region DE
+"abc" in "DE": FAIL NOT_A_NUMBER
+"030 123456" in "": FAIL INVALID_COUNTRY_CODE
+"011" in "US": FAIL TOO_SHORT_AFTER_IDD
+"+49 1" in "DE": FAIL TOO_SHORT_NSN
+"+49 123456789012345678" in "DE": FAIL TOO_LONG
+030123456 in full width digits in "DE": OK +49 digits 30123456 number 30123456 region DE
+
+== Possible versus valid
++1 650 253 000 parses     : True
+  IsPossibleNumberWithReason: TOO_SHORT
+  IsValidNumber           : False
+  GetRegionCodeForNumber  : ""
+  RegionCode field        : "US"
+044 668 18 00 (CH)
+  IsValidNumber           : True
+  IsValidNumberForRegion CH: True
+  IsValidNumberForRegion ch: True
+  IsValidNumberForRegion DE: False
+  IsPossibleNumberForType MOBILE: True
+  CanBeInternationallyDialled: True
+  MetadataCore.IsValidNumberForRegion(cc, nsn, 'ch'): False
+IsValidNumber('+49 30 123456', 'CH'): True
+
+== Number types
++41 44 668 18 00: FIXED_LINE, region CH
++41 79 123 45 67: MOBILE, region CH
++41 800 123 456: TOLL_FREE, region CH
++41 900 123 456: PREMIUM_RATE, region CH
++1 650-253-0000: FIXED_LINE_OR_MOBILE, region US
++800 1234 5678: TOLL_FREE, region 001
+
+== Comparing numbers
++41 44 668 18 00 vs +41446681800    : EXACT_MATCH
++41 44 668 18 00 vs 044 668 18 00   : NSN_MATCH
++41 44 668 18 00 vs +41 44 668 18 01: NO_MATCH
+abc vs +41 44 668 18 00             : NOT_A_NUMBER
+records 044 668 18 00 (CH) vs +41 44 668 18 00 (DE): EXACT_MATCH
+record 044 668 18 00 (CH) vs string 446681800: NSN_MATCH

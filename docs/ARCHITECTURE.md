@@ -3,7 +3,8 @@
 This document describes how the port is built and why: the layers, the
 generated metadata, the regex abstraction and its engine quirks, the string
 contract on both compilers, the reference oracle, the test strategy and the
-design questions that are closed. Fast moving numbers (test counts, gate
+design questions that are closed. How to USE the library is in the
+[user guide](GUIDE.md). Fast moving numbers (test counts, gate
 counts, metadata sizes) are not repeated here; they live in the manifest at the
 top of [AGENTS.md](../AGENTS.md).
 
@@ -425,6 +426,7 @@ has to switch the metadata the same way and say so in its header.
 | mass differential (`-RunMassDifferential`) | every example number agrees with the oracle on parse, four formats, possible, valid, type and region |
 | FreePascal compile check | every hand written unit of `src/` compiles with FreePascal; any warning fails |
 | FreePascal runtime check | a Delphi and a FreePascal build of `tools/fpcruntime/PhoneNumbersFpcRuntime.dpr` write byte identical observation files |
+| samples (`tools/run_samples.ps1`) | every program of `samples/` builds without warnings on Delphi and on FreePascal and prints exactly its golden output `samples/expected/<name>.txt` - which is what `docs/GUIDE.md` quotes |
 
 The test suite is ONE program (`tests/LibPhoneNumberTests.dpr`) on a test
 layer of its own (`tests/framework/`): fixtures derive from `TTestCase`, their

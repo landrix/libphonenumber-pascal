@@ -99,6 +99,14 @@ type
       out AEngineFormat: TMetadataPhoneNumberFormat;
       out ALegacyDisplay: Boolean): Boolean; static;
   public
+    { Upstream parse(numberToParse, defaultRegion): parses APhoneNumber into
+      AParsed. ACountry is the region assumed for a number written without
+      its calling code; it is canonicalised with UpperCase(Trim(...)), and an
+      empty or unknown region accepts only numbers written in international
+      format with a leading plus sign. Returns False with the reason in
+      AError instead of throwing. True does NOT mean valid: check that with
+      IsValidNumber. Accepts formatting, vanity letters, Unicode digits,
+      extensions ("ext. 42") and RFC3966 ("tel:+41-44-668-18-00"). }
     class function Parse(const APhoneNumber, ACountry: string; out AParsed: TPhoneNumber; out AError: TPhoneNumberParseError): Boolean; static;
     { Upstream parseAndKeepRawInput: same result as Parse plus the fields that
       upstream only fills in when keepRawInput is set - RawInput,
@@ -193,11 +201,15 @@ type
 
     { Upstream isPossibleNumber(CharSequence number, String regionDialingFrom):
       Parse in ACountry followed by IsPossibleNumber(TPhoneNumber); False when
-      the number does not parse. }
+      the number does not parse. Only the length is checked. }
     class function IsPossibleNumber(const APhoneNumber,
       ACountry: string): Boolean; overload; static;
     { Parse plus isValidNumber(PhoneNumber); False when the number does not
-      parse in ACountry. No upstream counterpart of its own. }
+      parse in ACountry. No upstream counterpart of its own. ACountry is only
+      the DEFAULT region of the parse, so this is not "valid in ACountry": a
+      number with its own calling code is validated for that code
+      ('+49 30 123456' is valid with ACountry 'CH'). Use
+      IsValidNumberForRegion for the region check. }
     class function IsValidNumber(const APhoneNumber,
       ACountry: string): Boolean; overload; static;
 
@@ -273,6 +285,16 @@ type
     class function CanBeInternationallyDialled(
       const AParsed: TPhoneNumber): Boolean; static;
 
+    { Upstream format(number, numberFormat): AParsed in one of the formats of
+      TPhoneNumberFormat; every format except E164 includes the extension.
+      Format does not validate - an invalid number is formatted as well as it
+      can be. A record whose national number is zero or absent takes
+      upstream's raw input path: it formats to its RawInput when it carries
+      one or has no calling code - so Default(TPhoneNumber) formats to the
+      empty string - and in E164 a FROM_DEFAULT_COUNTRY record with a calling
+      code gets that code prefixed to its RawInput. Every other record is
+      formatted normally; a hand built record with only the numeric
+      NationalNumber is formatted from its decimal digits. }
     class function Format(const AParsed: TPhoneNumber; AFormat: TPhoneNumberFormat): string; static;
 
     { ------------------------------------------------------------------
@@ -288,9 +310,9 @@ type
          unsupported regionCallingFrom makes formatOutOfCountryCallingNumber log
          a warning and fall back to the INTERNATIONAL format, and an invalid
          country calling code makes every one of them return the bare national
-         significant number. Note that this is deliberately NOT the empty string
-         that the older Format() returns for a number without a calling code -
-         the new entry points follow the upstream contract instead.
+         significant number. Unlike Format(), which returns the empty string
+         for a record without a calling code, these follow the upstream
+         contract.
       ------------------------------------------------------------------ }
 
     { Upstream formatOutOfCountryCallingNumber. }

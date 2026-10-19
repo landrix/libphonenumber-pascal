@@ -65,12 +65,13 @@ reopens them.
    character. That is only lossless when the conversion is: set
    `SetMultiByteConversionCodePage(CP_UTF8)` (the Lazarus convention) and, on
    Unix, put `cwstring` into the program's uses clause - without a widestring
-   manager the FPC RTL on Unix turns every non ASCII character into `?`. A
-   LONE surrogate cannot be carried by a UTF-8 `string` at all; only the
+   manager the FPC RTL on Unix turns every non ASCII character into `?`.
+   [docs/GUIDE.md](docs/GUIDE.md#lazarus-and-freepascal) has the recipe for a
+   program, Lazarus LCL applications included. A LONE surrogate cannot be carried by a UTF-8 `string` at all; only the
    UnicodeString entry points (the code point primitives, the
    AsYouTypeFormatter) can receive one. The runtime gate driver
    `tools/fpcruntime/PhoneNumbersFpcRuntime.dpr`, the test program
-   `tests/LibPhoneNumberTests.dpr` and the sample in `samples/` do exactly
+   `tests/LibPhoneNumberTests.dpr` and the samples in `samples/` do exactly
    this. A unit that spells non ASCII text as a numeric constant (`#$FF11`) in
    a `string` context additionally needs a source code page: without
    `{$CODEPAGE UTF8}` FreePascal converts such a constant at COMPILE time

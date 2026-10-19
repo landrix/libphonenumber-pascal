@@ -1,0 +1,56 @@
+== Short numbers
+112 dialled in DE
+  possible short number : yes
+  valid short number    : yes
+  expected cost         : TOLL_FREE
+  emergency number      : yes
+  connects to emergency : yes
+  carrier specific      : no
+  SMS service           : no
+  TPhoneNumberUtil.IsValidNumber: no
+110 dialled in DE
+  possible short number : yes
+  valid short number    : yes
+  expected cost         : TOLL_FREE
+  emergency number      : yes
+  connects to emergency : yes
+  carrier specific      : no
+  SMS service           : no
+  TPhoneNumberUtil.IsValidNumber: no
+116000 dialled in DE
+  possible short number : yes
+  valid short number    : yes
+  expected cost         : TOLL_FREE
+  emergency number      : no
+  connects to emergency : no
+  carrier specific      : no
+  SMS service           : no
+  TPhoneNumberUtil.IsValidNumber: no
+1120 dialled in DE
+  possible short number : yes
+  valid short number    : no
+  expected cost         : UNKNOWN_COST
+  emergency number      : no
+  connects to emergency : yes
+  carrier specific      : no
+  SMS service           : no
+  TPhoneNumberUtil.IsValidNumber: no
+22222 dialled in DE
+  possible short number : yes
+  valid short number    : no
+  expected cost         : UNKNOWN_COST
+  emergency number      : no
+  connects to emergency : no
+  carrier specific      : no
+  SMS service           : no
+  TPhoneNumberUtil.IsValidNumber: no
+
+== Emergency numbers are checked on the number as dialled
+IsEmergencyNumber('911', 'US')   : yes
+IsEmergencyNumber('+1 911', 'US'): no
+IsEmergencyNumber('112', 'us')   : yes
+
+== Example short numbers
+GetExampleShortNumber(DE)              : 110
+GetExampleShortNumberForCost(DE, toll free)   : "110"
+GetExampleShortNumberForCost(DE, premium rate): ""

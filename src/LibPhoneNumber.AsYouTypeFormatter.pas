@@ -161,8 +161,8 @@ type
       plus.
 
       ARegionCode is CANONICALISED with UpperCase(Trim(...)) before it is used,
-      the same way every other public entry point of this port normalises a
-      region argument. Upstream compares region codes exactly and would treat
+      the same way the facade TPhoneNumberUtil and the ShortNumberInfo
+      functions normalise a region argument. Upstream compares region codes exactly and would treat
       ' de ' as an unknown region; the canonical codes are a superset of what
       it accepts, so accepting them changes no answer for a caller that already
       passes CLDR codes and is a deliberate service for one that does not. }

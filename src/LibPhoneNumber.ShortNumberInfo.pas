@@ -183,7 +183,7 @@ function GetExampleShortNumber(const ARegionCode: string): string;
 function GetExampleShortNumberForCost(const ARegionCode: string;
   ACost: TShortNumberCost): string;
 
-{ Diagnostics. }
+{ Diagnostics: the upstream enum name, "TOLL_FREE", "STANDARD_RATE", ... }
 function ShortNumberCostToString(ACost: TShortNumberCost): string;
 
 implementation

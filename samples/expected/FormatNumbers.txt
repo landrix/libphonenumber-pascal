@@ -1,0 +1,57 @@
+== Format
+044 668 18 00 (CH)
+  pnfE164                : +41446681800
+  pnfInternational       : +41 44 668 18 00
+  pnfInternationalLegacy : +41 (44) 668 18 00
+  pnfNational            : 044 668 18 00
+  pnfRfc3966             : tel:+41-44-668-18-00
+650 253 0000 (US)
+  pnfE164                : +16502530000
+  pnfInternational       : +1 650-253-0000
+  pnfInternationalLegacy : +1 650-253-0000
+  pnfNational            : (650) 253-0000
+  pnfRfc3966             : tel:+1-650-253-0000
+030 123456 ext. 42 (DE)
+  pnfE164                : +4930123456
+  pnfInternational       : +49 30 123456 ext. 42
+  pnfInternationalLegacy : +49 (30) 123456 ext. 42
+  pnfNational            : 030 123456 ext. 42
+  pnfRfc3966             : tel:+49-30-123456;ext=42
+
+== FormatOutOfCountryCallingNumber
+CH number from US: 011 41 44 668 18 00
+CH number from DE: 00 41 44 668 18 00
+CH number from CH: 044 668 18 00
+US number from US: 1 (650) 253-0000
+US number from CA: 1 (650) 253-0000
+US number from GB: 00 1 650-253-0000
+
+== Formats that need ParseAndKeepRawInput
+RawInput                        : 0446681800
+FormatInOriginalFormat (CH)     : 044 668 18 00
+FormatNumberForMobileDialing CH : 044 668 18 00
+FormatNumberForMobileDialing US : +41446681800
+FormatInOriginalFormat of +41 44 668 18 00 (CH): +41 44 668 18 00
+1-800-FLOWERS NATIONAL          : (800) 356-9377
+1-800-FLOWERS from DE keeping alpha characters: 00 1 800-FLOWERS
+
+== Carrier codes (Brazil)
+NATIONAL                           : (11) 2345-6789
+FormatNationalNumberWithCarrierCode 15: 0 15 (11) 2345-6789
+FormatNumberForMobileDialing BR    : ""
+PreferredDomesticCarrierCode       : 15
+FormatNationalNumberWithPreferredCarrierCode, fallback 21: 0 15 (11) 2345-6789
+FormatNumberForMobileDialing BR    : "0 15 (11) 2345-6789"
+
+== FormatByPattern
+NATIONAL     : 650.253.0000
+INTERNATIONAL: +1 650.253.0000
+
+== Parts of a number
+GetNationalSignificantNumber      : 446681800
+GetLengthOfNationalDestinationCode: 2
+GetLengthOfGeographicalAreaCode   : 2
+
+== Pitfalls
+invalid +1 650 253 000 as E164: +1650253000, valid: False
+Format(Default(TPhoneNumber), pnfE164): ""

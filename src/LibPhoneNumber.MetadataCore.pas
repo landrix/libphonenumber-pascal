@@ -164,10 +164,13 @@ uses
   LibPhoneNumber.Metadata.Types;
 
 type
-  { Upstream PhoneNumberUtil.PhoneNumberType, in upstream declaration order. }
+  { Upstream PhoneNumberUtil.PhoneNumberType, in upstream declaration order.
+    The answer of GetNumberType; NumberTypeToString gives the upstream name. }
   TMetadataNumberType = (
     mntFixedLine,
     mntMobile,
+    { The region does not tell fixed line and mobile numbers apart by their
+      digits (US, CA and the other NANPA regions, for example). }
     mntFixedLineOrMobile,
     mntTollFree,
     mntPremiumRate,
@@ -177,15 +180,22 @@ type
     mntPager,
     mntUan,
     mntVoicemail,
+    { Not a valid number, or a type the metadata does not describe. }
     mntUnknown
   );
 
-  { Upstream PhoneNumberUtil.ValidationResult, in upstream declaration order. }
+  { Upstream PhoneNumberUtil.ValidationResult, in upstream declaration order:
+    the answer of the IsPossibleNumber*WithReason functions, a check of the
+    LENGTH only. ValidationResultToString gives the upstream name. }
   TMetadataValidationResult = (
     mvrIsPossible,
+    { The number can only be dialled within its local area (it lacks the
+      area code). }
     mvrIsPossibleLocalOnly,
     mvrInvalidCountryCode,
     mvrTooShort,
+    { Between the shortest and the longest length, but no possible length
+      itself. }
     mvrInvalidLength,
     mvrTooLong
   );
@@ -218,9 +228,17 @@ function IsNumberMatchingDesc(const ANationalNumber: string;
   ADesc: PPhoneNumberDescRec): Boolean;
 
 { Region resolution }
+
+{ Upstream getRegionCodeForCountryCode: the main region of a calling code
+  (US for 1, GB for 44), "001" for a non geographical entity, 'ZZ' for an
+  unknown calling code. }
 function GetRegionCodeForCountryCode(ACountryCode: Integer): string;
 function TryGetMetadataForRegionOrCallingCode(ACountryCode: Integer;
   const ARegionCode: string; out AMetadata: PPhoneMetadataRec): Boolean;
+{ Upstream getRegionCodeForNumber on (calling code, national significant
+  number): the region the number belongs to, "001" for a non geographical
+  entity, the empty string when no region matches. The record form is
+  TPhoneNumberUtil.GetRegionCodeForNumber. }
 function GetRegionCodeForNumber(ACountryCode: Integer;
   const ANationalNumber: string): string;
 
@@ -337,7 +355,10 @@ function TestNumberLengthForType(const ANationalNumber: string;
   AMetadata: PPhoneMetadataRec;
   AType: TMetadataNumberType): TMetadataValidationResult;
 
-{ Possible number API }
+{ Possible number API: upstream isPossibleNumber*, a check of the LENGTH of
+  ANationalNumber (the national significant number, TPhoneNumber
+  .NationalNumberDigits) against the main region of ACountryCode. The record
+  forms are the methods of the same names on TPhoneNumberUtil. }
 function IsPossibleNumberWithReason(ACountryCode: Integer;
   const ANationalNumber: string): TMetadataValidationResult;
 function IsPossibleNumberForTypeWithReason(ACountryCode: Integer;
@@ -348,7 +369,11 @@ function IsPossibleNumber(ACountryCode: Integer;
 function IsPossibleNumberForType(ACountryCode: Integer;
   const ANationalNumber: string; AType: TMetadataNumberType): Boolean;
 
-{ Typing and validity }
+{ Typing and validity: upstream getNumberType, isValidNumber and
+  isValidNumberForRegion on (calling code, national significant number). The
+  record forms are the methods of the same names on TPhoneNumberUtil, which
+  also canonicalise the region argument; ARegionCode is taken EXACTLY here
+  ('ch' is not 'CH'). }
 function GetNumberTypeHelper(const ANationalNumber: string;
   AMetadata: PPhoneMetadataRec): TMetadataNumberType;
 function GetNumberType(ACountryCode: Integer;
@@ -596,7 +621,7 @@ function IsUnwantedEndCharBefore(const AWide: UnicodeString;
 function TryMatchExtensionForMatchingAt(const AWide: UnicodeString;
   AStart, ATo: Integer; out AMatchEnd: Integer): Boolean;
 
-{ Diagnostics }
+{ Diagnostics: the upstream enum names, "FIXED_LINE", "IS_POSSIBLE", ... }
 function NumberTypeToString(AType: TMetadataNumberType): string;
 function ValidationResultToString(AResult: TMetadataValidationResult): string;
 { Maps a stored description kind to the number type it represents; returns
