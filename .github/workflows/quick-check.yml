@@ -1,0 +1,44 @@
+name: Quick Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  quick-check:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The upstream clone is git-ignored; the generator and the length compare
+      # gate read its XMLs. Fetch exactly the commit pinned in vendor/versions.md.
+      - name: Fetch upstream libphonenumber at the pinned commit
+        shell: pwsh
+        run: |
+          $versions = Get-Content -Raw -LiteralPath vendor/versions.md
+          $sha = [regex]::Match($versions, 'google/libphonenumber/commit/([0-9a-f]{40})').Groups[1].Value
+          if (-not $sha) { throw "No pinned libphonenumber commit found in vendor/versions.md." }
+          git init --quiet vendor/libphonenumber
+          git -C vendor/libphonenumber remote add origin https://github.com/google/libphonenumber.git
+          git -C vendor/libphonenumber fetch --quiet --depth 1 origin $sha
+          if ($LASTEXITCODE -ne 0) { throw "Fetching libphonenumber $sha failed." }
+          git -C vendor/libphonenumber checkout --quiet --detach FETCH_HEAD
+          if ($LASTEXITCODE -ne 0) { throw "Checking out libphonenumber $sha failed." }
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # The hosted runner has neither Delphi nor FreePascal: the DUnitX build,
+      # the FreePascal compile check and the FreePascal runtime check skip with
+      # a warning. What runs here is the metadata generator, the check that the
+      # committed generated units are its exact output, and the length compare
+      # gate against the upstream XML.
+      - name: Run quick check
+        shell: pwsh
+        run: powershell -ExecutionPolicy Bypass -File tools/run_pr_quick_check.ps1

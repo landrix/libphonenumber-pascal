@@ -1,0 +1,272 @@
+[
+  {
+    "name": "DE mobile with spaces",
+    "input": "+49 151 12345678",
+    "country": "DE",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "DE",
+    "expectedNationalNumber": "15112345678",
+    "shouldBeValid": true
+  },
+  {
+    "name": "DE local with slash",
+    "input": "030/123456",
+    "country": "DE",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "DE",
+    "expectedNationalNumber": "30123456",
+    "shouldBeValid": true
+  },
+  {
+    "name": "DE with punctuation",
+    "input": "+49-(0)30-1234-567",
+    "country": "DE",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "DE",
+    "expectedNationalNumber": "301234567",
+    "shouldBeValid": true
+  },
+  {
+    "name": "US E164",
+    "input": "+1 202 555 0123",
+    "country": "US",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "US",
+    "expectedNationalNumber": "2025550123",
+    "shouldBeValid": true
+  },
+  {
+    "name": "US national formatting",
+    "input": "(202) 555-0123",
+    "country": "US",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "US",
+    "expectedNationalNumber": "2025550123",
+    "shouldBeValid": true
+  },
+  {
+    "name": "US with extension text",
+    "input": "+1 202 555 0123 ext. 99",
+    "country": "US",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "US",
+    "expectedNationalNumber": "2025550123",
+    "shouldBeValid": true
+  },
+  {
+    "name": "GB international",
+    "input": "+44 20 7946 0321",
+    "country": "GB",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "GB",
+    "expectedNationalNumber": "2079460321",
+    "shouldBeValid": true
+  },
+  {
+    "name": "GB national",
+    "input": "020 7946 0321",
+    "country": "GB",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "GB",
+    "expectedNationalNumber": "2079460321",
+    "shouldBeValid": true
+  },
+  {
+    "name": "FR international",
+    "input": "+33 1 42 68 53 00",
+    "country": "FR",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "FR",
+    "expectedNationalNumber": "142685300",
+    "shouldBeValid": true
+  },
+  {
+    "name": "IT mobile",
+    "input": "+39 347 123 4567",
+    "country": "IT",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "IT",
+    "expectedNationalNumber": "3471234567",
+    "shouldBeValid": true
+  },
+  {
+    "name": "ES mobile",
+    "input": "+34 612 34 56 78",
+    "country": "ES",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "ES",
+    "expectedNationalNumber": "612345678",
+    "shouldBeValid": true
+  },
+  {
+    "name": "CH office number",
+    "input": "+41 44 668 18 00",
+    "country": "CH",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "CH",
+    "expectedNationalNumber": "446681800",
+    "shouldBeValid": true
+  },
+  {
+    "name": "AT with spacing",
+    "input": "+43 1 234 56 78",
+    "country": "AT",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "AT",
+    "expectedNationalNumber": "12345678",
+    "shouldBeValid": true
+  },
+  {
+    "name": "NL mobile",
+    "input": "+31 6 12345678",
+    "country": "NL",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "NL",
+    "expectedNationalNumber": "612345678",
+    "shouldBeValid": true
+  },
+  {
+    "name": "SE mobile",
+    "input": "+46 70 123 45 67",
+    "country": "SE",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "SE",
+    "expectedNationalNumber": "701234567",
+    "shouldBeValid": true
+  },
+  {
+    "name": "PL mobile",
+    "input": "+48 501 234 567",
+    "country": "PL",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "PL",
+    "expectedNationalNumber": "501234567",
+    "shouldBeValid": true
+  },
+  {
+    "name": "NO with dots",
+    "input": "+47 21.23.24.25",
+    "country": "NO",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "NO",
+    "expectedNationalNumber": "21232425",
+    "shouldBeValid": true
+  },
+  {
+    "name": "DK with dashes",
+    "input": "+45-32-12-34-56",
+    "country": "DK",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "DK",
+    "expectedNationalNumber": "32123456",
+    "shouldBeValid": true
+  },
+  {
+    "name": "JP international",
+    "input": "+81 3-1234-5678",
+    "country": "JP",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "JP",
+    "expectedNationalNumber": "312345678",
+    "shouldBeValid": true
+  },
+  {
+    "name": "AU international",
+    "input": "+61 2 9374 4000",
+    "country": "AU",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "AU",
+    "expectedNationalNumber": "293744000",
+    "shouldBeValid": true
+  },
+  {
+    "name": "IN mobile",
+    "input": "+91 98765 43210",
+    "country": "IN",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "IN",
+    "expectedNationalNumber": "9876543210",
+    "shouldBeValid": true
+  },
+  {
+    "name": "GB international with 00 prefix",
+    "input": "0044 20 7946 0321",
+    "country": "GB",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "GB",
+    "expectedNationalNumber": "2079460321",
+    "shouldBeValid": true
+  },
+  {
+    "name": "GB international with 011 prefix from US",
+    "input": "01144 20 7946 0321",
+    "country": "US",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "GB",
+    "expectedNationalNumber": "2079460321",
+    "shouldBeValid": true
+  },
+  {
+    "name": "Empty input",
+    "input": "",
+    "country": "DE",
+    "shouldParse": false,
+    "expectedError": "pnpeNotANumber",
+    "expectedRegion": "DE",
+    "expectedNationalNumber": "0",
+    "shouldBeValid": false
+  },
+  {
+    "name": "Letters only",
+    "input": "abcdef",
+    "country": "US",
+    "shouldParse": false,
+    "expectedError": "pnpeNotANumber",
+    "expectedRegion": "US",
+    "expectedNationalNumber": "0",
+    "shouldBeValid": false
+  },
+  {
+    "name": "Symbols only",
+    "input": "+-()/ .",
+    "country": "GB",
+    "shouldParse": false,
+    "expectedError": "pnpeNotANumber",
+    "expectedRegion": "GB",
+    "expectedNationalNumber": "0",
+    "shouldBeValid": false
+  },
+  {
+    "name": "DE mobile ten digit (upstream invalid)",
+    "input": "+49 151 1234567",
+    "country": "DE",
+    "shouldParse": true,
+    "expectedError": "pnpeNone",
+    "expectedRegion": "DE",
+    "expectedNationalNumber": "1511234567",
+    "shouldBeValid": false
+  }
+]

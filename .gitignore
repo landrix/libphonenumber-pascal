@@ -1,0 +1,27 @@
+__history
+*.local
+*.identcache
+*.dsk
+*.~dsk
+
+# Upstream clones at the commits pinned in vendor/versions.md
+vendor/libphonenumber-csharp
+vendor/libphonenumber
+
+# Build output
+tests/bin
+tests/dcu
+samples/bin
+*.dcu
+*.ppu
+*.o
+
+# Generated local artefacts and the NuGet oracle cache
+tools/snapshots/*.json
+tools/.nuget-oracle/
+
+# GNU Global tags
+GPATH
+GTAGS
+GRTAGS
+GTEMP.pas

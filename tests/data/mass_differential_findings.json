@@ -1,0 +1,16 @@
+{
+  "summary": {
+    "generatedAt": "2026-10-18T11:10:00+02:00",
+    "oracle": "libphonenumber-csharp 9.0.41 (9.0.41.0)",
+    "metadataVersion": "metadata-v1",
+    "metadataSourceFile": "resources/PhoneNumberMetadata.xml",
+    "metadataSourceCommit": "33be5664343676b27761213d8f5500d682568ea7",
+    "caseCount": 1144,
+    "expectedCaseCount": 1144,
+    "comparedFields": 10296,
+    "fieldsPerCase": 9,
+    "parseFailures": 0,
+    "findingCount": 0
+  },
+  "findings": []
+}

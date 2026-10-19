@@ -1,0 +1,987 @@
+{
+  "generator": "tools/generate_aytf_cases.ps1",
+  "oraclePackage": "libphonenumber-csharp 9.0.41",
+  "oracleAssembly": "9.0.41.0",
+  "note": "Generated expectations. Test IDEAS come from the upstream Java suites; every value here is computed against the SHIPPED metadata by the C# NuGet oracle, never copied from PhoneNumberMetadataForTesting.xml based tests.",
+  "aytfSequences": [
+    {
+      "name": "US international with plus",
+      "region": "US",
+      "input": "+16502532222",
+      "comment": "testAYTFUS idea: the plus branch, attemptToExtractIdd plus attemptToExtractCountryCallingCode.",
+      "outputs": [
+        "+",
+        "+1",
+        "+1 6",
+        "+1 65",
+        "+1 650",
+        "+1 650-2",
+        "+1 650-25",
+        "+1 650-253",
+        "+1 650-253-2",
+        "+1 650-253-22",
+        "+1 650-253-222",
+        "+1 650-253-2222"
+      ]
+    },
+    {
+      "name": "US national with national prefix",
+      "region": "US",
+      "input": "16502532222",
+      "comment": "isNanpaNumberWithNationalPrefix: the leading 1 becomes the national prefix.",
+      "outputs": [
+        "1",
+        "16",
+        "1 65",
+        "1 (650",
+        "1 (650) 2",
+        "1 (650) 25",
+        "1 (650) 253",
+        "1 (650) 253-2",
+        "1 (650) 253-22",
+        "1 (650) 253-222",
+        "1 (650) 253-2222"
+      ]
+    },
+    {
+      "name": "US national without national prefix",
+      "region": "US",
+      "input": "6502532222",
+      "comment": "Plain national entry, no prefix extraction.",
+      "outputs": [
+        "6",
+        "65",
+        "650",
+        "650-2",
+        "650-25",
+        "650-253",
+        "650-2532",
+        "(650) 253-22",
+        "(650) 253-222",
+        "(650) 253-2222"
+      ]
+    },
+    {
+      "name": "US IDD 011 to GB",
+      "region": "US",
+      "input": "01144212345678",
+      "comment": "testAYTFLongIDD idea: IDD 011 plus country calling code 44, currentMetadata switches to GB.",
+      "outputs": [
+        "0",
+        "01",
+        "011 ",
+        "011 4",
+        "011 44 ",
+        "011 44 2",
+        "011 44 21",
+        "011 44 21 2",
+        "011 44 21 23",
+        "011 44 21 234",
+        "011 44 21 2345",
+        "011 44 21 2345 6",
+        "011 44 21 2345 67",
+        "011 44 21 2345 678"
+      ]
+    },
+    {
+      "name": "US star short code",
+      "region": "US",
+      "input": "*121#",
+      "comment": "testAYTFUSMobileShortCode idea: a non digit turns formatting off for good (inputHasFormatting).",
+      "outputs": [
+        "*",
+        "*1",
+        "*12",
+        "*121",
+        "*121#"
+      ]
+    },
+    {
+      "name": "US vanity with spaces",
+      "region": "US",
+      "input": "800 MY APPLE",
+      "comment": "testAYTFUSVanityNumber idea: alpha input is echoed unformatted.",
+      "outputs": [
+        "8",
+        "80",
+        "800",
+        "800 ",
+        "800 M",
+        "800 MY",
+        "800 MY ",
+        "800 MY A",
+        "800 MY AP",
+        "800 MY APP",
+        "800 MY APPL",
+        "800 MY APPLE"
+      ]
+    },
+    {
+      "name": "DE national Berlin",
+      "region": "DE",
+      "input": "030123456",
+      "comment": "testAYTFDE idea, recomputed on the shipped metadata.",
+      "outputs": [
+        "0",
+        "03",
+        "030",
+        "030 1",
+        "030 12",
+        "030 123",
+        "030 1234",
+        "030 12345",
+        "030 123456"
+      ]
+    },
+    {
+      "name": "DE international with plus",
+      "region": "DE",
+      "input": "+4930123456",
+      "comment": "",
+      "outputs": [
+        "+",
+        "+4",
+        "+49 ",
+        "+49 3",
+        "+49 30",
+        "+49 30 1",
+        "+49 30 12",
+        "+49 30 123",
+        "+49 30 1234",
+        "+49 30 12345",
+        "+49 30 123456"
+      ]
+    },
+    {
+      "name": "DE mobile national",
+      "region": "DE",
+      "input": "015112345678",
+      "comment": "",
+      "outputs": [
+        "0",
+        "01",
+        "015",
+        "0151",
+        "01511",
+        "01511 2",
+        "01511 23",
+        "01511 234",
+        "01511 2345",
+        "01511 23456",
+        "01511 234567",
+        "01511 2345678"
+      ]
+    },
+    {
+      "name": "GB mobile national",
+      "region": "GB",
+      "input": "07912345678",
+      "comment": "testAYTFGBFixedLine idea for the mobile range.",
+      "outputs": [
+        "0",
+        "07",
+        "079",
+        "0791",
+        "07912",
+        "07912 3",
+        "07912 34",
+        "07912 345",
+        "07912 3456",
+        "07912 34567",
+        "07912 345678"
+      ]
+    },
+    {
+      "name": "GB fixed line national",
+      "region": "GB",
+      "input": "02012345678",
+      "comment": "",
+      "outputs": [
+        "0",
+        "02",
+        "020",
+        "020 1",
+        "020 12",
+        "020 123",
+        "020 1234",
+        "020 1234 5",
+        "020 1234 56",
+        "020 1234 567",
+        "020 1234 5678"
+      ]
+    },
+    {
+      "name": "GB international with plus",
+      "region": "GB",
+      "input": "+447912345678",
+      "comment": "",
+      "outputs": [
+        "+",
+        "+4",
+        "+44 ",
+        "+44 7",
+        "+44 79",
+        "+44 791",
+        "+44 7912",
+        "+44 7912 3",
+        "+44 7912 34",
+        "+44 7912 345",
+        "+44 7912 3456",
+        "+44 7912 34567",
+        "+44 7912 345678"
+      ]
+    },
+    {
+      "name": "ZZ unknown region with plus",
+      "region": "ZZ",
+      "input": "+48881231",
+      "comment": "testInvalidRegion idea: EMPTY_METADATA fallback, formatting only works through the plus branch.",
+      "outputs": [
+        "+",
+        "+4",
+        "+48 ",
+        "+48 8",
+        "+48 88",
+        "+48 881",
+        "+48 881 2",
+        "+48 881 23",
+        "+48 881 231"
+      ]
+    },
+    {
+      "name": "ZZ unknown region national",
+      "region": "ZZ",
+      "input": "650253",
+      "comment": "testInvalidRegion idea, second half: no metadata, so nothing is formatted.",
+      "outputs": [
+        "6",
+        "65",
+        "650",
+        "6502",
+        "65025",
+        "650253"
+      ]
+    },
+    {
+      "name": "ZZ plus sign in the middle",
+      "region": "ZZ",
+      "input": "+48881231+2",
+      "comment": "testInvalidPlusSign idea: a plus is only a plus at position one.",
+      "outputs": [
+        "+",
+        "+4",
+        "+48 ",
+        "+48 8",
+        "+48 88",
+        "+48 881",
+        "+48 881 2",
+        "+48 881 23",
+        "+48 881 231",
+        "+48881231+",
+        "+48881231+2"
+      ]
+    },
+    {
+      "name": "JP multiple leading digit patterns",
+      "region": "JP",
+      "input": "+815023456789",
+      "comment": "testAYTFMultipleLeadingDigitPatterns idea.",
+      "outputs": [
+        "+",
+        "+8",
+        "+81 ",
+        "+81 5",
+        "+81 50",
+        "+81 50-2",
+        "+81 50-23",
+        "+81 50-234",
+        "+81 50-2345",
+        "+81 50-2345-6",
+        "+81 50-2345-67",
+        "+81 50-2345-678",
+        "+81 50-2345-6789"
+      ]
+    },
+    {
+      "name": "International toll free from US",
+      "region": "US",
+      "input": "+800123456789",
+      "comment": "testAYTF_International_Toll_Free idea: the non geographical entity 800.",
+      "outputs": [
+        "+",
+        "+8",
+        "+80",
+        "+800 ",
+        "+800 1",
+        "+800 12",
+        "+800 123",
+        "+800 1234",
+        "+800 1234 5",
+        "+800 1234 56",
+        "+800 1234 567",
+        "+800 1234 5678",
+        "+800123456789"
+      ]
+    },
+    {
+      "name": "BR national",
+      "region": "BR",
+      "input": "01131234567",
+      "comment": "National prefix plus carrier code shape; ableToExtractLongerNdd territory.",
+      "outputs": [
+        "0",
+        "01",
+        "011",
+        "011 3",
+        "011 31",
+        "011 312",
+        "011 3123",
+        "011 3123-4",
+        "011 3123-45",
+        "011 3123-456",
+        "011 3123-4567"
+      ]
+    },
+    {
+      "name": "AU long IDD",
+      "region": "AU",
+      "input": "0011541234567",
+      "comment": "testAYTFLongIDD_AU idea: AU has a multi branch internationalPrefix.",
+      "outputs": [
+        "0",
+        "00",
+        "001",
+        "0011",
+        "00115",
+        "0011 54 ",
+        "0011 54 1",
+        "0011 54 12",
+        "0011 54 12 3",
+        "0011 54 12 34",
+        "0011 54 12 345",
+        "0011 54 12 3456",
+        "0011 54 12 3456-7"
+      ]
+    },
+    {
+      "name": "KR long NDD",
+      "region": "KR",
+      "input": "0212345678",
+      "comment": "testAYTFLongNDD_KR idea.",
+      "outputs": [
+        "0",
+        "02",
+        "021",
+        "02-12",
+        "02-123",
+        "02-1234",
+        "02-1234-5",
+        "02-1234-56",
+        "02-123-4567",
+        "02-1234-5678"
+      ]
+    }
+  ],
+  "aytfRemember": [
+    {
+      "name": "US remember first and fourth digit",
+      "region": "US",
+      "input": "16502532222",
+      "comment": "testAYTFAndRememberPositionUS idea: the remembered position moves as separators are inserted.",
+      "rememberIndices": [
+        0,
+        3
+      ],
+      "outputs": [
+        "1",
+        "16",
+        "1 65",
+        "1 (650",
+        "1 (650) 2",
+        "1 (650) 25",
+        "1 (650) 253",
+        "1 (650) 253-2",
+        "1 (650) 253-22",
+        "1 (650) 253-222",
+        "1 (650) 253-2222"
+      ],
+      "positions": [
+        1,
+        1,
+        1,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "US remember after plus",
+      "region": "US",
+      "input": "+16502532222",
+      "comment": "",
+      "rememberIndices": [
+        4
+      ],
+      "outputs": [
+        "+",
+        "+1",
+        "+1 6",
+        "+1 65",
+        "+1 650",
+        "+1 650-2",
+        "+1 650-25",
+        "+1 650-253",
+        "+1 650-253-2",
+        "+1 650-253-22",
+        "+1 650-253-222",
+        "+1 650-253-2222"
+      ],
+      "positions": [
+        0,
+        0,
+        0,
+        0,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "US remember then formatting char",
+      "region": "US",
+      "input": "650253*22",
+      "comment": "Once ableToFormat is false getRememberedPosition returns the ORIGINAL position instead.",
+      "rememberIndices": [
+        1
+      ],
+      "outputs": [
+        "6",
+        "65",
+        "650",
+        "650-2",
+        "650-25",
+        "650-253",
+        "650253*",
+        "650253*2",
+        "650253*22"
+      ],
+      "positions": [
+        0,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "name": "DE remember area code digit",
+      "region": "DE",
+      "input": "03012345678",
+      "comment": "",
+      "rememberIndices": [
+        2
+      ],
+      "outputs": [
+        "0",
+        "03",
+        "030",
+        "030 1",
+        "030 12",
+        "030 123",
+        "030 1234",
+        "030 12345",
+        "030 123456",
+        "030 1234567",
+        "030 12345678"
+      ],
+      "positions": [
+        0,
+        0,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ]
+    }
+  ],
+  "aytfClear": [
+    {
+      "name": "US national twice on one formatter",
+      "region": "US",
+      "firstInput": "6502532222",
+      "firstOutputs": [
+        "6",
+        "65",
+        "650",
+        "650-2",
+        "650-25",
+        "650-253",
+        "650-2532",
+        "(650) 253-22",
+        "(650) 253-222",
+        "(650) 253-2222"
+      ],
+      "secondInput": "6502532222",
+      "secondOutputs": [
+        "6",
+        "65",
+        "650",
+        "650-2",
+        "650-25",
+        "650-253",
+        "650-2532",
+        "(650) 253-22",
+        "(650) 253-222",
+        "(650) 253-2222"
+      ]
+    },
+    {
+      "name": "US plus then national",
+      "region": "US",
+      "firstInput": "+16502532222",
+      "firstOutputs": [
+        "+",
+        "+1",
+        "+1 6",
+        "+1 65",
+        "+1 650",
+        "+1 650-2",
+        "+1 650-25",
+        "+1 650-253",
+        "+1 650-253-2",
+        "+1 650-253-22",
+        "+1 650-253-222",
+        "+1 650-253-2222"
+      ],
+      "secondInput": "6502532222",
+      "secondOutputs": [
+        "6",
+        "65",
+        "650",
+        "650-2",
+        "650-25",
+        "650-253",
+        "650-2532",
+        "(650) 253-22",
+        "(650) 253-222",
+        "(650) 253-2222"
+      ]
+    },
+    {
+      "name": "US IDD then national",
+      "region": "US",
+      "firstInput": "01144212345678",
+      "firstOutputs": [
+        "0",
+        "01",
+        "011 ",
+        "011 4",
+        "011 44 ",
+        "011 44 2",
+        "011 44 21",
+        "011 44 21 2",
+        "011 44 21 23",
+        "011 44 21 234",
+        "011 44 21 2345",
+        "011 44 21 2345 6",
+        "011 44 21 2345 67",
+        "011 44 21 2345 678"
+      ],
+      "secondInput": "6502532222",
+      "secondOutputs": [
+        "6",
+        "65",
+        "650",
+        "650-2",
+        "650-25",
+        "650-253",
+        "650-2532",
+        "(650) 253-22",
+        "(650) 253-222",
+        "(650) 253-2222"
+      ]
+    }
+  ],
+  "aytfSmoke": [
+    {
+      "region": "US",
+      "input": "+12015550123",
+      "expected": "+1 201-555-0123"
+    },
+    {
+      "region": "CA",
+      "input": "+15062345678",
+      "expected": "+1 506-234-5678"
+    },
+    {
+      "region": "GB",
+      "input": "+441212345678",
+      "expected": "+44 121 234 5678"
+    },
+    {
+      "region": "DE",
+      "input": "+4930123456",
+      "expected": "+49 30 123456"
+    },
+    {
+      "region": "FR",
+      "input": "+33123456789",
+      "expected": "+33 1 23 45 67 89"
+    },
+    {
+      "region": "IT",
+      "input": "+390212345678",
+      "expected": "+39 02 1234 5678"
+    },
+    {
+      "region": "ES",
+      "input": "+34810123456",
+      "expected": "+34 810 12 34 56"
+    },
+    {
+      "region": "NL",
+      "input": "+31101234567",
+      "expected": "+31 10 123 4567"
+    },
+    {
+      "region": "CH",
+      "input": "+41212345678",
+      "expected": "+41 21 234 56 78"
+    },
+    {
+      "region": "AT",
+      "input": "+431234567890",
+      "expected": "+43 1 234567890"
+    },
+    {
+      "region": "BE",
+      "input": "+3212345678",
+      "expected": "+32 12 34 56 78"
+    },
+    {
+      "region": "SE",
+      "input": "+468123456",
+      "expected": "+46 8 12 34 56"
+    },
+    {
+      "region": "PL",
+      "input": "+48123456789",
+      "expected": "+48 12 345 67 89"
+    },
+    {
+      "region": "PT",
+      "input": "+351212345678",
+      "expected": "+351 21 234 5678"
+    },
+    {
+      "region": "IE",
+      "input": "+3532212345",
+      "expected": "+353 22 12345"
+    },
+    {
+      "region": "AU",
+      "input": "+61212345678",
+      "expected": "+61 2 1234 5678"
+    },
+    {
+      "region": "NZ",
+      "input": "+6432345678",
+      "expected": "+64 3 234 5678"
+    },
+    {
+      "region": "JP",
+      "input": "+81312345678",
+      "expected": "+81 3-1234-5678"
+    },
+    {
+      "region": "BR",
+      "input": "+551123456789",
+      "expected": "+55 11 2345-6789"
+    },
+    {
+      "region": "AR",
+      "input": "+541123456789",
+      "expected": "+54 11 2345-6789"
+    },
+    {
+      "region": "MX",
+      "input": "+522001234567",
+      "expected": "+52 200 123 4567"
+    },
+    {
+      "region": "IN",
+      "input": "+917410410123",
+      "expected": "+91 74104 10123"
+    },
+    {
+      "region": "ZA",
+      "input": "+27101234567",
+      "expected": "+27 10 123 4567"
+    },
+    {
+      "region": "KR",
+      "input": "+8222123456",
+      "expected": "+82 2-212-3456"
+    }
+  ],
+  "mobileDialing": [
+    {
+      "name": "US from US with formatting",
+      "input": "+1 650 253 0000",
+      "region": "US",
+      "regionCallingFrom": "US",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "+1 650-253-0000"
+    },
+    {
+      "name": "US from US without formatting",
+      "input": "+1 650 253 0000",
+      "region": "US",
+      "regionCallingFrom": "US",
+      "withFormatting": false,
+      "keepRawInput": false,
+      "expected": "+16502530000"
+    },
+    {
+      "name": "US from GB with formatting",
+      "input": "+1 650 253 0000",
+      "region": "US",
+      "regionCallingFrom": "GB",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "+1 650-253-0000"
+    },
+    {
+      "name": "US from GB without formatting",
+      "input": "+1 650 253 0000",
+      "region": "US",
+      "regionCallingFrom": "GB",
+      "withFormatting": false,
+      "keepRawInput": false,
+      "expected": "+16502530000"
+    },
+    {
+      "name": "US from DE",
+      "input": "+1 650 253 0000",
+      "region": "US",
+      "regionCallingFrom": "DE",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "+1 650-253-0000"
+    },
+    {
+      "name": "BR from BR without carrier code",
+      "input": "+55 11 3121-2869",
+      "region": "BR",
+      "regionCallingFrom": "BR",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": ""
+    },
+    {
+      "name": "BR from BR with carrier code",
+      "input": "012 3121286979",
+      "region": "BR",
+      "regionCallingFrom": "BR",
+      "withFormatting": true,
+      "keepRawInput": true,
+      "expected": "0 12 (31) 2128-6979"
+    },
+    {
+      "name": "BR from US",
+      "input": "+55 11 3121-2869",
+      "region": "BR",
+      "regionCallingFrom": "US",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "+55 11 3121-2869"
+    },
+    {
+      "name": "MX from MX",
+      "input": "+52 1 33 1234 5678",
+      "region": "MX",
+      "regionCallingFrom": "MX",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "13312345678"
+    },
+    {
+      "name": "MX from US",
+      "input": "+52 1 33 1234 5678",
+      "region": "MX",
+      "regionCallingFrom": "US",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": ""
+    },
+    {
+      "name": "CL from CL",
+      "input": "+56 2 2123 4567",
+      "region": "CL",
+      "regionCallingFrom": "CL",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "+56 2 2123 4567"
+    },
+    {
+      "name": "UZ from UZ",
+      "input": "+998 71 123 4567",
+      "region": "UZ",
+      "regionCallingFrom": "UZ",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "+998 71 123 45 67"
+    },
+    {
+      "name": "DE from DE",
+      "input": "+49 30 1234567",
+      "region": "DE",
+      "regionCallingFrom": "DE",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "030 1234567"
+    },
+    {
+      "name": "DE from US",
+      "input": "+49 30 1234567",
+      "region": "DE",
+      "regionCallingFrom": "US",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "+49 30 1234567"
+    },
+    {
+      "name": "GB from GB",
+      "input": "+44 20 7031 3000",
+      "region": "GB",
+      "regionCallingFrom": "GB",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "020 7031 3000"
+    },
+    {
+      "name": "Non geo 800 from US",
+      "input": "+800 1234 5678",
+      "region": "US",
+      "regionCallingFrom": "US",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "+800 1234 5678"
+    },
+    {
+      "name": "Non geo 800 from 001",
+      "input": "+800 1234 5678",
+      "region": "US",
+      "regionCallingFrom": "001",
+      "withFormatting": true,
+      "keepRawInput": false,
+      "expected": "+800 1234 5678"
+    }
+  ],
+  "keepingAlphaChars": [
+    {
+      "name": "1-800-FLOWERS from US",
+      "rawInput": "1-800-FLOWERS",
+      "region": "US",
+      "regionCallingFrom": "US",
+      "expected": "1 800-FLOWERS"
+    },
+    {
+      "name": "1-800-FLOWERS from GB",
+      "rawInput": "1-800-FLOWERS",
+      "region": "US",
+      "regionCallingFrom": "GB",
+      "expected": "00 1 800-FLOWERS"
+    },
+    {
+      "name": "1-800-FLOWERS from DE",
+      "rawInput": "1-800-FLOWERS",
+      "region": "US",
+      "regionCallingFrom": "DE",
+      "expected": "00 1 800-FLOWERS"
+    },
+    {
+      "name": "1-800-FLOWERS from CA",
+      "rawInput": "1-800-FLOWERS",
+      "region": "US",
+      "regionCallingFrom": "CA",
+      "expected": "1 800-FLOWERS"
+    },
+    {
+      "name": "1-800-FLOWERS from ZZ",
+      "rawInput": "1-800-FLOWERS",
+      "region": "US",
+      "regionCallingFrom": "ZZ",
+      "expected": "+1 800-FLOWERS"
+    },
+    {
+      "name": "1-800-SIX-FLAG from AU",
+      "rawInput": "1-800-SIX-FLAG",
+      "region": "US",
+      "regionCallingFrom": "AU",
+      "expected": "0011 1 800-SIX-FLAG"
+    },
+    {
+      "name": "GB national from GB",
+      "rawInput": "020 7031 3000",
+      "region": "GB",
+      "regionCallingFrom": "GB",
+      "expected": "0020 7031 3000"
+    },
+    {
+      "name": "GB national from US",
+      "rawInput": "020 7031 3000",
+      "region": "GB",
+      "regionCallingFrom": "US",
+      "expected": "011 44 020 7031 3000"
+    },
+    {
+      "name": "DE slash grouping from DE",
+      "rawInput": "030/1234567",
+      "region": "DE",
+      "regionCallingFrom": "DE",
+      "expected": "0030/1234567"
+    },
+    {
+      "name": "DE slash grouping from GB",
+      "rawInput": "030/1234567",
+      "region": "DE",
+      "regionCallingFrom": "GB",
+      "expected": "00 49 030/1234567"
+    },
+    {
+      "name": "US alpha with extension from GB",
+      "rawInput": "1-800-FLOWERS ext. 1234",
+      "region": "US",
+      "regionCallingFrom": "GB",
+      "expected": "00 1 800-FLOWERS ext. 1234"
+    },
+    {
+      "name": "US alpha with X extension from GB",
+      "rawInput": "1-800-FLOWERS X 12",
+      "region": "US",
+      "regionCallingFrom": "GB",
+      "expected": "00 1 800-FLOWERS ext. 12"
+    }
+  ]
+}
