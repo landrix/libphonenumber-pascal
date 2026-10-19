@@ -24,7 +24,8 @@ top of [AGENTS.md](../AGENTS.md).
 
 ```
 LibPhoneNumber.PhoneNumberUtil      facade TPhoneNumberUtil: parse driver, Format*, IsNumberMatch,
-                                     parse based accessory API
+                                     parse based accessory API, record taking overloads of the
+                                     validation, typing and region methods
 LibPhoneNumber.PhoneNumberMatcher   FindNumbers / TPhoneNumberMatcher (uses the facade)
 LibPhoneNumber.AsYouTypeFormatter   TAsYouTypeFormatter
 LibPhoneNumber.ShortNumberInfo      ShortNumberInfo port
@@ -63,14 +64,21 @@ Placement rules:
 - Where upstream takes a `PhoneNumber`, the lower layers take
   `(CountryCode, NationalNumberDigits)`; the emergency number methods of
   `ShortNumberInfo` keep the raw string because they must tell `+1 911` from
-  `911`.
+  `911`. The facade offers every such `PhoneNumberUtil` method with the
+  `TPhoneNumber` record as well, as a thin wrapper that passes
+  `(CountryCode, NationalNumberDigits)` down (a record that carries only the
+  numeric `NationalNumber` falls back to its decimal digits).
 - `TPhoneNumber.NationalNumberDigits` is canonical; `NationalNumber` is its
   lossy numeric value. `RegionCode` is an addition (see `LibPhoneNumber.Types`).
 - `pnfInternationalLegacy` has no upstream counterpart: it is a display variant
   produced by post processing the INTERNATIONAL string
   (`ToLegacyDisplayFormat`).
-- Region arguments are canonicalised with `UpperCase(Trim(...))` at every
-  public boundary.
+- Region arguments are canonicalised with `UpperCase(Trim(...))` by the
+  facade `TPhoneNumberUtil`, the `TAsYouTypeFormatter` constructor and the
+  `ShortNumberInfo` functions; the matcher hands its region to the parse
+  driver, which canonicalises it. The low level unit functions of
+  `Metadata`, `MetadataCore`, `MetadataFormat` and `ShortMetadata` take
+  region codes EXACTLY, like upstream, and expect canonical CLDR codes.
 
 ### Parse path
 
@@ -151,6 +159,18 @@ facade. Port decisions:
   there too.
 - `getInvalidExampleNumber` has no C# counterpart; its production test checks
   the upstream contract (parses, right calling code, not valid).
+
+The validation, typing and region methods that upstream offers on a
+`PhoneNumber` are record taking overloads on the facade as well:
+`IsValidNumber`, `IsValidNumberForRegion`, `GetNumberType`,
+`GetRegionCodeForNumber`, `IsPossibleNumber`, `IsPossibleNumberWithReason`,
+`IsPossibleNumberForType`, `IsPossibleNumberForTypeWithReason` and
+`CanBeInternationallyDialled`. Each is one line over the unit level function of
+the same name in `MetadataCore` (`CanBeInternationallyDialled`:
+`MetadataFormat`); none of them reads `RegionCode` or the raw input fields,
+because upstream resolves the region from the calling code. The older string
+overloads `IsValidNumber(number, region)` and `IsPossibleNumber(number,
+region)` parse first and answer `False` for an input that does not parse.
 
 ## Generated metadata
 

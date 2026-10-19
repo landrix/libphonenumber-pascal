@@ -40,11 +40,15 @@ reopens them.
    (`mainCountryForCode` order). Upstream carries no region on the number at
    all, so this is an addition, and `TPhoneNumber.RegionCode` documents its
    exact contract.
-3. **Region arguments are canonicalised** with `UpperCase(Trim(...))` at every
-   public entry point (facade, `TAsYouTypeFormatter` constructor,
-   `ShortNumberInfo`). Upstream compares CLDR codes exactly; the canonical
-   spellings are a strict superset of what it accepts, so this changes no answer
-   for a caller that passes canonical codes.
+3. **Region arguments are canonicalised** with `UpperCase(Trim(...))` by the
+   facade `TPhoneNumberUtil`, the `TAsYouTypeFormatter` constructor and the
+   `ShortNumberInfo` functions (the matcher passes its region to the parse
+   driver, which canonicalises it). The low level unit functions of
+   `LibPhoneNumber.Metadata`, `MetadataCore`, `MetadataFormat` and
+   `ShortMetadata` do NOT: they take region codes exactly, like upstream, and
+   expect canonical CLDR codes. Upstream compares CLDR codes exactly; the
+   canonical spellings are a strict superset of what it accepts, so this
+   changes no answer for a caller that passes canonical codes.
 4. **The alternate format metadata is NOT switched** when the phone metadata is
    switched to the upstream TEST data set. Upstream reaches it through the static
    `DefaultMetadataDependenciesProvider.getInstance()` singleton, which

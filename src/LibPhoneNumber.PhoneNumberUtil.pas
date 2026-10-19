@@ -191,8 +191,88 @@ type
       out ACountryCode: Integer;
       out AError: TPhoneNumberParseError): Boolean; static;
 
-    class function IsPossibleNumber(const APhoneNumber, ACountry: string): Boolean; static;
-    class function IsValidNumber(const APhoneNumber, ACountry: string): Boolean; static;
+    { Upstream isPossibleNumber(CharSequence number, String regionDialingFrom):
+      Parse in ACountry followed by IsPossibleNumber(TPhoneNumber); False when
+      the number does not parse. }
+    class function IsPossibleNumber(const APhoneNumber,
+      ACountry: string): Boolean; overload; static;
+    { Parse plus isValidNumber(PhoneNumber); False when the number does not
+      parse in ACountry. No upstream counterpart of its own. }
+    class function IsValidNumber(const APhoneNumber,
+      ACountry: string): Boolean; overload; static;
+
+    { ------------------------------------------------------------------
+      Validation, typing and region resolution of an already parsed number:
+      the upstream PhoneNumberUtil methods that take a PhoneNumber.
+
+      Each one is a thin wrapper over the function of the same name in
+      LibPhoneNumber.MetadataCore (CanBeInternationallyDialled: in
+      LibPhoneNumber.MetadataFormat), applied to the record's calling code
+      and its national significant number. The national significant number
+      is NationalNumberDigits; a hand built record that carries only the
+      numeric NationalNumber falls back to its decimal representation, as in
+      every other record taking method of this facade. RegionCode and the
+      raw input fields are not read - upstream resolves the region from the
+      calling code, and so does every one of these. A region argument is
+      canonicalised with UpperCase(Trim(...)). Nothing throws and nothing
+      logs; Java's null region is the empty string.
+      ------------------------------------------------------------------ }
+
+    { Upstream isValidNumber(PhoneNumber): the number matches a valid pattern
+      of the region getRegionCodeForNumber resolves. Only the leading digits
+      and the length are checked, not whether the number is in use. }
+    class function IsValidNumber(
+      const AParsed: TPhoneNumber): Boolean; overload; static;
+
+    { Upstream isValidNumberForRegion(PhoneNumber, regionCode): the number is
+      valid in ARegion. False for an unsupported region and when the calling
+      code of the number is not the one of ARegion; the non geographical
+      "001" accepts every non geographical entity. }
+    class function IsValidNumberForRegion(const AParsed: TPhoneNumber;
+      const ARegion: string): Boolean; static;
+
+    { Upstream getNumberType(PhoneNumber): mntUnknown for a number that is
+      not valid. }
+    class function GetNumberType(
+      const AParsed: TPhoneNumber): TMetadataNumberType; static;
+
+    { Upstream getRegionCodeForNumber(PhoneNumber): the region the number is
+      from, "001" for a non geographical entity, the empty string (Java:
+      null) for an unsupported calling code or when no region of a shared
+      calling code matches. Only reliable for valid numbers. }
+    class function GetRegionCodeForNumber(
+      const AParsed: TPhoneNumber): string; static;
+
+    { Upstream isPossibleNumber(PhoneNumber): isPossibleNumberWithReason is
+      mvrIsPossible or mvrIsPossibleLocalOnly. }
+    class function IsPossibleNumber(
+      const AParsed: TPhoneNumber): Boolean; overload; static;
+
+    { Upstream isPossibleNumberWithReason(PhoneNumber): the length check
+      against the main region of the calling code, i.e.
+      IsPossibleNumberForTypeWithReason with mntUnknown (every length of the
+      region). }
+    class function IsPossibleNumberWithReason(
+      const AParsed: TPhoneNumber): TMetadataValidationResult; static;
+
+    { Upstream isPossibleNumberForType(PhoneNumber, PhoneNumberType). }
+    class function IsPossibleNumberForType(const AParsed: TPhoneNumber;
+      AType: TMetadataNumberType): Boolean; static;
+
+    { Upstream isPossibleNumberForTypeWithReason(PhoneNumber,
+      PhoneNumberType): the length check against the possible lengths of
+      AType in the main region of the calling code. }
+    class function IsPossibleNumberForTypeWithReason(
+      const AParsed: TPhoneNumber;
+      AType: TMetadataNumberType): TMetadataValidationResult; static;
+
+    { Upstream canBeInternationallyDialled(PhoneNumber): False when the
+      number matches the noInternationalDialling description of its region;
+      True for a region without metadata, the non geographical entities
+      included. }
+    class function CanBeInternationallyDialled(
+      const AParsed: TPhoneNumber): Boolean; static;
+
     class function Format(const AParsed: TPhoneNumber; AFormat: TPhoneNumberFormat): string; static;
 
     { ------------------------------------------------------------------
@@ -945,6 +1025,76 @@ begin
 
   Result := LibPhoneNumber.MetadataCore.IsPossibleNumber(
     Parsed.CountryCode, GetNationalNumberDigits(Parsed));
+end;
+
+{ ------------------------------------------------------------------
+  The record taking validation, typing and region methods. One line each over
+  the unit level port; see the interface section.
+  ------------------------------------------------------------------ }
+
+class function TPhoneNumberUtil.IsValidNumber(
+  const AParsed: TPhoneNumber): Boolean;
+begin
+  Result := LibPhoneNumber.MetadataCore.IsValidNumber(
+    AParsed.CountryCode, GetNationalNumberDigits(AParsed));
+end;
+
+class function TPhoneNumberUtil.IsValidNumberForRegion(
+  const AParsed: TPhoneNumber; const ARegion: string): Boolean;
+begin
+  Result := LibPhoneNumber.MetadataCore.IsValidNumberForRegion(
+    AParsed.CountryCode, GetNationalNumberDigits(AParsed),
+    UpperCase(Trim(ARegion)));
+end;
+
+class function TPhoneNumberUtil.GetNumberType(
+  const AParsed: TPhoneNumber): TMetadataNumberType;
+begin
+  Result := LibPhoneNumber.MetadataCore.GetNumberType(
+    AParsed.CountryCode, GetNationalNumberDigits(AParsed));
+end;
+
+class function TPhoneNumberUtil.GetRegionCodeForNumber(
+  const AParsed: TPhoneNumber): string;
+begin
+  Result := LibPhoneNumber.MetadataCore.GetRegionCodeForNumber(
+    AParsed.CountryCode, GetNationalNumberDigits(AParsed));
+end;
+
+class function TPhoneNumberUtil.IsPossibleNumber(
+  const AParsed: TPhoneNumber): Boolean;
+begin
+  Result := LibPhoneNumber.MetadataCore.IsPossibleNumber(
+    AParsed.CountryCode, GetNationalNumberDigits(AParsed));
+end;
+
+class function TPhoneNumberUtil.IsPossibleNumberWithReason(
+  const AParsed: TPhoneNumber): TMetadataValidationResult;
+begin
+  Result := LibPhoneNumber.MetadataCore.IsPossibleNumberWithReason(
+    AParsed.CountryCode, GetNationalNumberDigits(AParsed));
+end;
+
+class function TPhoneNumberUtil.IsPossibleNumberForType(
+  const AParsed: TPhoneNumber; AType: TMetadataNumberType): Boolean;
+begin
+  Result := LibPhoneNumber.MetadataCore.IsPossibleNumberForType(
+    AParsed.CountryCode, GetNationalNumberDigits(AParsed), AType);
+end;
+
+class function TPhoneNumberUtil.IsPossibleNumberForTypeWithReason(
+  const AParsed: TPhoneNumber;
+  AType: TMetadataNumberType): TMetadataValidationResult;
+begin
+  Result := LibPhoneNumber.MetadataCore.IsPossibleNumberForTypeWithReason(
+    AParsed.CountryCode, GetNationalNumberDigits(AParsed), AType);
+end;
+
+class function TPhoneNumberUtil.CanBeInternationallyDialled(
+  const AParsed: TPhoneNumber): Boolean;
+begin
+  Result := LibPhoneNumber.MetadataFormat.CanBeInternationallyDialled(
+    AParsed.CountryCode, GetNationalNumberDigits(AParsed));
 end;
 
 class function TPhoneNumberUtil.GetNationalNumberDigits(

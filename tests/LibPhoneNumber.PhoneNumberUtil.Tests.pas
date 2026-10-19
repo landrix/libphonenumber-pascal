@@ -320,6 +320,20 @@ type
     procedure Accessory_RegionArgumentsAreCanonicalised;
 
     procedure Accessory_NationalSignificantNumberMatchesTheOracle;
+
+    { The record taking overloads of the validation, typing and region
+      methods (upstream: the PhoneNumberUtil methods that take a
+      PhoneNumber). Expected values were read off the NuGet oracle
+      libphonenumber-csharp 9.0.41 against the PRODUCTION metadata; every
+      case additionally checks equality with the unit level function of
+      LibPhoneNumber.MetadataCore / MetadataFormat for the same pair. }
+    procedure RecordOverloads_MatchTheOracle;
+
+    procedure RecordOverloads_IsValidNumberForRegionMatchesTheOracle;
+
+    procedure RecordOverloads_AcceptHandBuiltRecords;
+
+    procedure RecordOverloads_StringOverloadsAreUnchanged;
   end;
 
 implementation
@@ -3478,6 +3492,285 @@ begin
     keep all eleven zeros (documented divergence at the facade). }
   Assert.AreEqual('00000000000650',
     ParsedNumber('+100000000000650', 'ZZ').NationalNumberDigits);
+end;
+
+procedure TPhoneNumberUtilTests.RecordOverloads_MatchTheOracle;
+type
+  TCase = record
+    Input: string;
+    NumberType: TMetadataNumberType;
+    Valid: Boolean;
+    Region: string;
+    Possible: Boolean;
+    Reason: TMetadataValidationResult;
+    PossibleMobile: Boolean;
+    ReasonMobile: TMetadataValidationResult;
+    Diallable: Boolean;
+  end;
+const
+  { Oracle 9.0.41 on Parse(Input, "ZZ"): GetNumberType, IsValidNumber,
+    GetRegionCodeForNumber (null -> ''), IsPossibleNumber,
+    IsPossibleNumberWithReason, IsPossibleNumberForType(MOBILE),
+    IsPossibleNumberForTypeWithReason(MOBILE), CanBeInternationallyDialled. }
+  Cases: array[0..14] of TCase = (
+    (Input: '+4930123456'; NumberType: mntFixedLine; Valid: True; Region: 'DE';
+     Possible: True; Reason: mvrIsPossible; PossibleMobile: False;
+     ReasonMobile: mvrTooShort; Diallable: True),
+    (Input: '+4915123456789'; NumberType: mntMobile; Valid: True; Region: 'DE';
+     Possible: True; Reason: mvrIsPossible; PossibleMobile: True;
+     ReasonMobile: mvrIsPossible; Diallable: True),
+    (Input: '+16502530000'; NumberType: mntFixedLineOrMobile; Valid: True;
+     Region: 'US'; Possible: True; Reason: mvrIsPossible;
+     PossibleMobile: True; ReasonMobile: mvrIsPossible; Diallable: True),
+    (Input: '+16135550123'; NumberType: mntFixedLineOrMobile; Valid: True;
+     Region: 'CA'; Possible: True; Reason: mvrIsPossible;
+     PossibleMobile: True; ReasonMobile: mvrIsPossible; Diallable: True),
+    (Input: '+12423570000'; NumberType: mntMobile; Valid: True; Region: 'BS';
+     Possible: True; Reason: mvrIsPossible; PossibleMobile: True;
+     ReasonMobile: mvrIsPossible; Diallable: True),
+    (Input: '+18002530000'; NumberType: mntTollFree; Valid: True; Region: 'US';
+     Possible: True; Reason: mvrIsPossible; PossibleMobile: True;
+     ReasonMobile: mvrIsPossible; Diallable: True),
+    { Non geographical entities: region "001". }
+    (Input: '+80012345678'; NumberType: mntTollFree; Valid: True;
+     Region: '001'; Possible: True; Reason: mvrIsPossible;
+     PossibleMobile: False; ReasonMobile: mvrInvalidLength; Diallable: True),
+    (Input: '+97912345678'; NumberType: mntUnknown; Valid: False;
+     Region: '001'; Possible: True; Reason: mvrIsPossibleLocalOnly;
+     PossibleMobile: False; ReasonMobile: mvrInvalidLength; Diallable: True),
+    (Input: '+390236618300'; NumberType: mntFixedLine; Valid: True;
+     Region: 'IT'; Possible: True; Reason: mvrIsPossible;
+     PossibleMobile: True; ReasonMobile: mvrIsPossible; Diallable: True),
+    { noInternationalDialling: IT 848 and TR 444. }
+    (Input: '+39848123456'; NumberType: mntSharedCost; Valid: True;
+     Region: 'IT'; Possible: True; Reason: mvrIsPossible;
+     PossibleMobile: True; ReasonMobile: mvrIsPossible; Diallable: False),
+    (Input: '+904441234'; NumberType: mntUan; Valid: True; Region: 'TR';
+     Possible: True; Reason: mvrIsPossible; PossibleMobile: False;
+     ReasonMobile: mvrTooShort; Diallable: False),
+    (Input: '+5491123456789'; NumberType: mntMobile; Valid: True;
+     Region: 'AR'; Possible: True; Reason: mvrIsPossible;
+     PossibleMobile: True; ReasonMobile: mvrIsPossible; Diallable: True),
+    { Invalid numbers: no region of +1 matches, too short, too long. }
+    (Input: '+11234567890'; NumberType: mntUnknown; Valid: False; Region: '';
+     Possible: True; Reason: mvrIsPossible; PossibleMobile: True;
+     ReasonMobile: mvrIsPossible; Diallable: True),
+    (Input: '+493012'; NumberType: mntUnknown; Valid: False; Region: 'DE';
+     Possible: True; Reason: mvrIsPossible; PossibleMobile: False;
+     ReasonMobile: mvrTooShort; Diallable: True),
+    (Input: '+4930123456789012345'; NumberType: mntUnknown; Valid: False;
+     Region: 'DE'; Possible: False; Reason: mvrTooLong;
+     PossibleMobile: False; ReasonMobile: mvrTooLong; Diallable: True)
+  );
+var
+  I: Integer;
+  Number: TPhoneNumber;
+  Label_: string;
+begin
+  for I := Low(Cases) to High(Cases) do
+  begin
+    Number := ParsedNumber(Cases[I].Input, 'ZZ');
+    Label_ := Cases[I].Input + ': ';
+    Assert.AreEqual(Ord(Cases[I].NumberType),
+      Ord(TPhoneNumberUtil.GetNumberType(Number)), Label_ + 'getNumberType');
+    Assert.AreEqual(Cases[I].Valid, TPhoneNumberUtil.IsValidNumber(Number),
+      Label_ + 'isValidNumber');
+    Assert.AreEqual(Cases[I].Region,
+      TPhoneNumberUtil.GetRegionCodeForNumber(Number),
+      Label_ + 'getRegionCodeForNumber');
+    Assert.AreEqual(Cases[I].Possible,
+      TPhoneNumberUtil.IsPossibleNumber(Number), Label_ + 'isPossibleNumber');
+    Assert.AreEqual(Ord(Cases[I].Reason),
+      Ord(TPhoneNumberUtil.IsPossibleNumberWithReason(Number)),
+      Label_ + 'isPossibleNumberWithReason');
+    Assert.AreEqual(Cases[I].PossibleMobile,
+      TPhoneNumberUtil.IsPossibleNumberForType(Number, mntMobile),
+      Label_ + 'isPossibleNumberForType(MOBILE)');
+    Assert.AreEqual(Ord(Cases[I].ReasonMobile),
+      Ord(TPhoneNumberUtil.IsPossibleNumberForTypeWithReason(Number,
+        mntMobile)),
+      Label_ + 'isPossibleNumberForTypeWithReason(MOBILE)');
+    Assert.AreEqual(Cases[I].Diallable,
+      TPhoneNumberUtil.CanBeInternationallyDialled(Number),
+      Label_ + 'canBeInternationallyDialled');
+
+    { Port rule: each overload is the unit level function on the record's
+      (CountryCode, NationalNumberDigits) pair. }
+    Assert.AreEqual(Ord(LibPhoneNumber.MetadataCore.GetNumberType(
+      Number.CountryCode, Number.NationalNumberDigits)),
+      Ord(TPhoneNumberUtil.GetNumberType(Number)), Label_ + 'core type');
+    Assert.AreEqual(LibPhoneNumber.MetadataCore.IsValidNumber(
+      Number.CountryCode, Number.NationalNumberDigits),
+      TPhoneNumberUtil.IsValidNumber(Number), Label_ + 'core valid');
+    Assert.AreEqual(LibPhoneNumber.MetadataCore.GetRegionCodeForNumber(
+      Number.CountryCode, Number.NationalNumberDigits),
+      TPhoneNumberUtil.GetRegionCodeForNumber(Number), Label_ + 'core region');
+    Assert.AreEqual(Ord(LibPhoneNumber.MetadataCore.IsPossibleNumberWithReason(
+      Number.CountryCode, Number.NationalNumberDigits)),
+      Ord(TPhoneNumberUtil.IsPossibleNumberWithReason(Number)),
+      Label_ + 'core reason');
+    Assert.AreEqual(LibPhoneNumber.MetadataFormat.CanBeInternationallyDialled(
+      Number.CountryCode, Number.NationalNumberDigits),
+      TPhoneNumberUtil.CanBeInternationallyDialled(Number),
+      Label_ + 'core diallable');
+  end;
+
+  { Oracle 9.0.41, IsPossibleNumberForTypeWithReason(FIXED_LINE): a local
+    only length, a mobile only length and a type the entity does not have. }
+  Assert.AreEqual(Ord(mvrIsPossibleLocalOnly),
+    Ord(TPhoneNumberUtil.IsPossibleNumberForTypeWithReason(
+      ParsedNumber('+493012', 'ZZ'), mntFixedLine)), '+493012 fixed line');
+  Assert.AreEqual(Ord(mvrTooLong),
+    Ord(TPhoneNumberUtil.IsPossibleNumberForTypeWithReason(
+      ParsedNumber('+5491123456789', 'ZZ'), mntFixedLine)),
+    '+5491123456789 fixed line');
+  Assert.IsFalse(TPhoneNumberUtil.IsPossibleNumberForType(
+    ParsedNumber('+5491123456789', 'ZZ'), mntFixedLine),
+    '+5491123456789 fixed line possible');
+  Assert.AreEqual(Ord(mvrInvalidLength),
+    Ord(TPhoneNumberUtil.IsPossibleNumberForTypeWithReason(
+      ParsedNumber('+80012345678', 'ZZ'), mntFixedLine)),
+    '+80012345678 fixed line');
+
+  { A record parsed in its own region and kept with its raw input answers
+    the same as the ZZ parse: the overloads do not read RegionCode or the
+    raw input fields. }
+  Number := KeptNumber('613 555 0123', 'ca');
+  Assert.AreEqual('CA', TPhoneNumberUtil.GetRegionCodeForNumber(Number));
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumber(Number));
+  Number.RegionCode := 'US';
+  Assert.AreEqual('CA', TPhoneNumberUtil.GetRegionCodeForNumber(Number),
+    'RegionCode is not read');
+end;
+
+procedure TPhoneNumberUtilTests.RecordOverloads_IsValidNumberForRegionMatchesTheOracle;
+var
+  Number: TPhoneNumber;
+begin
+  { Oracle 9.0.41, IsValidNumberForRegion(Parse(Input, "ZZ"), region). }
+  Number := ParsedNumber('+4930123456', 'ZZ');
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'DE'));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'US'));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumberForRegion(Number, '001'));
+
+  { Shared calling code: valid in the region the number belongs to only.
+    The toll free +1 800 number is valid in both. }
+  Number := ParsedNumber('+16135550123', 'ZZ');
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'CA'));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'US'));
+  Number := ParsedNumber('+16502530000', 'ZZ');
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'US'));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'CA'));
+  Number := ParsedNumber('+18002530000', 'ZZ');
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'US'));
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'CA'));
+
+  { Non geographical entity: valid for "001" only. }
+  Number := ParsedNumber('+80012345678', 'ZZ');
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(Number, '001'));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'US'));
+
+  { Invalid numbers are valid nowhere. }
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumberForRegion(
+    ParsedNumber('+493012', 'ZZ'), 'DE'));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumberForRegion(
+    ParsedNumber('+11234567890', 'ZZ'), 'US'));
+
+  { Port rule, not an oracle value: the region argument goes through
+    UpperCase(Trim(...)); the unit level function takes it exactly. }
+  Number := ParsedNumber('+4930123456', 'ZZ');
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'de'));
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(Number, ' De '));
+  Assert.IsFalse(LibPhoneNumber.MetadataCore.IsValidNumberForRegion(
+    Number.CountryCode, Number.NationalNumberDigits, 'de'),
+    'the unit level function does not canonicalise');
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(
+    ParsedNumber('+80012345678', 'ZZ'), ' 001 '));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumberForRegion(Number, ''));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'XY'));
+end;
+
+procedure TPhoneNumberUtilTests.RecordOverloads_AcceptHandBuiltRecords;
+var
+  Number: TPhoneNumber;
+begin
+  { Oracle 9.0.41 on a PhoneNumber built with CountryCode = 49 and
+    NationalNumber = 30123456: FIXED_LINE, valid, DE, IS_POSSIBLE, MOBILE TOO_SHORT,
+    internationally diallable, valid for DE. The record carries only the
+    numeric NationalNumber; the overloads fall back to its digits. }
+  Number := Default(TPhoneNumber);
+  Number.CountryCode := 49;
+  Number.NationalNumber := 30123456;
+  Assert.AreEqual(Ord(mntFixedLine), Ord(TPhoneNumberUtil.GetNumberType(Number)));
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumber(Number));
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'de'));
+  Assert.AreEqual('DE', TPhoneNumberUtil.GetRegionCodeForNumber(Number));
+  Assert.IsTrue(TPhoneNumberUtil.IsPossibleNumber(Number));
+  Assert.AreEqual(Ord(mvrIsPossible),
+    Ord(TPhoneNumberUtil.IsPossibleNumberWithReason(Number)));
+  Assert.IsFalse(TPhoneNumberUtil.IsPossibleNumberForType(Number, mntMobile));
+  Assert.AreEqual(Ord(mvrTooShort),
+    Ord(TPhoneNumberUtil.IsPossibleNumberForTypeWithReason(Number, mntMobile)));
+  Assert.IsTrue(TPhoneNumberUtil.CanBeInternationallyDialled(Number));
+
+  { Oracle 9.0.41 on a PhoneNumber built with CountryCode = 999 and
+    NationalNumber = 1234567: UNKNOWN, invalid, null region, INVALID_COUNTRY_CODE,
+    internationally diallable (no region metadata). }
+  Number := Default(TPhoneNumber);
+  Number.CountryCode := 999;
+  Number.NationalNumber := 1234567;
+  Assert.AreEqual(Ord(mntUnknown), Ord(TPhoneNumberUtil.GetNumberType(Number)));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumber(Number));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'DE'));
+  Assert.AreEqual('', TPhoneNumberUtil.GetRegionCodeForNumber(Number));
+  Assert.IsFalse(TPhoneNumberUtil.IsPossibleNumber(Number));
+  Assert.AreEqual(Ord(mvrInvalidCountryCode),
+    Ord(TPhoneNumberUtil.IsPossibleNumberWithReason(Number)));
+  Assert.AreEqual(Ord(mvrInvalidCountryCode),
+    Ord(TPhoneNumberUtil.IsPossibleNumberForTypeWithReason(Number, mntMobile)));
+  Assert.IsTrue(TPhoneNumberUtil.CanBeInternationallyDialled(Number));
+
+  { Oracle 9.0.41 on an empty PhoneNumber: the same answers as for 999. }
+  Number := Default(TPhoneNumber);
+  Assert.AreEqual(Ord(mntUnknown), Ord(TPhoneNumberUtil.GetNumberType(Number)));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumber(Number));
+  Assert.AreEqual('', TPhoneNumberUtil.GetRegionCodeForNumber(Number));
+  Assert.IsFalse(TPhoneNumberUtil.IsPossibleNumber(Number));
+  Assert.AreEqual(Ord(mvrInvalidCountryCode),
+    Ord(TPhoneNumberUtil.IsPossibleNumberWithReason(Number)));
+  Assert.IsTrue(TPhoneNumberUtil.CanBeInternationallyDialled(Number));
+
+  { Port rule: when both fields are set, the digits win - the Italian
+    leading zero lives only there. Oracle 9.0.41: +39 02 3661 8300 is a
+    valid IT fixed line number. }
+  Number := ParsedNumber('+390236618300', 'ZZ');
+  Assert.AreEqual('0236618300', Number.NationalNumberDigits);
+  Assert.AreEqual(Ord(mntFixedLine), Ord(TPhoneNumberUtil.GetNumberType(Number)));
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumberForRegion(Number, 'it'));
+end;
+
+procedure TPhoneNumberUtilTests.RecordOverloads_StringOverloadsAreUnchanged;
+var
+  Number: TPhoneNumber;
+begin
+  { The string overloads parse in the given region and then answer what the
+    record overload answers for the parsed number. Oracle 9.0.41:
+    IsValidNumber(Parse("030 123456", "DE")) = True, IsPossibleNumber = True;
+    "+49 30 12" parses, is not valid, but is possible (IS_POSSIBLE). }
+  Assert.IsTrue(TPhoneNumberUtil.IsValidNumber('030 123456', 'DE'));
+  Assert.IsTrue(TPhoneNumberUtil.IsPossibleNumber('030 123456', 'de'));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumber('+49 30 12', 'ZZ'));
+  Assert.IsTrue(TPhoneNumberUtil.IsPossibleNumber('+49 30 12', 'ZZ'));
+  { A string that does not parse is neither valid nor possible. }
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumber('abc', 'DE'));
+  Assert.IsFalse(TPhoneNumberUtil.IsPossibleNumber('abc', 'DE'));
+  Assert.IsFalse(TPhoneNumberUtil.IsValidNumber('030 123456', 'ZZ'));
+
+  Number := ParsedNumber('030 123456', 'DE');
+  Assert.AreEqual(TPhoneNumberUtil.IsValidNumber(Number),
+    TPhoneNumberUtil.IsValidNumber('030 123456', 'DE'));
+  Assert.AreEqual(TPhoneNumberUtil.IsPossibleNumber(Number),
+    TPhoneNumberUtil.IsPossibleNumber('030 123456', 'DE'));
 end;
 
 initialization

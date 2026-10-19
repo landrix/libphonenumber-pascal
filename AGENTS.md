@@ -22,11 +22,11 @@ nowhere else. `README.md`, `docs/ARCHITECTURE.md`, `tools/README.md` and
 many there are; a number repeated in one of them is a bug in that file. Update
 this block, with its date, in the same change that moves a number.
 
-As of 2026-10-19 (the parse driver steps `maybeStripInternationalPrefixAndNormalize` and `maybeExtractCountryCode` are public, their two upstream tests are ported, and an empty international prefix is a zero length IDD match as upstream - CO of the testing metadata parses differently, production does not; the regex layer validates every pattern unwrapped as well; the workflow and the quick check run the FreePascal runtime gate and test suite on WSL FreePascal 3.2.4 AND 3.2.2 by default):
+As of 2026-10-19 (the facade takes a parsed `TPhoneNumber` for every validation, typing and region method upstream offers on a `PhoneNumber`, four tests more; the parse driver steps `maybeStripInternationalPrefixAndNormalize` and `maybeExtractCountryCode` are public, their two upstream tests are ported, and an empty international prefix is a zero length IDD match as upstream - CO of the testing metadata parses differently, production does not; the regex layer validates every pattern unwrapped as well; the workflow and the quick check run the FreePascal runtime gate and test suite on WSL FreePascal 3.2.4 AND 3.2.2 by default):
 
 | item | value |
 | --- | --- |
-| Test suite (Delphi + FreePascal) | 563 tests in 10 fixtures, one program `tests/LibPhoneNumberTests.dpr`, all green on Delphi 13 Win64 (`tools/run_delphi_tests.ps1`) and on FreePascal 3.2.4 aarch64-linux (WSL, the default), 3.2.2 aarch64-linux (WSL distribution package), 3.3.1 aarch64-linux (WSL), 3.3.1 aarch64-win64 and 3.2.4 aarch64-darwin (Mac), plus 3.2.2 x86_64-linux (Ubuntu 24.04 distribution package, verified in an emulated container; CI) |
+| Test suite (Delphi + FreePascal) | 567 tests in 10 fixtures, one program `tests/LibPhoneNumberTests.dpr`, all green on Delphi 13 Win64 (`tools/run_delphi_tests.ps1`) and on FreePascal 3.2.4 aarch64-linux (WSL, the default), 3.2.2 aarch64-linux (WSL distribution package), 3.3.1 aarch64-linux (WSL), 3.3.1 aarch64-win64 and 3.2.4 aarch64-darwin (Mac), plus 3.2.2 x86_64-linux (Ubuntu 24.04 distribution package, verified in an emulated container; CI) |
 | FreePascal test suite gate | `tools/run_fpc_tests.ps1`: build + run about 25-30 s on WSL, 8 s Native, 7 s on the Mac; a step of `run_update_workflow.ps1` (`-SkipFpcTests`) and of `run_pr_quick_check.ps1`, run once per `-FpcToolchains` entry - by default WSL 3.2.4 AND WSL 3.2.2 (`/usr/bin/fpc`); the whole quick check about 110 s with both toolchains on an otherwise idle machine |
 | CI | `.github/workflows/quick-check.yml`: job `quick-check` (windows-latest; generator, generated unit check, compare gate - no compiler) and job `freepascal` (ubuntu-24.04, distribution FPC 3.2.2 x86_64: compile check, the whole suite with a JUnit artifact, the sample). `.github/workflows/upstream-release-check.yml` (ubuntu-latest, weekly and manual): `tools/check_upstream_release.ps1` opens an issue when google/libphonenumber has a release newer than `Get-OraclePin` |
 | Generator inputs | 4 upstream XMLs |
@@ -54,7 +54,10 @@ What is ported, and where it lives (details in `docs/ARCHITECTURE.md`):
 1. `src/LibPhoneNumber.PhoneNumberUtil.pas` - facade `TPhoneNumberUtil`: the
    parse driver (`Parse`, `ParseAndKeepRawInput`; private `ParseHelper`;
    public steps `MaybeStripInternationalPrefixAndNormalize`,
-   `TryMaybeExtractCountryCode`), `IsPossibleNumber`, `IsValidNumber`, `Format`
+   `TryMaybeExtractCountryCode`), `IsPossibleNumber`, `IsValidNumber` (string
+   and record overloads), the record taking `IsValidNumberForRegion`,
+   `GetNumberType`, `GetRegionCodeForNumber`, `IsPossibleNumber*WithReason`,
+   `IsPossibleNumberForType` and `CanBeInternationallyDialled`, `Format`
    and every extended formatter, `FormatInOriginalFormat`, the three
    `IsNumberMatch` overloads, and the parse based half of the accessory API
    (`GetNationalSignificantNumber`, the example number family, record taking

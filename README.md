@@ -27,7 +27,7 @@ The current metadata is built from upstream **libphonenumber 9.0.41**
 
 | upstream class | status | Pascal entry point |
 | --- | --- | --- |
-| `PhoneNumberUtil` | Ported: parsing (including RFC3966, extensions, Unicode digits, vanity numbers), `isPossibleNumber*`, `isValidNumber*`, `getNumberType`, region and calling code lookup, every `format*` method, `isNumberMatch`, example numbers, supported types, `isNumberGeographical`, area code and national destination code lengths, `truncateTooLongNumber`, and the two parse steps `maybeStripInternationalPrefixAndNormalize` and `maybeExtractCountryCode`. A few upstream test methods are not ported because they need a metadata loader that can fail or proto fields the record does not model; see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). | `TPhoneNumberUtil` in `LibPhoneNumber.PhoneNumberUtil` |
+| `PhoneNumberUtil` | Ported: parsing (including RFC3966, extensions, Unicode digits, vanity numbers), `isPossibleNumber*`, `isValidNumber*`, `getNumberType`, `canBeInternationallyDialled`, region and calling code lookup, every `format*` method, `isNumberMatch`, example numbers, supported types, `isNumberGeographical`, area code and national destination code lengths, `truncateTooLongNumber`, and the two parse steps `maybeStripInternationalPrefixAndNormalize` and `maybeExtractCountryCode`. Every method upstream offers on a `PhoneNumber` takes the parsed `TPhoneNumber` record. A few upstream test methods are not ported because they need a metadata loader that can fail or proto fields the record does not model; see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). | `TPhoneNumberUtil` in `LibPhoneNumber.PhoneNumberUtil` |
 | `AsYouTypeFormatter` | Complete. | `TAsYouTypeFormatter` in `LibPhoneNumber.AsYouTypeFormatter` |
 | `ShortNumberInfo` | Complete: possible and valid short numbers, expected cost, emergency numbers, carrier specific numbers, SMS services, example short numbers. | unit functions in `LibPhoneNumber.ShortNumberInfo` |
 | `PhoneNumberMatcher` / `findNumbers` | Complete, all four leniency levels including the alternate format metadata for the grouping levels. | `FindNumbers` and `TPhoneNumberMatcher` in `LibPhoneNumber.PhoneNumberMatcher` |
@@ -43,8 +43,11 @@ Deliberate API differences from upstream, all documented in the unit headers:
   `italianLeadingZero` / `numberOfLeadingZeros` proto fields.
 - `TPhoneNumber.RegionCode` is an addition: the region the port reports for the
   number.
-- Region arguments are canonicalised with `UpperCase(Trim(...))` at every public
-  entry point.
+- Region arguments are canonicalised with `UpperCase(Trim(...))` by
+  `TPhoneNumberUtil`, the `TAsYouTypeFormatter` constructor and
+  `ShortNumberInfo`. The low level unit functions (`LibPhoneNumber.Metadata`,
+  `LibPhoneNumber.MetadataCore`, ...) take region codes exactly, like
+  upstream.
 - `pnfInternationalLegacy` is an extra display variant of the INTERNATIONAL
   format.
 - Where upstream returns `null`, the port has a `TryGet...` function that
@@ -55,9 +58,13 @@ Deliberate API differences from upstream, all documented in the unit headers:
 Add `src/` to the unit search path. The units you use directly are
 `LibPhoneNumber.Types`, `LibPhoneNumber.PhoneNumberUtil`,
 `LibPhoneNumber.AsYouTypeFormatter`, `LibPhoneNumber.ShortNumberInfo` and
-`LibPhoneNumber.PhoneNumberMatcher`; `LibPhoneNumber.MetadataCore` exports the
-number type and region functions that take a calling code and national
-number. Everything else is metadata or an internal layer.
+`LibPhoneNumber.PhoneNumberMatcher`. `TPhoneNumberUtil` validates, types and
+formats a parsed `TPhoneNumber` (`IsValidNumber`, `GetNumberType`,
+`GetRegionCodeForNumber`, `IsPossibleNumberWithReason`, `Format`, ...);
+`LibPhoneNumber.MetadataCore` declares the `TMetadataNumberType` and
+`TMetadataValidationResult` enums those answer with, and exports the same
+functions on a calling code and national number. Everything else is metadata
+or an internal layer.
 
 ### Delphi
 
@@ -82,6 +89,8 @@ begin
     Writeln(TPhoneNumberUtil.Format(Number, pnfInternational));  // +41 44 668 18 00
     Writeln(TPhoneNumberUtil.FormatOutOfCountryCallingNumber(Number, 'US'));
                                                                   // 011 41 44 668 18 00
+    Writeln(BoolToStr(TPhoneNumberUtil.IsValidNumber(Number), True)); // True
+    Writeln(TPhoneNumberUtil.GetRegionCodeForNumber(Number));    // CH
   end;
   Writeln(BoolToStr(TPhoneNumberUtil.IsValidNumber('044 668 18 00', 'CH'), True));
 

@@ -22,6 +22,21 @@ All notable changes to this repository are documented in this file.
 - `testMaybeStripInternationalPrefix` and `testMaybeExtractCountryCode` of
   `PhoneNumberUtilTest` are ported, with the Java expected values, into the
   testing metadata fixture `tests/LibPhoneNumber.UpstreamSuite.Tests.pas`.
+- `TPhoneNumberUtil` takes an already parsed `TPhoneNumber` wherever upstream
+  `PhoneNumberUtil` takes a `PhoneNumber`: new overloads `IsValidNumber(AParsed)`
+  and `IsPossibleNumber(AParsed)` next to the existing string overloads, and
+  the new members `IsValidNumberForRegion(AParsed, ARegion)`,
+  `GetNumberType(AParsed)`, `GetRegionCodeForNumber(AParsed)`,
+  `IsPossibleNumberWithReason(AParsed)`,
+  `IsPossibleNumberForType(AParsed, AType)`,
+  `IsPossibleNumberForTypeWithReason(AParsed, AType)` and
+  `CanBeInternationallyDialled(AParsed)`. Each is a thin wrapper over the unit
+  level function of `LibPhoneNumber.MetadataCore` (`CanBeInternationallyDialled`:
+  `LibPhoneNumber.MetadataFormat`) with the record's calling code and national
+  significant number; the region argument is canonicalised with
+  `UpperCase(Trim(...))`. A caller no longer has to pass
+  `(CountryCode, NationalNumberDigits)` to the low level functions. Existing
+  calls are unchanged. Four production metadata tests with oracle values.
 
 ### Fixes
 
@@ -76,6 +91,15 @@ All notable changes to this repository are documented in this file.
   No duplicates (matched by title); an open issue for an older release is
   closed as superseded only when it carries the script's hidden body marker.
   `-DryRun` shows what it would do.
+
+### Documentation
+
+- The region canonicalisation rule is stated precisely (README,
+  `KNOWN_ISSUES.md` item 3, `docs/ARCHITECTURE.md`): the facade, the
+  `TAsYouTypeFormatter` constructor and `ShortNumberInfo` canonicalise; the
+  low level unit functions of `LibPhoneNumber.Metadata`, `MetadataCore`,
+  `MetadataFormat` and `ShortMetadata` take region codes exactly, like
+  upstream.
 
 ## 0.1.0 - 2026-10-19
 
