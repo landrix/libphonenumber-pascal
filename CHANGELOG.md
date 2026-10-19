@@ -2,11 +2,60 @@
 
 All notable changes to this repository are documented in this file.
 
-## Unreleased
+## 0.1.0 - 2026-10-19
+
+First release of the Pascal port of libphonenumber, built from upstream
+metadata release 9.0.41.
+
+The port grew out of a development line of
+[LibPhonenumber-for-Delphi](https://github.com/landrix/LibPhonenumber-for-Delphi),
+the .NET based wrapper. This repository starts as one fresh tree without that
+history; the .NET bridge is not part of it.
+
+### Features
+
+- The port of `PhoneNumberUtil`, in three layers (see
+  `docs/ARCHITECTURE.md`). The facade `TPhoneNumberUtil`
+  (`LibPhoneNumber.PhoneNumberUtil`): parsing (`Parse`,
+  `ParseAndKeepRawInput`, including the RFC3966 `tel:` / `phone-context` /
+  `isub` forms, the complete extension pattern, Unicode decimal digits and
+  vanity numbers), `IsPossibleNumber` / `IsValidNumber` on a string, every
+  format (`E164`, `INTERNATIONAL`, `NATIONAL`, `RFC3966`, out of country,
+  carrier code, by pattern, in original format, for mobile dialing, keeping
+  alpha characters), the three `IsNumberMatch` overloads, and the accessory
+  API (supported types, `IsNumberGeographical`, area code and national
+  destination code lengths, mobile token, national significant number, the
+  example number family, `TruncateTooLongNumber`, `IsAlphaNumber`). The
+  unit functions of `LibPhoneNumber.MetadataCore` take calling code and
+  national number: the `IsPossibleNumber*` / `IsValidNumber*` families (with
+  reason, for type, for region), `GetNumberType` and the region resolution.
+- `TAsYouTypeFormatter` (`LibPhoneNumber.AsYouTypeFormatter`): the port of
+  `AsYouTypeFormatter`, including remembered positions.
+- `LibPhoneNumber.ShortNumberInfo`: the port of `ShortNumberInfo` (possible and
+  valid short numbers, expected cost, emergency numbers, carrier specific
+  numbers, SMS services, example short numbers).
+- `FindNumbers` / `TPhoneNumberMatcher` (`LibPhoneNumber.PhoneNumberMatcher`):
+  the port of `PhoneNumberMatcher` with all four leniency levels; the grouping
+  levels consult the alternate format metadata.
+- Metadata generator `tools/generate_metadata.ps1`, a port of upstream
+  `BuildMetadataFromXml.java`, producing nine units from four upstream XMLs
+  (production, short number, test and alternate format metadata).
+- Delphi and FreePascal (3.2.2, 3.2.4, 3.3.1) from the same source.
+
+### Verification
+
+- The four central upstream test classes ported against the upstream TEST
+  metadata, and production tests whose expected values come from the C#
+  oracle `libphonenumber-csharp` 9.0.41.
+- Mass differential against the oracle over every example number, metadata
+  length compare gate against the upstream XML, FreePascal compile gate and a
+  FreePascal runtime gate that compares a Delphi and a FreePascal build of one
+  driver byte for byte.
+- A console sample in `samples/` for both compilers.
 
 ### Tests on Delphi and FreePascal
 
-- DUnitX is gone. The suite runs on a small test layer of its own in
+- The suite runs without DUnitX (which the initial import still used), on a small test layer of its own in
   `tests/framework/`: `TTestCase` with virtual `Setup` / `TearDown`, tests as
   PUBLISHED methods found through the published method table (the Delphi
   layout and the packed / aligned layouts of FreePascal 3.2 / 3.3 are handled
@@ -47,14 +96,17 @@ All notable changes to this repository are documented in this file.
   port bugs and feature requests with a contact link that routes metadata
   problems upstream (`.github/ISSUE_TEMPLATE/`), and a pull request template.
 
-### Fixed
+### Fixed before the release
 
 - Regex layer on FreePascal 3.2.2: regexpr 0.987 answers "no match" for an
   EMPTY input whatever the pattern, while java.util.regex matches a pattern
   that can match the empty string against `""`. For an engine older than 1.0
   the layer now decides the empty input with a probe at the end of a one
   character input in multi line mode (`EmptyInputMatches`; `\A` rewritten to
-  `^`), which keeps anchors inside the pattern exact, in all four operations.
+  `^`), which keeps anchors inside the pattern exact, in all four operations;
+  the two shapes it still answers wrongly on an empty input (a `(?-m)` group,
+  a `(?#...)` comment with `[` before `\A`) occur in no metadata pattern
+  (KNOWN_ISSUES.md, permanent item 8).
   Found by the FreePascal run of `EmptyInput_MatchesAPatternThatAllowsIt`,
   which now also covers the prefix match with groups, `find()`, both replace
   operations and anchored shapes (`a*$`, `(?:x|$)`, `^$`, `\Aa*`, `\b`,
@@ -65,50 +117,3 @@ All notable changes to this repository are documented in this file.
   Relative `-WorkDir` / `-JUnit` paths of the FreePascal scripts (and of
   `run_delphi_tests.ps1`, `run_mass_differential.ps1`, `run_benchmark.ps1`)
   are made absolute first.
-
-## 0.1.0 - unreleased
-
-Initial import of the Pascal port of libphonenumber, built from upstream
-metadata release 9.0.41.
-
-The port grew out of a development line of
-[LibPhonenumber-for-Delphi](https://github.com/landrix/LibPhonenumber-for-Delphi),
-the .NET based wrapper. This repository starts as one fresh tree without that
-history; the .NET bridge is not part of it.
-
-### Features
-
-- `TPhoneNumberUtil` (`LibPhoneNumber.PhoneNumberUtil`): the port of
-  `PhoneNumberUtil` - parsing (`Parse`, `ParseAndKeepRawInput`, including the
-  RFC3966 `tel:` / `phone-context` / `isub` forms, the complete extension
-  pattern, Unicode decimal digits and vanity numbers), `IsPossibleNumber*`,
-  `IsValidNumber*`, number type and region resolution, every format
-  (`E164`, `INTERNATIONAL`, `NATIONAL`, `RFC3966`, out of country, carrier
-  code, by pattern, in original format, for mobile dialing, keeping alpha
-  characters), the three `IsNumberMatch` overloads, and the accessory API
-  (supported types, `IsNumberGeographical`, area code and national
-  destination code lengths, mobile token, national significant number, the
-  example number family, `TruncateTooLongNumber`, `IsAlphaNumber`).
-- `TAsYouTypeFormatter` (`LibPhoneNumber.AsYouTypeFormatter`): the port of
-  `AsYouTypeFormatter`, including remembered positions.
-- `LibPhoneNumber.ShortNumberInfo`: the port of `ShortNumberInfo` (possible and
-  valid short numbers, expected cost, emergency numbers, carrier specific
-  numbers, SMS services, example short numbers).
-- `FindNumbers` / `TPhoneNumberMatcher` (`LibPhoneNumber.PhoneNumberMatcher`):
-  the port of `PhoneNumberMatcher` with all four leniency levels; the grouping
-  levels consult the alternate format metadata.
-- Metadata generator `tools/generate_metadata.ps1`, a port of upstream
-  `BuildMetadataFromXml.java`, producing nine units from four upstream XMLs
-  (production, short number, test and alternate format metadata).
-- Delphi and FreePascal (3.2.2, 3.2.4, 3.3.1) from the same source.
-
-### Verification
-
-- DUnitX suite with the four central upstream test classes ported against the
-  upstream TEST metadata, and production tests whose expected values come from
-  the C# oracle `libphonenumber-csharp` 9.0.41.
-- Mass differential against the oracle over every example number, metadata
-  length compare gate against the upstream XML, FreePascal compile gate and a
-  FreePascal runtime gate that compares a Delphi and a FreePascal build of one
-  driver byte for byte.
-- A console sample in `samples/` for both compilers.
