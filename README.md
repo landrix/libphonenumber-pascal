@@ -1,5 +1,9 @@
 # libphonenumber-pascal
 
+[![Quick Check](https://github.com/landrix/libphonenumber-pascal/actions/workflows/quick-check.yml/badge.svg?branch=main)](https://github.com/landrix/libphonenumber-pascal/actions/workflows/quick-check.yml)
+[![Release](https://img.shields.io/github/v/release/landrix/libphonenumber-pascal)](https://github.com/landrix/libphonenumber-pascal/releases)
+[![License](https://img.shields.io/github/license/landrix/libphonenumber-pascal)](LICENSE)
+
 A pure Object Pascal port of Google's
 [libphonenumber](https://github.com/google/libphonenumber): parse, validate,
 classify and format international phone numbers, format them as the user
