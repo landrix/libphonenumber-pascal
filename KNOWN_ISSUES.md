@@ -12,9 +12,7 @@ them stable.
 
 1. **A few `PhoneNumberUtilTest` methods stay unported, none for missing API**
    (count in the AGENTS.md manifest).
-   They test private parse driver steps on their own
-   (`maybeStripInternationalPrefixAndNormalize`, `maybeExtractCountryCode`), a
-   failing metadata loader the port does not have, or the
+   They test a failing metadata loader the port does not have, or the
    `italianLeadingZero` / `numberOfLeadingZeros` proto pair `TPhoneNumber` does
    not model. Each is listed with its reason in the header of
    `tests/LibPhoneNumber.UpstreamSuite.Tests.pas`.
@@ -113,6 +111,21 @@ reopens them.
    caller supplied pattern, on FreePascal 3.2.2, with an empty input can hit
    them. Deliberately not rewritten for this legacy engine; FreePascal 3.2.4
    and later (regexpr 1.x) and Delphi do not use the probe.
+9. **The unwrapped pattern validation of regexpr < 1.0 does not model
+   `(?x)` comments.** The regex layer compiles every caller pattern once
+   on its own, unwrapped, so that a pattern breaking out of the layer's
+   wrapping group is rejected like java.util.regex rejects it
+   (`ValidateUnwrapped` in `src/LibPhoneNumber.Regex.pas`). On regexpr 0.987
+   (FreePascal 3.2.2) that check reuses the counted quantifier rewrite,
+   whose scanner does not know extended mode comments: in
+   `(?:a){90}(?x)#(` + line break + `X` it pairs the commented `(` as a
+   group, and the validation then hits the engine's limit of 90 groups and
+   raises, where java.util.regex accepts the pattern. No metadata pattern
+   uses `(?x)` (none of the generated units nor the four upstream XMLs);
+   only a caller supplied pattern on FreePascal 3.2.2 that combines an
+   extended mode comment containing a parenthesis with heavy counted
+   quantifiers can hit it. Deliberately not modelled for this legacy
+   engine; Delphi and regexpr 1.x do not rewrite.
 
 ## Deferred
 

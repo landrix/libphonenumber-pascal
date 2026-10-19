@@ -72,16 +72,6 @@ type
       AKeepRawInput, ACheckRegion: Boolean; out AParsed: TPhoneNumber;
       out AError: TPhoneNumberParseError): Boolean; static;
 
-    { Upstream maybeExtractCountryCode. Factored out of the parse driver
-      because parseHelper calls it TWICE: once on the number as it stands and,
-      when that fails with INVALID_COUNTRY_CODE on a number starting with a
-      plus sign, once more with that plus run removed. }
-    class function TryMaybeExtractCountryCode(const ANumber: string;
-      ADefaultMetadata: PPhoneMetadataRec; AHasDefaultMetadata: Boolean;
-      out ACountryCode: Integer; out ANationalDigits: string;
-      out ASource: TCountryCodeSource;
-      out AError: TPhoneNumberParseError): Boolean; static;
-
     { The core of upstream isNumberMatch(PhoneNumber, PhoneNumber). Both
       comparisons canonicalise their operands first, so a record that carries
       only NationalNumberDigits or only NationalNumber compares correctly. }
@@ -114,6 +104,93 @@ type
       upstream only fills in when keepRawInput is set - RawInput,
       CountryCodeSource and PreferredDomesticCarrierCode. }
     class function ParseAndKeepRawInput(const APhoneNumber, ACountry: string; out AParsed: TPhoneNumber; out AError: TPhoneNumberParseError): Boolean; static;
+
+    { ------------------------------------------------------------------
+      Two steps of the parse driver, public on their own.
+
+      Upstream marks both @VisibleForTesting; they are exported here so that
+      the upstream tests of the two steps can be ported. Parse and
+      ParseAndKeepRawInput run through exactly these two methods. The
+      `string` arguments follow the contract of the unit header: plus
+      characters are recognised on the UTF-16 form, and every number these
+      methods write is normalised to ASCII digits.
+      ------------------------------------------------------------------ }
+
+    { Upstream maybeStripInternationalPrefixAndNormalize(number,
+      possibleIddPrefix): "Strips any international prefix (such as +, 00,
+      011) present in the number provided, normalizes the resulting number,
+      and indicates if an international prefix was present."
+
+      ANumber is the non normalised number (Java's StringBuilder, modified in
+      place). A leading run of plus characters always wins; otherwise
+      APossibleIddPrefix - a regular expression, normally the
+      InternationalPrefix of the metadata of the region the number may be
+      dialled from - is stripped when it matches at the start of the
+      normalised number and the first digit behind it is not a 0. Returns
+      pnccsFromNumberWithPlusSign, pnccsFromNumberWithIdd or, when no
+      international prefix was present, pnccsFromDefaultCountry. ANumber is
+      normalised on return in every case except the empty input, which is
+      returned unchanged with pnccsFromDefaultCountry.
+
+      An EMPTY APossibleIddPrefix is upstream's getInternationalPrefix() of a
+      territory without one, and it behaves as upstream's compiled "": a
+      zero length match, so every number whose normalised form does not
+      start with 0 reports pnccsFromNumberWithIdd with nothing stripped.
+
+      Raises EArgumentException (upstream: PatternSyntaxException, an
+      IllegalArgumentException) when APossibleIddPrefix does not compile;
+      ANumber is then unchanged, because the pattern is compiled before the
+      number is normalised, as upstream. A number with a leading plus never
+      looks at the pattern. }
+    class function MaybeStripInternationalPrefixAndNormalize(
+      var ANumber: string;
+      const APossibleIddPrefix: string): TCountryCodeSource; static;
+
+    { Upstream maybeExtractCountryCode(number, defaultRegionMetadata,
+      nationalNumber, keepRawInput, phoneNumber): "Tries to extract a country
+      calling code from a number" - after a plus sign, after the
+      international prefix of the default region, or, without either, from
+      the start of the number when it begins with the calling code of the
+      default region and only makes sense with that code removed.
+
+      ANumber is the non normalised number, it may begin with a plus sign.
+      ADefaultRegionMetadata is the metadata of the default region, nil for
+      upstream's null (no default region: the international prefix then
+      never matches and the calling code of the default region is not
+      tried). It is a SOURCE BOUND pointer (AGENTS.md "Metadata Source
+      Switching"): fetch it with LibPhoneNumber.Metadata.TryGetMetadataForRegion
+      after the last UseMetadataTables switch and do not keep it across one.
+
+      On True, ACountryCode is the extracted calling code or 0 when none is
+      considered present, AError is pnpeNone, APhoneNumber.CountryCode is set
+      to ACountryCode and, when a calling code was extracted, its national
+      significant number is APPENDED to ANationalNumber (otherwise
+      ANationalNumber is left unchanged, as upstream's StringBuilder). The
+      empty input answers True with ACountryCode = 0 and touches neither
+      ANationalNumber nor APhoneNumber, exactly like upstream.
+
+      On False - upstream throws NumberParseException - AError is
+      pnpeTooShortAfterIdd or pnpeInvalidCountryCode, ACountryCode is 0, and
+      ANationalNumber and APhoneNumber.CountryCode are left unchanged.
+
+      APhoneNumber.CountryCodeSource is only written when AKeepRawInput is
+      True, and then also on the False path (upstream records the source
+      before it throws). No other field of APhoneNumber is touched.
+
+      The international prefix of ADefaultRegionMetadata goes through
+      MaybeStripInternationalPrefixAndNormalize, so a malformed one raises
+      EArgumentException out of this method; ANationalNumber and
+      APhoneNumber are not written then. The
+      generated metadata cannot carry one - the generator validates every
+      pattern and the FreePascal runtime gate compiles all of them - so only
+      a record built by the caller can. A territory without an international
+      prefix (empty) is handled like upstream; see there. }
+    class function TryMaybeExtractCountryCode(const ANumber: string;
+      ADefaultRegionMetadata: PPhoneMetadataRec; var ANationalNumber: string;
+      AKeepRawInput: Boolean; var APhoneNumber: TPhoneNumber;
+      out ACountryCode: Integer;
+      out AError: TPhoneNumberParseError): Boolean; static;
+
     class function IsPossibleNumber(const APhoneNumber, ACountry: string): Boolean; static;
     class function IsValidNumber(const APhoneNumber, ACountry: string): Boolean; static;
     class function Format(const AParsed: TPhoneNumber; AFormat: TPhoneNumberFormat): string; static;
@@ -332,6 +409,9 @@ type
   end;
 
 implementation
+
+uses
+  LibPhoneNumber.Regex;
 
 { ------------------------------------------------------------------
   Small string helpers. The facade used the Delphi string helpers
@@ -879,104 +959,153 @@ begin
   Result := '';
 end;
 
+{ Upstream maybeStripInternationalPrefixAndNormalize(number, possibleIddPrefix),
+  in upstream order. PLUS_CHARS_PATTERN.lookingAt() is the UTF-16 test of
+  StartsWithPlusChar, and number.delete(0, m.end()) removes the whole plus RUN
+  the pattern matches (StripLeadingPlusRun). normalize(number) is
+  NormalizeAlphaPhoneOrDigits; the iddPattern that upstream takes from its
+  regexCache is compiled and cached by the regex layer behind
+  ParsePrefixAsIdd.
+
+  Upstream compiles the iddPattern BEFORE it normalises the number, so a
+  malformed pattern throws (PatternSyntaxException, an
+  IllegalArgumentException) with the number untouched. The compile probe of
+  the regex layer (TryCompilePattern) runs at the same point here and its
+  failure is raised as EArgumentException. The empty pattern is not compiled:
+  the probe rejects it by contract, and ParsePrefixAsIdd answers it without an
+  engine (see there). }
+class function TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+  var ANumber: string; const APossibleIddPrefix: string): TCountryCodeSource;
+var
+  CompileError: string;
+begin
+  if ANumber = '' then
+    Exit(pnccsFromDefaultCountry);
+
+  // "Check to see if the number begins with one or more plus signs."
+  if StartsWithPlusChar(ANumber) then
+  begin
+    ANumber := StripLeadingPlusRun(ANumber);
+    // "Can now normalize the rest of the number since we've consumed the "+"
+    // sign at the start."
+    ANumber := LibPhoneNumber.MetadataCore.NormalizeAlphaPhoneOrDigits(ANumber);
+    Exit(pnccsFromNumberWithPlusSign);
+  end;
+
+  // "Attempt to parse the first digits as an international prefix."
+  if (APossibleIddPrefix <> '')
+    and not TryCompilePattern(APossibleIddPrefix, CompileError) then
+    raise EArgumentException.CreateFmt(
+      'Invalid international prefix pattern "%s": %s',
+      [APossibleIddPrefix, CompileError]);
+  ANumber := LibPhoneNumber.MetadataCore.NormalizeAlphaPhoneOrDigits(ANumber);
+  if ParsePrefixAsIdd(APossibleIddPrefix, ANumber) then
+    Result := pnccsFromNumberWithIdd
+  else
+    Result := pnccsFromDefaultCountry;
+end;
+
 { Upstream maybeExtractCountryCode(number, defaultRegionMetadata,
-  nationalNumber, keepRawInput, phoneNumber), including the
-  maybeStripInternationalPrefixAndNormalize it starts with.
+  nationalNumber, keepRawInput, phoneNumber), in upstream order.
 
   Java throws two error types out of this method and returns 0 for "no country
   calling code present"; this port reports the throw as a False result with
   AError set, and keeps the 0 return as ACountryCode = 0 with a True result.
-  The keepRawInput handling is the caller's, because there is no PhoneNumber
-  object to write into here - ASource is what Java stores as the
-  countryCodeSource.
-
-  ANationalDigits stays EMPTY in the "no country calling code present" case,
-  exactly like the upstream StringBuilder, which parseHelper then fills with
-  normalize(nationalNumber) itself. }
+  The contract of the out and var parameters is in the interface section. }
 class function TPhoneNumberUtil.TryMaybeExtractCountryCode(
-  const ANumber: string; ADefaultMetadata: PPhoneMetadataRec;
-  AHasDefaultMetadata: Boolean; out ACountryCode: Integer;
-  out ANationalDigits: string; out ASource: TCountryCodeSource;
+  const ANumber: string; ADefaultRegionMetadata: PPhoneMetadataRec;
+  var ANationalNumber: string; AKeepRawInput: Boolean;
+  var APhoneNumber: TPhoneNumber; out ACountryCode: Integer;
   out AError: TPhoneNumberParseError): Boolean;
 var
   FullNumber: string;
+  PossibleCountryIddPrefix: string;
+  Source: TCountryCodeSource;
+  PotentialCountryCode: Integer;
+  ExtractedNationalNumber: string;
+  DefaultCountryCode: Integer;
+  DefaultCountryCodeString: string;
   PotentialNationalNumber: string;
-  DefaultCountryCodeText: string;
   CarrierCode: string;
   GeneralDesc: PPhoneNumberDescRec;
 begin
   ACountryCode := 0;
-  ANationalDigits := '';
-  ASource := pnccsFromDefaultCountry;
   AError := pnpeNone;
 
   if ANumber = '' then
     Exit(True);
 
-  // Port of maybeStripInternationalPrefixAndNormalize: a leading run of plus
-  // characters always wins, otherwise the international prefix of the DEFAULT
-  // region decides. The prefix comes from the metadata (a regex, e.g. '011'
-  // for the NANP, '00' for most of Europe, '001[14-689]|...' for AU).
-  //
-  // Java strips the plus run and normalises the REST; here normalize() runs on
-  // the whole string, which is the same thing - neither ALPHA_PHONE_MAPPINGS
-  // nor normalizeDigitsOnly keeps a plus character.
-  FullNumber := LibPhoneNumber.MetadataCore.NormalizeAlphaPhoneOrDigits(
-    ANumber);
-  if StartsWithPlusChar(ANumber) then
-    ASource := pnccsFromNumberWithPlusSign
-  else if AHasDefaultMetadata
-    and ParsePrefixAsIdd(ADefaultMetadata^.InternationalPrefix, FullNumber) then
-    ASource := pnccsFromNumberWithIdd;
+  FullNumber := ANumber;
+  // "Set the default prefix to be something that will never match."
+  PossibleCountryIddPrefix := 'NonMatch';
+  if ADefaultRegionMetadata <> nil then
+    PossibleCountryIddPrefix := ADefaultRegionMetadata^.InternationalPrefix;
 
-  if ASource <> pnccsFromDefaultCountry then
+  Source := MaybeStripInternationalPrefixAndNormalize(FullNumber,
+    PossibleCountryIddPrefix);
+  if AKeepRawInput then
+    APhoneNumber.CountryCodeSource := Source;
+
+  if Source <> pnccsFromDefaultCountry then
   begin
     if Length(FullNumber) <= MinLengthForNsn then
     begin
+      // "Phone number had an IDD, but after this was not long enough to be a
+      // viable phone number."
       AError := pnpeTooShortAfterIdd;
       Exit(False);
     end;
 
-    ACountryCode := ExtractCountryCode(FullNumber, ANationalDigits);
-    if ACountryCode <> 0 then
+    PotentialCountryCode := ExtractCountryCode(FullNumber,
+      ExtractedNationalNumber);
+    if PotentialCountryCode <> 0 then
+    begin
+      ANationalNumber := ANationalNumber + ExtractedNationalNumber;
+      APhoneNumber.CountryCode := PotentialCountryCode;
+      ACountryCode := PotentialCountryCode;
       Exit(True);
+    end;
 
     // "If this fails, they must be using a strange country calling code that
     // we don't recognize, or that doesn't exist."
-    ANationalDigits := '';
     AError := pnpeInvalidCountryCode;
     Exit(False);
-  end;
-
-  if AHasDefaultMetadata then
+  end
+  else if ADefaultRegionMetadata <> nil then
   begin
-    // Port of the FROM_NUMBER_WITHOUT_PLUS_SIGN branch: a national number that
-    // starts with the calling code of its own region is only reinterpreted
-    // when dropping the calling code makes it match the general description
-    // (or when keeping it makes the number too long).
-    DefaultCountryCodeText := IntToStr(ADefaultMetadata^.CountryCode);
-    if StartsWithText(FullNumber, DefaultCountryCodeText) then
+    // "Check to see if the number starts with the country calling code for the
+    // default region. If so, we remove the country calling code, and do some
+    // checks on the validity of the number before and after."
+    DefaultCountryCode := ADefaultRegionMetadata^.CountryCode;
+    DefaultCountryCodeString := IntToStr(DefaultCountryCode);
+    if StartsWithText(FullNumber, DefaultCountryCodeString) then
     begin
       PotentialNationalNumber := Copy(FullNumber,
-        Length(DefaultCountryCodeText) + 1, MaxInt);
+        Length(DefaultCountryCodeString) + 1, MaxInt);
+      GeneralDesc := GetDesc(ADefaultRegionMetadata, pdkGeneralDesc);
+      // Upstream passes null: "Don't need the carrier code".
       MaybeStripNationalPrefixAndCarrierCode(PotentialNationalNumber,
-        ADefaultMetadata, CarrierCode);
-      GeneralDesc := GetDesc(ADefaultMetadata, pdkGeneralDesc);
+        ADefaultRegionMetadata, CarrierCode);
+      // "If the number was not valid before but is valid now, or if it was too
+      // long before, we consider the number with the country calling code
+      // stripped to be a better result and keep that instead."
       if (not MatchesNationalNumberPattern(FullNumber, GeneralDesc)
             and MatchesNationalNumberPattern(PotentialNationalNumber, GeneralDesc))
-        or (TestNumberLength(FullNumber, ADefaultMetadata) = mvrTooLong) then
+        or (TestNumberLength(FullNumber, ADefaultRegionMetadata) = mvrTooLong) then
       begin
-        ANationalDigits := PotentialNationalNumber;
-        ASource := pnccsFromNumberWithoutPlusSign;
-        ACountryCode := ADefaultMetadata^.CountryCode;
+        ANationalNumber := ANationalNumber + PotentialNationalNumber;
+        if AKeepRawInput then
+          APhoneNumber.CountryCodeSource := pnccsFromNumberWithoutPlusSign;
+        APhoneNumber.CountryCode := DefaultCountryCode;
+        ACountryCode := DefaultCountryCode;
         Exit(True);
       end;
     end;
   end;
 
   // "No country calling code present."
+  APhoneNumber.CountryCode := 0;
   ACountryCode := 0;
-  ANationalDigits := '';
   Result := True;
 end;
 
@@ -1021,7 +1150,7 @@ var
   CountryCode: Integer;
   RegionCallingCode: Integer;
   CountryCodeWasExtracted: Boolean;
-  Source: TCountryCodeSource;
+  ExtractTarget: TPhoneNumber;
   LengthResult: TMetadataValidationResult;
 begin
   AParsed := Default(TPhoneNumber);
@@ -1093,16 +1222,28 @@ begin
   // its chance - which is what makes "+01164 3 331 6005" dialled in the US the
   // New Zealand number +64 3 331 6005: the leading plus is a typo, the real
   // prefix is the NANPA IDD 011.
+  //
+  // Java hands its PhoneNumber to maybeExtractCountryCode. Here the step
+  // writes into a SCRATCH record with keepRawInput forced on, so the country
+  // code source is always available and AParsed stays untouched until parsing
+  // succeeds; the keepRawInput gate is applied at the end, where it always
+  // was. The scratch source is preset to FROM_DEFAULT_COUNTRY for the empty
+  // input, the one case in which the step does not write it (unreachable:
+  // IsViablePhoneNumber guarantees a digit).
+  NationalDigits := '';
+  ExtractTarget := Default(TPhoneNumber);
+  ExtractTarget.CountryCodeSource := pnccsFromDefaultCountry;
   if not TryMaybeExtractCountryCode(NationalNumberText, DefaultMetadata,
-    HasDefaultMetadata, CountryCode, NationalDigits, Source, AError) then
+    NationalDigits, True, ExtractTarget, CountryCode, AError) then
   begin
     if (AError <> pnpeInvalidCountryCode) or not StartsWithPlus then
       Exit(False);
 
     // "Strip the plus-char, and try again." PLUS_CHARS_PATTERN matches a RUN,
-    // and Java continues behind the whole match.
+    // and Java continues behind the whole match. A failed attempt leaves
+    // NationalDigits unchanged (empty), as upstream's StringBuilder.
     if not TryMaybeExtractCountryCode(StripLeadingPlusRun(NationalNumberText),
-      DefaultMetadata, HasDefaultMetadata, CountryCode, NationalDigits, Source,
+      DefaultMetadata, NationalDigits, True, ExtractTarget, CountryCode,
       AError) then
       Exit(False);
 
@@ -1200,7 +1341,7 @@ begin
   // Upstream only records the country code source when parsing with
   // keepRawInput; Parse leaves the field at pnccsUnspecified.
   if AKeepRawInput then
-    AParsed.CountryCodeSource := Source;
+    AParsed.CountryCodeSource := ExtractTarget.CountryCodeSource;
 
   AError := pnpeNone;
   Result := True;

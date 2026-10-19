@@ -53,10 +53,13 @@ unit LibPhoneNumber.UpstreamSuite.Tests;
 
   Coverage
   --------
-  PhoneNumberUtilTest declares 121 test methods. 115 of them are covered here
-  by 113 fixture methods - the three getMetadataFor*_shouldBeNull tests are one
-  method, because they are one lookup each - plus two fixture methods of this
-  port's own that pin the metadata switch. The remaining 6 are listed below.
+  PhoneNumberUtilTest declares 121 test methods. 117 of them are covered here
+  by 115 fixture methods - the three getMetadataFor*_shouldBeNull tests are one
+  method, because they are one lookup each - plus four fixture methods of
+  this port's own: two pin the metadata switch, and the two
+  ParseDriverSteps_* methods pin the empty and the malformed international
+  prefix of the two parse driver steps with values DERIVED FROM THE JAVA
+  CODE (no Java test covers them). The remaining 4 are listed below.
 
   The fourteen methods of the accessory API step (getSupportedTypesFor*,
   isNumberGeographical, getLengthOfGeographicalAreaCode,
@@ -72,23 +75,9 @@ unit LibPhoneNumber.UpstreamSuite.Tests;
   Tests of PhoneNumberUtilTest that are NOT ported, and why
   --------------------------------------------------------
   None of these is blocked on missing library surface. They test a
-  private step of the parse driver on its own, a metadata loader the port does
-  not have, or a proto field pair the record does not model:
+  metadata loader the port does not have, or a proto field pair the record
+  does not model:
 
-    testMaybeStripInternationalPrefix     - an API SHAPE difference, not a
-                                            metadata one:
-                                            maybeStripInternationalPrefixAnd
-                                            Normalize is a private step of the
-                                            parse driver here and is not
-                                            callable on its own. Covered
-                                            indirectly by
-                                            ParseWithInternationalPrefixes and
-                                            by the CountryCodeSource
-                                            assertions of ParseAndKeepRaw.
-    testMaybeExtractCountryCode           - same shape difference:
-                                            TryMaybeExtractCountryCode is a
-                                            private method of the facade;
-                                            covered by ParseAndKeepRaw.
     testGetMetadataForRegionForMissing    - needs a metadata SOURCE that can
       Metadata / ...ForNonGeographical...    FAIL. UseMetadataTables installs a
                                             data set, it does not install a
@@ -111,6 +100,15 @@ unit LibPhoneNumber.UpstreamSuite.Tests;
   can do the same thing - UseSyntheticMetadata installs a complete, self
   consistent ONE TERRITORY data set through UseMetadataTables for the duration
   of the test and a finally block puts the testing tables back.
+
+  testMaybeStripInternationalPrefix and testMaybeExtractCountryCode ARE ported
+  (Test_MaybeStripInternationalPrefix, Test_MaybeExtractCountryCode) against
+  the two public parse driver steps
+  TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize and
+  TPhoneNumberUtil.TryMaybeExtractCountryCode. Java's StringBuilder arguments
+  are var parameters, the expected NumberParseException is a False result
+  plus the error type, and hasCountryCodeSource() = false is
+  CountryCodeSource = pnccsUnspecified.
 
   Single assertions left out inside a ported test are marked with an
   "UPSTREAM ONLY" comment at the place they belong. Exactly two such markers
@@ -348,6 +346,15 @@ type
     procedure Test_ExtractPossibleNumber;
 
     procedure Test_MaybeStripNationalPrefix;
+
+    procedure Test_MaybeStripInternationalPrefix;
+
+    procedure Test_MaybeExtractCountryCode;
+
+    { Port's own: values derived from the Java CODE, not from a Java test. }
+    procedure ParseDriverSteps_EmptyInternationalPrefix;
+
+    procedure ParseDriverSteps_MalformedIddPatternRaises;
 
     procedure Test_ParseNationalNumber;
 
@@ -2379,6 +2386,324 @@ begin
   finally
     UseTestingMetadata;
   end;
+end;
+
+procedure TUpstreamPhoneNumberUtilTests.Test_MaybeStripInternationalPrefix;
+const
+  InternationalPrefix = '00[39]';
+var
+  NumberToStrip, StrippedNumber: string;
+begin
+  { Java mutates a StringBuilder; the port takes ANumber as a var parameter. }
+  NumberToStrip := '0034567700-3898003';
+  { Note the dash is removed as part of the normalization. }
+  StrippedNumber := '45677003898003';
+  Assert.AreEqual(Ord(pnccsFromNumberWithIdd),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, InternationalPrefix)));
+  Assert.AreEqual(StrippedNumber, NumberToStrip,
+    'The number supplied was not stripped of its international prefix.');
+  { Now the number no longer starts with an IDD prefix, so it should now
+    report FROM_DEFAULT_COUNTRY. }
+  Assert.AreEqual(Ord(pnccsFromDefaultCountry),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, InternationalPrefix)));
+
+  NumberToStrip := '00945677003898003';
+  Assert.AreEqual(Ord(pnccsFromNumberWithIdd),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, InternationalPrefix)));
+  Assert.AreEqual(StrippedNumber, NumberToStrip,
+    'The number supplied was not stripped of its international prefix.');
+  { Test it works when the international prefix is broken up by spaces. }
+  NumberToStrip := '00 9 45677003898003';
+  Assert.AreEqual(Ord(pnccsFromNumberWithIdd),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, InternationalPrefix)));
+  Assert.AreEqual(StrippedNumber, NumberToStrip,
+    'The number supplied was not stripped of its international prefix.');
+  { Now the number no longer starts with an IDD prefix, so it should now
+    report FROM_DEFAULT_COUNTRY. }
+  Assert.AreEqual(Ord(pnccsFromDefaultCountry),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, InternationalPrefix)));
+
+  { Test the + symbol is also recognised and stripped. }
+  NumberToStrip := '+45677003898003';
+  StrippedNumber := '45677003898003';
+  Assert.AreEqual(Ord(pnccsFromNumberWithPlusSign),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, InternationalPrefix)));
+  Assert.AreEqual(StrippedNumber, NumberToStrip,
+    'The number supplied was not stripped of the plus symbol.');
+
+  { If the number afterwards is a zero, we should not strip this - no country
+    calling code begins with 0. }
+  NumberToStrip := '0090112-3123';
+  StrippedNumber := '00901123123';
+  Assert.AreEqual(Ord(pnccsFromDefaultCountry),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, InternationalPrefix)));
+  Assert.AreEqual(StrippedNumber, NumberToStrip,
+    'The number supplied had a 0 after the match so shouldn''t be stripped.');
+  { Here the 0 is separated by a space from the IDD. }
+  NumberToStrip := '009 0-112-3123';
+  Assert.AreEqual(Ord(pnccsFromDefaultCountry),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, InternationalPrefix)));
+end;
+
+procedure TUpstreamPhoneNumberUtilTests.Test_MaybeExtractCountryCode;
+var
+  Number: TPhoneNumber;
+  Metadata: PPhoneMetadataRec;
+  NumberToFill: string;
+  CountryCallingCode: Integer;
+  Error: TPhoneNumberParseError;
+begin
+  { Java's NumberParseException is a False result plus AError here, so every
+    "fail("Should not have thrown an exception")" becomes an IsTrue on the
+    result and the one expected exception an IsFalse plus the error type.
+    number.clear() is Default(TPhoneNumber); hasCountryCodeSource() = false is
+    CountryCodeSource = pnccsUnspecified. Metadata is fetched inside the test:
+    the pointer is source bound (AGENTS.md "Metadata Source Switching"). }
+  Number := Default(TPhoneNumber);
+  Metadata := MetadataOf(RC_US);
+  { Note that for the US, the IDD is 011. }
+  NumberToFill := '';
+  Assert.IsTrue(TPhoneNumberUtil.TryMaybeExtractCountryCode('011112-3456789',
+    Metadata, NumberToFill, True, Number, CountryCallingCode, Error),
+    'Should not have thrown an exception.');
+  Assert.AreEqual(1, CountryCallingCode,
+    'Did not extract country calling code 1 correctly.');
+  Assert.AreEqual(Ord(pnccsFromNumberWithIdd), Ord(Number.CountryCodeSource),
+    'Did not figure out CountryCodeSource correctly');
+  { Should strip and normalize national significant number. }
+  Assert.AreEqual('123456789', NumberToFill,
+    'Did not strip off the country calling code correctly.');
+
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsTrue(TPhoneNumberUtil.TryMaybeExtractCountryCode('+6423456789',
+    Metadata, NumberToFill, True, Number, CountryCallingCode, Error),
+    'Should not have thrown an exception.');
+  Assert.AreEqual(64, CountryCallingCode,
+    'Did not extract country calling code 64 correctly.');
+  Assert.AreEqual(Ord(pnccsFromNumberWithPlusSign),
+    Ord(Number.CountryCodeSource),
+    'Did not figure out CountryCodeSource correctly');
+
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsTrue(TPhoneNumberUtil.TryMaybeExtractCountryCode('+80012345678',
+    Metadata, NumberToFill, True, Number, CountryCallingCode, Error),
+    'Should not have thrown an exception.');
+  Assert.AreEqual(800, CountryCallingCode,
+    'Did not extract country calling code 800 correctly.');
+  Assert.AreEqual(Ord(pnccsFromNumberWithPlusSign),
+    Ord(Number.CountryCodeSource),
+    'Did not figure out CountryCodeSource correctly');
+
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsTrue(TPhoneNumberUtil.TryMaybeExtractCountryCode('2345-6789',
+    Metadata, NumberToFill, True, Number, CountryCallingCode, Error),
+    'Should not have thrown an exception.');
+  Assert.AreEqual(0, CountryCallingCode,
+    'Should not have extracted a country calling code - no international prefix present.');
+  Assert.AreEqual(Ord(pnccsFromDefaultCountry), Ord(Number.CountryCodeSource),
+    'Did not figure out CountryCodeSource correctly');
+
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsFalse(TPhoneNumberUtil.TryMaybeExtractCountryCode(
+    '0119991123456789', Metadata, NumberToFill, True, Number,
+    CountryCallingCode, Error),
+    'Should have thrown an exception, no valid country calling code present.');
+  { Expected. }
+  Assert.AreEqual(Ord(pnpeInvalidCountryCode), Ord(Error),
+    'Wrong error type stored in exception.');
+
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsTrue(TPhoneNumberUtil.TryMaybeExtractCountryCode('(1 610) 619 4466',
+    Metadata, NumberToFill, True, Number, CountryCallingCode, Error),
+    'Should not have thrown an exception.');
+  Assert.AreEqual(1, CountryCallingCode,
+    'Should have extracted the country calling code of the region passed in');
+  Assert.AreEqual(Ord(pnccsFromNumberWithoutPlusSign),
+    Ord(Number.CountryCodeSource),
+    'Did not figure out CountryCodeSource correctly');
+
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsTrue(TPhoneNumberUtil.TryMaybeExtractCountryCode('(1 610) 619 4466',
+    Metadata, NumberToFill, False, Number, CountryCallingCode, Error),
+    'Should not have thrown an exception.');
+  Assert.AreEqual(1, CountryCallingCode,
+    'Should have extracted the country calling code of the region passed in');
+  Assert.AreEqual(Ord(pnccsUnspecified), Ord(Number.CountryCodeSource),
+    'Should not contain CountryCodeSource.');
+
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsTrue(TPhoneNumberUtil.TryMaybeExtractCountryCode('(1 610) 619 446',
+    Metadata, NumberToFill, False, Number, CountryCallingCode, Error),
+    'Should not have thrown an exception.');
+  Assert.AreEqual(0, CountryCallingCode,
+    'Should not have extracted a country calling code - invalid number after '
+    + 'extraction of uncertain country calling code.');
+  Assert.AreEqual(Ord(pnccsUnspecified), Ord(Number.CountryCodeSource),
+    'Should not contain CountryCodeSource.');
+
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsTrue(TPhoneNumberUtil.TryMaybeExtractCountryCode('(1 610) 619',
+    Metadata, NumberToFill, True, Number, CountryCallingCode, Error),
+    'Should not have thrown an exception.');
+  Assert.AreEqual(0, CountryCallingCode,
+    'Should not have extracted a country calling code - too short number both '
+    + 'before and after extraction of uncertain country calling code.');
+  Assert.AreEqual(Ord(pnccsFromDefaultCountry), Ord(Number.CountryCodeSource),
+    'Did not figure out CountryCodeSource correctly');
+end;
+
+procedure TUpstreamPhoneNumberUtilTests.ParseDriverSteps_EmptyInternationalPrefix;
+var
+  Metadata: PPhoneMetadataRec;
+  NumberToStrip, NumberToFill: string;
+  Number: TPhoneNumber;
+  CountryCallingCode: Integer;
+  Error: TPhoneNumberParseError;
+begin
+  { NOT copied from a Java test: every expected value below is DERIVED from
+    the Java code of PhoneNumberUtil, against the testing metadata.
+
+    CO of PhoneNumberMetadataForTesting.xml has no internationalPrefix
+    attribute, so getInternationalPrefix() is "" (the proto default;
+    BuildMetadataFromXml only sets it when the attribute exists).
+    parsePrefixAsIdd compiles "" and lookingAt() matches it with length 0 on
+    every input. The CAPTURING_DIGIT_PATTERN find() behind the match then
+    decides: first digit '0' -> false; any other digit -> delete(0, 0) and
+    true; no digit at all -> true as well. So a number WITHOUT a leading zero
+    counts as FROM_NUMBER_WITH_IDD, and maybeExtractCountryCode reads its
+    first digits as a calling code. }
+  Assert.AreEqual('', MetadataOf(RC_CO)^.InternationalPrefix,
+    'CO of the testing metadata has no international prefix.');
+
+  { maybeStripInternationalPrefixAndNormalize(number, ""). }
+  NumberToStrip := '123456';
+  Assert.AreEqual(Ord(pnccsFromNumberWithIdd),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, '')));
+  Assert.AreEqual('123456', NumberToStrip, 'A zero length IDD strips nothing.');
+
+  NumberToStrip := '1-23 456';
+  Assert.AreEqual(Ord(pnccsFromNumberWithIdd),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, '')));
+  Assert.AreEqual('123456', NumberToStrip, 'The number is normalised.');
+
+  { A zero behind the (empty) match blocks it. }
+  NumberToStrip := '0-123456';
+  Assert.AreEqual(Ord(pnccsFromDefaultCountry),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, '')));
+  Assert.AreEqual('0123456', NumberToStrip, 'Normalised, nothing stripped.');
+
+  { normalize("--") is "": no digit behind the match, so parsePrefixAsIdd
+    answers true. }
+  NumberToStrip := '--';
+  Assert.AreEqual(Ord(pnccsFromNumberWithIdd),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, '')));
+  Assert.AreEqual('', NumberToStrip);
+
+  { maybeExtractCountryCode with the CO metadata: "123456" is
+    FROM_NUMBER_WITH_IDD, 6 > MIN_LENGTH_FOR_NSN, and extractCountryCode
+    finds 1 (US is in the testing metadata) with "23456" behind it. }
+  Metadata := MetadataOf(RC_CO);
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsTrue(TPhoneNumberUtil.TryMaybeExtractCountryCode('123456', Metadata,
+    NumberToFill, True, Number, CountryCallingCode, Error));
+  Assert.AreEqual(1, CountryCallingCode);
+  Assert.AreEqual(1, Number.CountryCode);
+  Assert.AreEqual('23456', NumberToFill);
+  Assert.AreEqual(Ord(pnccsFromNumberWithIdd), Ord(Number.CountryCodeSource));
+
+  { "0123456": FROM_DEFAULT_COUNTRY, and it does not start with 57, so no
+    calling code is present. }
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsTrue(TPhoneNumberUtil.TryMaybeExtractCountryCode('0123456', Metadata,
+    NumberToFill, True, Number, CountryCallingCode, Error));
+  Assert.AreEqual(0, CountryCallingCode);
+  Assert.AreEqual('', NumberToFill);
+  Assert.AreEqual(Ord(pnccsFromDefaultCountry), Ord(Number.CountryCodeSource));
+
+  { "12": FROM_NUMBER_WITH_IDD, but 2 <= MIN_LENGTH_FOR_NSN. }
+  Number := Default(TPhoneNumber);
+  NumberToFill := '';
+  Assert.IsFalse(TPhoneNumberUtil.TryMaybeExtractCountryCode('12', Metadata,
+    NumberToFill, True, Number, CountryCallingCode, Error));
+  Assert.AreEqual(Ord(pnpeTooShortAfterIdd), Ord(Error));
+  Assert.AreEqual(Ord(pnccsFromNumberWithIdd), Ord(Number.CountryCodeSource),
+    'The source is recorded before the failure.');
+
+  { parseHelper("123456", "CO"): the calling code 1 is extracted as above;
+    its main region US differs from CO, so the national prefix step runs with
+    the US metadata, whose national prefix 1 does not match "23456"; 5 digits
+    are a valid NSN length for parse. Result: +1 23456. }
+  CheckParse(MakeNumber(1, '23456'), '123456', RC_CO);
+  Assert.AreEqual(Ord(pnccsFromNumberWithIdd),
+    Ord(ParseRawOk('123456', RC_CO).CountryCodeSource));
+end;
+
+procedure TUpstreamPhoneNumberUtilTests.ParseDriverSteps_MalformedIddPatternRaises;
+var
+  NumberToStrip: string;
+  Raised: Boolean;
+begin
+  { NOT from a Java test. Java compiles the pattern
+    (regexCache.getPatternForRegex) BEFORE normalize(number), so a malformed
+    pattern throws PatternSyntaxException - an IllegalArgumentException - with
+    the number untouched. The port raises EArgumentException at the same
+    point. }
+  NumberToStrip := '00-49 30 123';
+  Raised := False;
+  try
+    TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(NumberToStrip,
+      '[');
+  except
+    on EArgumentException do
+      Raised := True;
+  end;
+  Assert.IsTrue(Raised, 'A malformed IDD pattern must raise EArgumentException.');
+  Assert.AreEqual('00-49 30 123', NumberToStrip,
+    'The number must be unchanged when the pattern does not compile.');
+
+  { A pattern that would only compile inside the wrapping of the regex
+    layer (it closes the wrapping group early) is malformed as well. }
+  NumberToStrip := '49-30 123';
+  Raised := False;
+  try
+    TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(NumberToStrip,
+      ')|(');
+  except
+    on EArgumentException do
+      Raised := True;
+  end;
+  Assert.IsTrue(Raised, 'A breakout IDD pattern must raise EArgumentException.');
+  Assert.AreEqual('49-30 123', NumberToStrip,
+    'The number must be unchanged when the pattern does not compile.');
+
+  { A leading plus wins before the pattern is looked at, as upstream. }
+  NumberToStrip := '+49 30 123';
+  Assert.AreEqual(Ord(pnccsFromNumberWithPlusSign),
+    Ord(TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize(
+      NumberToStrip, '[')));
+  Assert.AreEqual('4930123', NumberToStrip);
 end;
 
 procedure TUpstreamPhoneNumberUtilTests.Test_ParseNationalNumber;

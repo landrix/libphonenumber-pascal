@@ -520,7 +520,11 @@ function ExtractCountryCode(const AFullNumber: string;
 
 { Upstream parsePrefixAsIdd: removes AIddPattern from the front of ANumber, but
   only when the first digit that follows is not '0' (calling codes never start
-  with zero). ANumber must be normalised to digits already. }
+  with zero). ANumber must be normalised to digits already. Literal in the
+  edge cases too: an empty AIddPattern matches with length 0 (True unless the
+  number starts with '0'), and a match with no digit behind it - the empty
+  number among them - answers True. A malformed AIddPattern raises the
+  compile error of the regex engine (see LibPhoneNumber.Regex). }
 function ParsePrefixAsIdd(const AIddPattern: string; var ANumber: string): Boolean;
 
 { Upstream maybeStripNationalPrefixAndCarrierCode. ANumber is modified in place
@@ -1710,12 +1714,19 @@ var
   Rest: string;
 begin
   Result := False;
-  if (AIddPattern = '') or (ANumber = '') then
-    Exit;
-  if not TryMatchPrefixEx(AIddPattern, ANumber, Match) then
-    Exit;
-
-  Rest := Copy(ANumber, Match.MatchEnd, Length(ANumber) - Match.MatchEnd + 1);
+  { Matcher.lookingAt(). An EMPTY iddPattern (getInternationalPrefix() of a
+    territory without the attribute) is the zero length match at the start of
+    every input, the empty input included. The regex layer answers False for
+    an empty pattern by contract, so that case is spelled out here: it needs
+    no engine and is therefore the same on PCRE and on every regexpr. }
+  if AIddPattern = '' then
+    Rest := ANumber
+  else
+  begin
+    if not TryMatchPrefixEx(AIddPattern, ANumber, Match) then
+      Exit;
+    Rest := Copy(ANumber, Match.MatchEnd, Length(ANumber) - Match.MatchEnd + 1);
+  end;
 
   { Upstream looks up the first captured digit behind the match and refuses the
     strip when it is a zero. ANumber is digits only here, so the first digit of

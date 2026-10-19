@@ -84,7 +84,29 @@ rollback). `checkRegion = False` is the `IsNumberMatch` path.
 `maybeExtractCountryCode` is a method of its own because parseHelper calls it
 twice: on `INVALID_COUNTRY_CODE` behind a leading plus run, Java strips the run
 and retries, which is what makes `+01164 3 331 6005` dialled in the US the New
-Zealand number `+6433316005`. `RawInput`, `CountryCodeSource` and
+Zealand number `+6433316005`. It and the
+`maybeStripInternationalPrefixAndNormalize` it starts with are PUBLIC, as
+`TPhoneNumberUtil.TryMaybeExtractCountryCode` and
+`TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize` (upstream:
+`@VisibleForTesting`), and the parse driver runs through exactly these two.
+The Java shape is kept: the `StringBuilder` arguments are `var` parameters,
+the national number is appended to, the `PhoneNumber` is a `var`
+`TPhoneNumber` whose `CountryCodeSource` is only written with
+`keepRawInput`, and the `NumberParseException` is a False result plus
+`TPhoneNumberParseError`. The default region metadata is a source bound
+`PPhoneMetadataRec` (`nil` for upstream's `null`). The driver hands the step a
+scratch record and copies the country code source into the result only on
+success, so a failed parse leaves the same fields as before.
+`parsePrefixAsIdd` is literal in its edge cases: an empty international
+prefix (CO of the testing metadata, the nine production non geographical
+entities) is upstream's compiled `""`, a zero length match, so a number that
+does not start with 0 counts as `FROM_NUMBER_WITH_IDD` and its first digits
+are read as a calling code (`123456` in CO of the testing metadata parses as
+`+1 23456`, as in Java and in the C# oracle loaded with the testing XML). The
+regex layer itself keeps its contract that an empty pattern never matches;
+`ParsePrefixAsIdd` answers the empty pattern without an engine. A malformed
+prefix pattern is compiled through `TryCompilePattern` before the number is
+normalised, as upstream, and raised as `EArgumentException`. `RawInput`, `CountryCodeSource` and
 `PreferredDomesticCarrierCode` are filled by `ParseAndKeepRawInput` only, as
 upstream. Vanity numbers are normalised through the alpha table, so
 `1-800-FLOWERS` parses.
@@ -236,6 +258,15 @@ unit.
   TRegExpr. regexpr 0.987 (FreePascal 3.2.2) does not know `\z` and reads it as
   a literal `z`; `$` with `ModifierM = False` is end of input without trailing
   newline tolerance in every TRegExpr version, which is exactly `\z`.
+  Because the wrapping would turn a malformed caller pattern that closes the
+  group early (`)|(`, `a)|(b`) into a valid one, the first compile of every
+  cache entry also compiles the raw pattern on its own; a failure there is an
+  ordinary compile error for every operation and for `TryCompilePattern`.
+  On regexpr 0.987 that check follows the counted quantifier rewrite decision
+  of the wrapped compile, because that engine crashes compiling a nested
+  counted quantifier as written (`(?:a{2}){2}`), and it validates exactly the
+  text the wrapper encloses - for the empty input probe the pattern with `\A`
+  already turned into `^`; see `ValidateUnwrapped`.
 - **Empty input.** regexpr 0.987 answers "no match" for an EMPTY input before
   it looks at the pattern; java.util.regex (and PCRE, and regexpr 1.x) match a
   pattern that can match the empty string against `""` in all four
@@ -400,16 +431,16 @@ probe counters must be zero.
 These are decisions, not backlog.
 
 1. **Some `PhoneNumberUtilTest` methods are not ported** (the count is in the
-   AGENTS.md manifest):
-   `testMaybeStripInternationalPrefix` and `testMaybeExtractCountryCode` call
-   private steps of the parse driver on their own (porting them would mean
-   exporting parse internals as public API); the two `...ForMissingMetadata`
-   tests need a metadata loader that can fail (the generated tables are
-   linked); `testIsNumberMatchAcceptsProtoDefaultsAsMatch` and
+   AGENTS.md manifest): the two `...ForMissingMetadata` tests need a metadata
+   loader that can fail (the generated tables are linked);
+   `testIsNumberMatchAcceptsProtoDefaultsAsMatch` and
    `testIsNumberMatchMatchesDiffLeadingZerosIfItalianLeadingZeroFalse` assert
    the `italianLeadingZero` / `numberOfLeadingZeros` proto pair `TPhoneNumber`
    does not model. Reasons are in the header of
    `tests/LibPhoneNumber.UpstreamSuite.Tests.pas`.
+   `testMaybeStripInternationalPrefix` and `testMaybeExtractCountryCode` are
+   no longer on this list: the two parse driver steps they call were made
+   public API (see "Parse path").
 2. Inside ported tests, the assertions on `italianLeadingZero` /
    `numberOfLeadingZeros` are omitted, and `testRemovalNotSupported` has no
    counterpart (`Iterator.remove()` does not exist here).

@@ -22,22 +22,22 @@ nowhere else. `README.md`, `docs/ARCHITECTURE.md`, `tools/README.md` and
 many there are; a number repeated in one of them is a bug in that file. Update
 this block, with its date, in the same change that moves a number.
 
-As of 2026-10-19 (test layer of its own replaces DUnitX; the suite runs on Delphi and FreePascal):
+As of 2026-10-19 (the parse driver steps `maybeStripInternationalPrefixAndNormalize` and `maybeExtractCountryCode` are public, their two upstream tests are ported, and an empty international prefix is a zero length IDD match as upstream - CO of the testing metadata parses differently, production does not; the regex layer validates every pattern unwrapped as well):
 
 | item | value |
 | --- | --- |
-| Test suite (Delphi + FreePascal) | 555 tests in 10 fixtures, one program `tests/LibPhoneNumberTests.dpr`, all green on Delphi 13 Win64 (`tools/run_delphi_tests.ps1`) and on FreePascal 3.2.4 aarch64-linux (WSL, the default), 3.2.2 aarch64-linux (WSL distribution package), 3.3.1 aarch64-linux (WSL), 3.3.1 aarch64-win64 and 3.2.4 aarch64-darwin (Mac), plus 3.2.2 x86_64-linux (Ubuntu 24.04 distribution package, verified in an emulated container; CI) |
+| Test suite (Delphi + FreePascal) | 563 tests in 10 fixtures, one program `tests/LibPhoneNumberTests.dpr`, all green on Delphi 13 Win64 (`tools/run_delphi_tests.ps1`) and on FreePascal 3.2.4 aarch64-linux (WSL, the default), 3.2.2 aarch64-linux (WSL distribution package), 3.3.1 aarch64-linux (WSL), 3.3.1 aarch64-win64 and 3.2.4 aarch64-darwin (Mac), plus 3.2.2 x86_64-linux (Ubuntu 24.04 distribution package, verified in an emulated container; CI) |
 | FreePascal test suite gate | `tools/run_fpc_tests.ps1`: build + run about 25-30 s on WSL, 8 s Native, 7 s on the Mac; a step of `run_update_workflow.ps1` (`-SkipFpcTests`) and of `run_pr_quick_check.ps1` (the whole quick check about 115 s on an otherwise idle machine) |
 | CI | `.github/workflows/quick-check.yml`: job `quick-check` (windows-latest; generator, generated unit check, compare gate - no compiler) and job `freepascal` (ubuntu-24.04, distribution FPC 3.2.2 x86_64: compile check, the whole suite with a JUnit artifact, the sample) |
 | Generator inputs | 4 upstream XMLs |
 | Generated units | 9 (`Metadata.{Data,Descs,Formats}`, `ShortMetadata.{Data,Descs}`, `TestingMetadata.{Data,Descs,Formats}`, `AlternateFormats.Data`) |
 | Hand written `src/` units | 13 |
 | FreePascal compile gate | 12 units listed = every hand written unit of `src/` (`LibPhoneNumber.Metadata.Types` is compiled through `LibPhoneNumber.Metadata`), the facade and the matcher included |
-| FreePascal runtime gate | `tools/run_fpc_runtime_check.ps1`, the same 12 units: 74488 observation lines (18930558 bytes). Core sections: 1144 production + 93 testing phone examples, 961 short number examples, 137 tricky inputs, 2784 AYTF sequences, 5548 compiled patterns each also compiled and matched in its counted quantifier rewrite - longest rewrite 1439 chars against a budget of 32768, 0 over budget - 71 targeted regex/rewrite/budget probes (19 of them on the empty input), 471 BMP class ranges. Facade and matcher sections (production and testing metadata): 1144 + 93 examples parsed back and found in sentences, 6938 parse inputs (6237 parse), 290 example number lookups (regions + non geo entities), 247 reference corpus cases, 17 mobileDialing + 12 keepingAlphaChars cases, 16196 matcher texts = 80980 `FindNumbers` calls with 63078 matches. The summary must show 0 exceptions, pattern failures, rewrite mismatches and expansion probe failures and a positive count in every section. Byte identical between Delphi and FPC 3.2.4 aarch64-linux (WSL, mandatory), 3.2.2 aarch64-linux (WSL), 3.3.1 aarch64-win64 (Windows) and 3.2.4 aarch64-darwin (Mac); before the import also 3.3.1 aarch64-linux (WSL). FPC build + run about 21 s on WSL, Delphi build + run about 11 s. RTL Unicode category sweep (reported, not gated): identical on 3.3.1, differs on 3.2.x (KNOWN_ISSUES.md, permanent item 7) |
+| FreePascal runtime gate | `tools/run_fpc_runtime_check.ps1`, the same 12 units: 74468 observation lines (18923618 bytes). Core sections: 1144 production + 93 testing phone examples, 961 short number examples, 137 tricky inputs, 2784 AYTF sequences, 5548 compiled patterns each also compiled and matched in its counted quantifier rewrite - longest rewrite 1439 chars against a budget of 32768, 0 over budget - 71 targeted regex/rewrite/budget probes (19 of them on the empty input), 471 BMP class ranges. Facade and matcher sections (production and testing metadata): 1144 + 93 examples parsed back and found in sentences, 6938 parse inputs (6233 parse), 290 example number lookups (regions + non geo entities), 247 reference corpus cases, 17 mobileDialing + 12 keepingAlphaChars cases, 16196 matcher texts = 80980 `FindNumbers` calls with 63058 matches. The summary must show 0 exceptions, pattern failures, rewrite mismatches and expansion probe failures and a positive count in every section. Byte identical between Delphi and FPC 3.2.4 aarch64-linux (WSL, mandatory), 3.2.2 aarch64-linux (WSL), 3.3.1 aarch64-win64 (Windows) and 3.2.4 aarch64-darwin (Mac); before the import also 3.3.1 aarch64-linux (WSL). FPC build + run about 21 s on WSL, Delphi build + run about 11 s. RTL Unicode category sweep (reported, not gated): identical on 3.3.1, differs on 3.2.x (KNOWN_ISSUES.md, permanent item 7) |
 | Length compare gate | 254/254 territories, all four counters zero |
 | Mass differential | 1144 cases x 9 APIs = 10296 compared fields, 0 findings |
 | Reference corpus | 247 cases in `tests/data/reference_cases_java_csharp.json` |
-| Ported upstream suites | `PhoneNumberUtilTest` 115/121, `ShortNumberInfoTest` 28/28, `PhoneNumberMatcherTest` 45/46, `AsYouTypeFormatterTest` 33/33 |
+| Ported upstream suites | `PhoneNumberUtilTest` 117/121, `ShortNumberInfoTest` 28/28, `PhoneNumberMatcherTest` 45/46, `AsYouTypeFormatterTest` 33/33 |
 | Phone metadata baseline | 254 territories (245 regions + 9 non geo), 215 calling codes, 3048 descriptions (1144 with an example number), 761 national + 205 international formats |
 | Short number baseline | 241 territories, 1928 descriptions (961 with an example number), 149 pooled possible lengths, 1202 patterns |
 | Testing metadata baseline | 36 territories (33 regions + 3 non geo), 29 calling codes, 432 descriptions (93 with an example number), 69 national + 12 international formats, 71 leadingDigits patterns, 66 pooled possible lengths |
@@ -52,7 +52,8 @@ As of 2026-10-19 (test layer of its own replaces DUnitX; the suite runs on Delph
 What is ported, and where it lives (details in `docs/ARCHITECTURE.md`):
 
 1. `src/LibPhoneNumber.PhoneNumberUtil.pas` - facade `TPhoneNumberUtil`: the
-   parse driver (`Parse`, `ParseAndKeepRawInput`; private `ParseHelper`,
+   parse driver (`Parse`, `ParseAndKeepRawInput`; private `ParseHelper`;
+   public steps `MaybeStripInternationalPrefixAndNormalize`,
    `TryMaybeExtractCountryCode`), `IsPossibleNumber`, `IsValidNumber`, `Format`
    and every extended formatter, `FormatInOriginalFormat`, the three
    `IsNumberMatch` overloads, and the parse based half of the accessory API
@@ -291,14 +292,10 @@ What is really left, and nothing else is known to be:
 
 1. Optional: the geocoder, carrier mapper and time zone mapper - only with a
    concrete use case.
-2. Optional, a design decision rather than backlog: exporting the two private
-   parse driver steps (`maybeStripInternationalPrefixAndNormalize`,
-   `maybeExtractCountryCode`) as public API would allow porting the two
-   upstream tests that call them.
-3. Deferred consciously (`docs/ARCHITECTURE.md`, "Closed questions"): a slice
+2. Deferred consciously (`docs/ARCHITECTURE.md`, "Closed questions"): a slice
    view for the possible-length pools, and a source bound handle type for
    metadata records.
-4. Routine: metadata refreshes through the vendor update workflow.
+3. Routine: metadata refreshes through the vendor update workflow.
 
 When resuming after a break: read `vendor/versions.md`, run
 `tools/show_metadata_info.ps1`, read the newest `CHANGELOG.md` entry, and run

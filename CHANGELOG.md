@@ -2,6 +2,54 @@
 
 All notable changes to this repository are documented in this file.
 
+## Unreleased
+
+### Features
+
+- The two parse driver steps upstream marks `@VisibleForTesting` are public on
+  `TPhoneNumberUtil`:
+  `MaybeStripInternationalPrefixAndNormalize(var ANumber, APossibleIddPrefix)`
+  (upstream `maybeStripInternationalPrefixAndNormalize`) returns the
+  `TCountryCodeSource` and leaves the number normalised, and
+  `TryMaybeExtractCountryCode(ANumber, ADefaultRegionMetadata,
+  var ANationalNumber, AKeepRawInput, var APhoneNumber, out ACountryCode,
+  out AError)` (upstream `maybeExtractCountryCode`) reports upstream's
+  `NumberParseException` as a False result plus `TPhoneNumberParseError`. The
+  default region metadata is a source bound `PPhoneMetadataRec`, `nil` for
+  upstream's `null`. `Parse` and `ParseAndKeepRawInput` run through both;
+  with the production metadata their results are unchanged, with the testing
+  metadata CO changes as described under Fixes.
+- `testMaybeStripInternationalPrefix` and `testMaybeExtractCountryCode` of
+  `PhoneNumberUtilTest` are ported, with the Java expected values, into the
+  testing metadata fixture `tests/LibPhoneNumber.UpstreamSuite.Tests.pas`.
+
+### Fixes
+
+- `ParsePrefixAsIdd` treats an EMPTY international prefix like upstream: the
+  compiled `""` is a zero length match, so the zero digit check alone decides
+  (it answered False before). Only territories without an
+  `internationalPrefix` attribute are affected - the nine production non
+  geographical entities, which `Parse` never uses as the default region, and
+  CO of the testing metadata, where a national number that does not start
+  with 0 is now read as carrying a calling code (`123456` -> `+1 23456`,
+  `6012345678` -> `INVALID_COUNTRY_CODE`), exactly as in Java. Production
+  parse results are unchanged.
+- `MaybeStripInternationalPrefixAndNormalize` compiles the prefix pattern
+  before it normalises the number, as upstream: a malformed pattern raises
+  `EArgumentException` and leaves the number unchanged.
+- The regex layer validates every caller pattern on its own, unwrapped, before
+  it compiles and caches the wrapped spelling. A malformed pattern that closes
+  the wrapping group early (`)|(`, `a)|(b`) used to compile as a valid
+  alternation; it is now a compile error like any other - the match and
+  replace operations raise, `TryCompilePattern` answers False, and
+  `FormatByPattern` skips such a user format. Metadata patterns are not
+  affected. On FreePascal 3.2.2 (regexpr 0.987) the check uses the same
+  counted quantifier rewrite decision as the wrapped compile, so valid
+  patterns such as `a{0}`, `(?:a){6553}` and `(?:a{2}){2}` pass it there too,
+  and the empty input probe validates the text it actually wraps (with `\A`
+  turned into `^`). Known limitation there: `(?x)` comments are not modelled
+  (KNOWN_ISSUES.md, permanent item 9).
+
 ## 0.1.0 - 2026-10-19
 
 First release of the Pascal port of libphonenumber, built from upstream

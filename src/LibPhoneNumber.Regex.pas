@@ -257,7 +257,10 @@ function ExpandCountedQuantifiers(const APattern: string;
   out AExpanded: string): Boolean;
 
 { Compiles APattern through the cache and reports a compile failure instead of
-  raising. Intended for dialect gates in the test suite. }
+  raising. Like every operation of this unit it also rejects a pattern that is
+  only valid inside the wrapping (see ValidateUnwrapped). Used by the dialect
+  gates of the test suite and by the compile-first step of
+  TPhoneNumberUtil.MaybeStripInternationalPrefixAndNormalize. }
 function TryCompilePattern(const APattern: string; out AError: string): Boolean;
 
 { Diagnostics. }
@@ -770,14 +773,105 @@ begin
     AExpanded := APattern;
 end;
 
+(* Compiles the caller's pattern ON ITS OWN, unwrapped, and discards the
+  result; raises the engine's compile error exactly like AcquireIndex does
+  for the wrapped spelling. The wrapping ('\A(?:' + p + ')...') is not
+  neutral for a malformed pattern: one that closes the wrapping group early
+  and opens a new one, e.g. ')|(' or 'a)|(b', is rejected by
+  java.util.regex.Pattern.compile but becomes the VALID '\A(?:)|()\z'. Every
+  first compile of a cache entry runs this check, so every operation and
+  TryCompilePattern reject such a pattern like any other compile error.
+  Never called with an empty pattern: every operation and TryCompilePattern
+  handle '' before they compile anything.
+
+  Below regexpr 1.0 (FreePascal 3.2.2) the check follows the counted
+  quantifier rewrite decision of the WRAPPED compile it guards
+  (AExpandLikeWrapped = the wrapped spelling was rewritten), because both
+  simpler rules are wrong on that engine:
+
+  1. Compiling the pattern as written crashes regexpr 0.987 for a nested
+     counted quantifier: '(?:a{2}){2}' raises an access violation inside
+     TRegExpr.Compile. The wrapped spelling of such a pattern is rewritten
+     and never reaches the engine in that form.
+  2. Rewriting the unwrapped pattern independently disagrees with the
+     wrapped compile. The budget decision can differ - '(?:a){6553}' fits
+     ExpansionBudget unwrapped but not in any wrapping, and its rewrite has
+     6553 groups, over the NSUBEXP limit (90) of the engine - and 'a{0}'
+     rewrites to the empty expression, which TRegExpr refuses
+     (reeNoExpression).
+
+  So: when the wrapped spelling was compiled as written, the pattern is
+  compiled as written, and it has one group fewer than that spelling. When
+  the wrapped spelling was rewritten, the pattern is rewritten too.
+
+  What makes the two decisions agree: APattern is the text the wrapper puts
+  between '(?:' and ')' VERBATIM - the caller's pattern for WrapFull,
+  WrapPrefix and WrapRaw, and the \A -> ^ rewritten pattern for the empty
+  input probe, which therefore passes that rewritten text here. When the
+  group scan of the rewrite finds the wrapper's own ')' as the partner of
+  its '(?:' - true for every well formed pattern built from the atoms the
+  rewrite scans (escapes, classes, groups; see the block comment above
+  ExpandCountedQuantifiers) - the body is rewritten by the same function with the same
+  budget, so the rewritten wrapped spelling is exactly prefix + rewrite of
+  APattern + suffix: the rewrite of APattern then fits the budget whenever
+  the wrapped one does, and it has no more groups. Only a pattern on which
+  that scan pairs differently can rewrite differently: a malformed one (a
+  breakout, an unterminated class, a trailing backslash), which is then
+  rejected, and a construct the scan does not model, such as a '(' inside
+  an '(?x)' comment - a known limitation, see KNOWN_ISSUES.md, permanent
+  item 9. An EMPTY rewrite is accepted without a compile: it
+  means every atom carries a zero count quantifier, and a breakout pattern
+  cannot rewrite to nothing, because the unmatched '(' it needs to rebalance
+  the wrapping scans as one atom up to the end of the pattern, with no
+  quantifier behind it, and is copied. *)
+procedure ValidateUnwrapped(const APattern: string;
+  AExpandLikeWrapped: Boolean);
+{$IFDEF FPC}
+var
+  Expr: TRegExpr;
+  Text: string;
+begin
+  Text := APattern;
+  if (TRegExpr.VersionMajor < 1) and AExpandLikeWrapped then
+  begin
+    if not ExpandWithin(APattern, ExpansionBudget, Text) then
+      Text := APattern
+    else if Text = '' then
+      Exit;
+  end;
+  Expr := TRegExpr.Create;
+  try
+    Expr.ModifierM := False;
+    Expr.Expression := RegExprString(Text);
+    Expr.Compile;
+  finally
+    Expr.Free;
+  end;
+end;
+{$ELSE}
+var
+  Expr: TRegEx;
+begin
+  Expr := TRegEx.Create(APattern, []);
+  { TRegEx compiles lazily; see AcquireIndex. }
+  Expr.IsMatch('');
+end;
+{$ENDIF}
+
 { Caller must hold GLock. AMultiLine is for the empty input probe of
   regexpr 0.987 only (EmptyInputMatches); every other caller compiles with
-  java.util.regex defaults. }
-function AcquireIndex(const AWrapped: string; AMultiLine: Boolean = False): Integer;
+  java.util.regex defaults.
+
+  AWrapped is the cache key and the expression that is compiled; ARaw is the
+  caller's pattern it was built from, validated on its own on a cache miss
+  (ValidateUnwrapped). }
+function AcquireIndex(const AWrapped, ARaw: string;
+  AMultiLine: Boolean = False): Integer;
 {$IFDEF FPC}
 var
   Expr: TRegExpr;
   Expanded: string;
+  Rewritten: Boolean;
 {$ELSE}
 var
   Expr: TRegEx;
@@ -790,6 +884,17 @@ begin
   Result := FindSlot(AWrapped);
   if GEntries[Result].Used then
     Exit;
+
+  { Before anything is stored: a failure leaves the table untouched. }
+{$IFDEF FPC}
+  { The rewrite decision of the wrapped spelling (see ValidateUnwrapped);
+    over budget, ExpandCountedQuantifiers hands back AWrapped itself. }
+  Rewritten := (TRegExpr.VersionMajor < 1)
+    and ExpandCountedQuantifiers(AWrapped, Expanded);
+  ValidateUnwrapped(ARaw, Rewritten);
+{$ELSE}
+  ValidateUnwrapped(ARaw, False);
+{$ENDIF}
 
   { Store the key BEFORE compiling. Assigning a string is the only other step
     here that can raise (out of memory), and the FreePascal cleanup pass only
@@ -811,12 +916,10 @@ begin
       configurations warning free. Metadata patterns are pure ASCII.
       The cache stays keyed by the pattern as given; only the engine sees the
       expanded form of a pre 1.0 regexpr (see ExpandCountedQuantifiers). }
-    { Over budget, ExpandCountedQuantifiers hands back AWrapped itself. }
+    { Expanded was computed above: the rewritten spelling, or AWrapped
+      itself over budget. }
     if TRegExpr.VersionMajor < 1 then
-    begin
-      ExpandCountedQuantifiers(AWrapped, Expanded);
-      Expr.Expression := RegExprString(Expanded);
-    end
+      Expr.Expression := RegExprString(Expanded)
     else
       Expr.Expression := RegExprString(AWrapped);
     Expr.Compile;
@@ -943,8 +1046,13 @@ function EmptyInputMatches(const APattern: string): Boolean;
 var
   Index: Integer;
   Expr: TRegExpr;
+  Probed: string;
 begin
-  Index := AcquireIndex('^(?:' + RewriteStartAnchors(APattern) + ')$', True);
+  { The unwrapped validation checks the text the probe actually wraps (see
+    ValidateUnwrapped): its rewrite decision has to match the one of the
+    probe spelling, and \A -> ^ changes the length of the rewrite. }
+  Probed := RewriteStartAnchors(APattern);
+  Index := AcquireIndex('^(?:' + Probed + ')$', Probed, True);
   Expr := GEntries[Index].Expr;
   Expr.InputString := RegExprString(#10);
   Result := Expr.ExecPos(2);
@@ -961,13 +1069,13 @@ begin
 end;
 {$ENDIF}
 
-function ExecuteMatch(const AWrapped, AInput: string): Boolean;
+function ExecuteMatch(const AWrapped, ARaw, AInput: string): Boolean;
 var
   Index: Integer;
 begin
   GLock.Enter;
   try
-    Index := AcquireIndex(AWrapped);
+    Index := AcquireIndex(AWrapped, ARaw);
   {$IFDEF FPC}
     Result := GEntries[Index].Expr.Exec(RegExprString(AInput));
   {$ELSE}
@@ -991,7 +1099,7 @@ begin
   if NeedsEmptyInputProbe(AInput) then
     Exit(LockedEmptyInputMatches(APattern));
 {$ENDIF}
-  Result := ExecuteMatch(WrapFull(APattern), AInput);
+  Result := ExecuteMatch(WrapFull(APattern), APattern, AInput);
 end;
 
 function TryMatchPrefix(const APattern, AInput: string): Boolean;
@@ -1005,7 +1113,7 @@ begin
   if NeedsEmptyInputProbe(AInput) then
     Exit(LockedEmptyInputMatches(APattern));
 {$ENDIF}
-  Result := ExecuteMatch(WrapPrefix(APattern), AInput);
+  Result := ExecuteMatch(WrapPrefix(APattern), APattern, AInput);
 end;
 
 function CountCapturingGroups(const APattern: string): Integer;
@@ -1068,7 +1176,7 @@ begin
 
   GLock.Enter;
   try
-    Index := AcquireIndex(WrapPrefix(APattern));
+    Index := AcquireIndex(WrapPrefix(APattern), APattern);
   {$IFDEF FPC}
     Expr := GEntries[Index].Expr;
     if NeedsEmptyInputProbe(AInput) then
@@ -1149,7 +1257,7 @@ begin
 
   GLock.Enter;
   try
-    Index := AcquireIndex(WrapRaw(APattern));
+    Index := AcquireIndex(WrapRaw(APattern), APattern);
   {$IFDEF FPC}
     Expr := GEntries[Index].Expr;
     if NeedsEmptyInputProbe(AInput) then
@@ -1279,7 +1387,7 @@ begin
 
   GLock.Enter;
   try
-    Index := AcquireIndex(WrapRaw(APattern));
+    Index := AcquireIndex(WrapRaw(APattern), APattern);
   {$IFDEF FPC}
     Expr := GEntries[Index].Expr;
     EmptyProbe := NeedsEmptyInputProbe(AInput);
@@ -1378,7 +1486,7 @@ begin
   try
     GLock.Enter;
     try
-      AcquireIndex(WrapFull(APattern));
+      AcquireIndex(WrapFull(APattern), APattern);
     finally
       GLock.Leave;
     end;

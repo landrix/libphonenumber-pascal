@@ -74,6 +74,12 @@ type
 
     procedure EmptyPattern_NeverMatches;
 
+    procedure MalformedPattern_CannotBreakOutOfTheWrapping;
+
+    procedure CountedQuantifiers_PassTheUnwrappedValidation;
+
+    procedure EmptyInputProbe_ValidatesWhatItWraps;
+
     procedure EmptyInput_MatchesAPatternThatAllowsIt;
 
     procedure PatternCache_ReusesCompiledPatterns;
@@ -175,6 +181,8 @@ type
     procedure ExtractCountryCode_TakesTheKnownCallingCodePrefix;
 
     procedure ParsePrefixAsIdd_UsesTheMetadataInternationalPrefix;
+
+    procedure ParsePrefixAsIdd_EmptyPatternIsAZeroLengthMatch;
 
     procedure MaybeStripNationalPrefix_LeavesTerritoriesWithoutNationalPrefixAlone;
 
@@ -432,6 +440,126 @@ begin
   Assert.IsFalse(TryMatchFull('', ''), 'Empty pattern must never match.');
   Assert.IsFalse(TryMatchFull('', '123'), 'Empty pattern must never match.');
   Assert.IsFalse(TryMatchPrefix('', '123'), 'Empty pattern must never match.');
+end;
+
+procedure TMetadataCoreTests.MalformedPattern_CannotBreakOutOfTheWrapping;
+
+  { Runs operation AOp of the regex layer and reports whether it raised. }
+  function Raises(AOp: Integer; const APattern, AInput: string): Boolean;
+  var
+    Match: TRegexPrefixMatch;
+    Value: string;
+    Start: Integer;
+  begin
+    Result := False;
+    try
+      case AOp of
+        0: TryMatchFull(APattern, AInput);
+        1: TryMatchPrefix(APattern, AInput);
+        2: TryMatchPrefixEx(APattern, AInput, Match);
+        3: TryFindFirst(APattern, AInput, Value, Start);
+        4: ReplaceAll(APattern, AInput, 'Y');
+        5: ReplaceFirst(APattern, AInput, 'Y');
+      end;
+    except
+      on Exception do
+        Result := True;
+    end;
+  end;
+
+const
+  Breakouts: array[0..2] of string = (')|(', 'a)|(b', '\d+)|(?:x');
+  Inputs: array[0..1] of string = ('a', '');
+var
+  Error: string;
+  I, Op, J: Integer;
+begin
+  { The layer wraps every pattern ('\A(?:' + p + ')...'). A caller pattern
+    that closes the wrapping group early and opens a new one is NOT a valid
+    pattern on its own - java.util.regex.Pattern.compile throws
+    PatternSyntaxException for each of these - but its wrapped spelling is.
+    Every operation must reject it like any other compile error: the
+    operations raise, TryCompilePattern answers False. The empty input runs
+    through the empty input probe on regexpr below 1.0. }
+  for I := Low(Breakouts) to High(Breakouts) do
+  begin
+    Assert.IsFalse(TryCompilePattern(Breakouts[I], Error),
+      'TryCompilePattern must reject ' + Breakouts[I]);
+    for Op := 0 to 5 do
+      for J := Low(Inputs) to High(Inputs) do
+        Assert.IsTrue(Raises(Op, Breakouts[I], Inputs[J]),
+          Format('operation %d must reject %s on "%s"',
+            [Op, Breakouts[I], Inputs[J]]));
+  end;
+
+  { The same text balanced is fine. }
+  Assert.IsTrue(TryCompilePattern('(?:a)|(b)', Error), Error);
+  Assert.IsTrue(TryMatchFull('(?:a)|(b)', 'a'));
+end;
+
+procedure TMetadataCoreTests.CountedQuantifiers_PassTheUnwrappedValidation;
+const
+  Valid: array[0..5] of string = ('a{0}', 'a{0,0}', 'x(?:a){0}y',
+    '(?:a){6553}', '(?:a{2}){2}', '(?:a{2}){2,3}');
+var
+  Error: string;
+  I: Integer;
+begin
+  (* Valid java.util.regex patterns (Pattern.compile accepts all six) that
+    the unwrapped validation must not reject - or crash on - on any engine.
+    All of them are traps on regexpr below 1.0 (FreePascal 3.2.2): 'a{0}'
+    and 'a{0,0}' rewrite to the EMPTY pattern, which TRegExpr refuses to
+    compile (reeNoExpression); '(?:a){6553}' rewrites to 6553 groups -
+    inside ExpansionBudget unwrapped, over it in every wrapped spelling -
+    which exceeds that engine's group limit; and the two nested counted
+    quantifiers crash TRegExpr.Compile when compiled as written. The
+    validation therefore follows the rewrite decision of the wrapped compile
+    (see ValidateUnwrapped in LibPhoneNumber.Regex). Expected match results:
+    Java "aaaa".matches("(?:a{2}){2}") is true, "aaaaaa" matches
+    (?:a{2}){2,3} and "aaaaa" does not; and
+    "".matches("a{0}") and "".matches("a{0,0}") are true, "a".matches("a{0}")
+    is false, "xy".matches("x(?:a){0}y") is true, and "xya" starts with a
+    match of it. *)
+  for I := Low(Valid) to High(Valid) do
+    Assert.IsTrue(TryCompilePattern(Valid[I], Error),
+      Valid[I] + ' must compile: ' + Error);
+
+  Assert.IsTrue(TryMatchFull('a{0}', ''), 'a{0} on the empty input');
+  Assert.IsFalse(TryMatchFull('a{0}', 'a'), 'a{0} on a');
+  Assert.IsTrue(TryMatchPrefix('a{0}', ''), 'lookingAt a{0} on the empty input');
+  Assert.IsTrue(TryMatchFull('a{0,0}', ''), 'a{0,0} on the empty input');
+  Assert.IsTrue(TryMatchFull('x(?:a){0}y', 'xy'), 'x(?:a){0}y on xy');
+  Assert.IsTrue(TryMatchPrefix('x(?:a){0}y', 'xya'), 'lookingAt x(?:a){0}y');
+  Assert.IsFalse(TryMatchFull('(?:a){6553}', 'a'), '(?:a){6553} on a');
+  Assert.IsTrue(TryMatchFull('(?:a){6553}', StringOfChar('a', 6553)),
+    '(?:a){6553} on 6553 a');
+  Assert.IsTrue(TryMatchFull('(?:a{2}){2}', 'aaaa'), '(?:a{2}){2} on aaaa');
+  Assert.IsTrue(TryMatchFull('(?:a{2}){2,3}', 'aaaaaa'),
+    '(?:a{2}){2,3} on aaaaaa');
+  Assert.IsFalse(TryMatchFull('(?:a{2}){2,3}', 'aaaaa'),
+    '(?:a{2}){2,3} on aaaaa');
+end;
+
+procedure TMetadataCoreTests.EmptyInputProbe_ValidatesWhatItWraps;
+const
+  { 32710 b behind ten copies of a zero width group. }
+  Big = '(?:\Aa{0}){10}b{32710}';
+  Small = '(?:\Aa{0}){10}b{3}';
+begin
+  (* The empty input probe of regexpr below 1.0 (FreePascal 3.2.2) compiles
+    '^(?:' + p + ')$' with every \A of p turned into ^, so the probed text is
+    ten characters shorter here than p itself. Its counted quantifier
+    rewrite fits ExpansionBudget (32766 characters) while the rewrite of p
+    as written does not (32770), and regexpr 0.987 refuses to compile
+    '(?:\Aa{0}){10}' unrewritten (reePlusStarOperandCouldBeEmpty). The
+    unwrapped validation must therefore check the text the probe wraps, not
+    p. Java: the pattern needs 32710 b, so neither matches() nor lookingAt()
+    succeeds on the empty input; "bbb" matches the small variant. *)
+  Assert.IsFalse(TryMatchFull(Big, ''), 'matches() on the empty input');
+  Assert.IsFalse(TryMatchPrefix(Big, ''), 'lookingAt() on the empty input');
+  Assert.IsFalse(TryMatchFull(Small, ''), 'small: matches() on the empty input');
+  Assert.IsTrue(TryMatchFull(Small, 'bbb'), 'small: matches() on bbb');
+  Assert.IsTrue(TryMatchPrefix(Small, 'bbbb'), 'small: lookingAt() on bbbb');
 end;
 
 procedure TMetadataCoreTests.EmptyInput_MatchesAPatternThatAllowsIt;
@@ -1072,6 +1200,16 @@ begin
   Formats[0] := MakeUserNumberFormat('*(\d{3})', '$1', [], '', '');
   Assert.AreEqual('6502530000',
     FormatByPattern(1, '6502530000', '', mpnfNational, Formats));
+
+  { A pattern that is only valid INSIDE the wrapping of the regex layer
+    (it closes the wrapping group and opens a new one); Pattern.compile
+    rejects it, so it is not a candidate either. }
+  Formats[0] := MakeUserNumberFormat('(\d{3})(\d{3})(\d{4}))|(', '$1-$2-$3',
+    [], '', '');
+  Assert.AreEqual('6502530000',
+    FormatByPattern(1, '6502530000', '', mpnfNational, Formats));
+  Assert.AreEqual(-1,
+    ChooseFormattingPatternForUserFormats(Formats, '6502530000'));
 
   { Broken leadingDigits, valid pattern: the format is skipped as a whole. }
   Formats[0] := MakeUserNumberFormat('(\d{3})(\d{3})(\d{4})', '$1/$2/$3',
@@ -1993,6 +2131,33 @@ begin
   Assert.IsFalse(ParsePrefixAsIdd(DeIdd, Number),
     'A zero behind the IDD must block the strip.');
   Assert.AreEqual('000123456', Number, 'The number must not be modified.');
+end;
+
+procedure TMetadataCoreTests.ParsePrefixAsIdd_EmptyPatternIsAZeroLengthMatch;
+var
+  Number: string;
+begin
+  { Derived from the Java code of parsePrefixAsIdd (no upstream test covers
+    it): an empty iddPattern matches with length 0 at the start of every
+    input (Matcher.lookingAt), so only the zero digit check behind the match
+    decides. getInternationalPrefix() is "" for a territory without the
+    attribute - the nine non geographical entities of the production
+    metadata among them. }
+  Number := '4930123456';
+  Assert.IsTrue(ParsePrefixAsIdd('', Number), 'A non zero digit follows.');
+  Assert.AreEqual('4930123456', Number, 'Nothing is stripped.');
+
+  Number := '0123456';
+  Assert.IsFalse(ParsePrefixAsIdd('', Number), 'A zero digit follows.');
+  Assert.AreEqual('0123456', Number);
+
+  { No digit behind the match at all: Java deletes nothing and answers true. }
+  Number := '';
+  Assert.IsTrue(ParsePrefixAsIdd('', Number), 'The empty number.');
+  Assert.AreEqual('', Number);
+
+  { A non empty pattern does not match the empty number. }
+  Assert.IsFalse(ParsePrefixAsIdd('00', Number));
 end;
 
 procedure TMetadataCoreTests.MaybeStripNationalPrefix_LeavesTerritoriesWithoutNationalPrefixAlone;

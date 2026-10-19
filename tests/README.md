@@ -113,8 +113,8 @@ Test units:
    `.AsYouTypeFormatter.Tests.pas` (`AsYouTypeFormatterTest`). Their `Setup`
    switches to the generated TESTING tables, so they read the same data the
    Java suite reads. Do not "verify" a value there with the oracle. Every
-   omission - Java methods that test private parse driver steps, a failing
-   metadata loader or proto fields the record does not model, single
+   omission - Java methods that need a failing metadata loader or proto
+   fields the record does not model, single
    assertions marked UPSTREAM ONLY, `testRemovalNotSupported` - is listed with
    its reason in the header of its unit. `Test_MaybeStripNationalPrefix`
    installs a complete synthetic one-territory data set for the duration of the
