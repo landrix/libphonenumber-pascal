@@ -7,10 +7,10 @@ All notable changes to this repository are documented in this file.
 Initial import of the Pascal port of libphonenumber, built from upstream
 metadata release 9.0.41.
 
-The port was developed in `landrix/LibPhonenumber-for-Delphi` (branch
-`native-implementation`, up to commit `f2091f2`), where its development history
-remains. This repository starts from that state as one fresh tree; the C#
-bridge of that repository is not part of it.
+The port grew out of a development line of
+[LibPhonenumber-for-Delphi](https://github.com/landrix/LibPhonenumber-for-Delphi),
+the .NET based wrapper. This repository starts as one fresh tree without that
+history; the .NET bridge is not part of it.
 
 ### Features
 
