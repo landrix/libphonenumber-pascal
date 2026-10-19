@@ -27,3 +27,6 @@ GPATH
 GTAGS
 GRTAGS
 GTEMP.pas
+
+# Local work list of the maintainers' tools, not part of the repository
+BACKLOG.md
