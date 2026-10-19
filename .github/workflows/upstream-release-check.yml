@@ -1,0 +1,42 @@
+name: Upstream Release Check
+
+# Once a week: is there a google/libphonenumber release newer than the pinned
+# one (Get-OraclePin in tools/oracle_helpers.ps1)? If so, open an issue with
+# the NuGet status of the matching libphonenumber-csharp package and the
+# refresh steps. The logic lives in tools/check_upstream_release.ps1, which
+# runs locally as well (-DryRun prints what it would do).
+on:
+  schedule:
+    # Mondays, 05:17 UTC.
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only print what would be done; open no issue"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # gh is preinstalled on the hosted runner and authenticates with GH_TOKEN.
+      # The input reaches the script through the environment, never through
+      # the script text.
+      - name: Check for a new upstream release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          $arguments = @{}
+          if ($env:DRY_RUN -eq "true") { $arguments["DryRun"] = $true }
+          ./tools/check_upstream_release.ps1 @arguments

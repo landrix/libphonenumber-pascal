@@ -88,7 +88,11 @@ if (-not (Test-Path -LiteralPath $programFile)) {
 
 $fpc = Resolve-FpcToolchain -Toolchain $Toolchain -FpcPath $FpcPath -MacHost $MacHost
 if ([string]::IsNullOrWhiteSpace($fpc)) {
-  Skip-OrFail "FreePascal toolchain '$Toolchain' not reachable; skipping the FreePascal test suite." $RequireFpc
+  $toolchainLabel = $Toolchain
+  if (-not [string]::IsNullOrWhiteSpace($FpcPath)) {
+    $toolchainLabel = "$Toolchain, $FpcPath"
+  }
+  Skip-OrFail "FreePascal toolchain '$toolchainLabel' not reachable; skipping the FreePascal test suite." $RequireFpc
   return
 }
 
@@ -148,7 +152,11 @@ function Assert-CleanBuild {
   }
 }
 
-Write-Info "FreePascal test suite ($Toolchain)"
+if ([string]::IsNullOrWhiteSpace($FpcPath)) {
+  Write-Info "FreePascal test suite ($Toolchain)"
+} else {
+  Write-Info "FreePascal test suite ($Toolchain, $FpcPath)"
+}
 
 if (Test-Path -LiteralPath $scratchDir) {
   Remove-Item -LiteralPath $scratchDir -Recurse -Force

@@ -161,8 +161,9 @@ powershell -ExecutionPolicy Bypass -File tools/run_delphi_tests.ps1
 pwsh -NoProfile -File tools/run_fpc_tests.ps1
 
 # Quick gate: metadata regeneration check, length compare against the upstream
-# XML, FreePascal compile and runtime checks, the FreePascal test suite and the
-# Delphi compile of the test program
+# XML, FreePascal compile and runtime checks, the FreePascal test suite (runtime
+# check and suite on WSL FreePascal 3.2.4 and 3.2.2; -FpcToolchains restricts)
+# and the Delphi compile of the test program
 powershell -ExecutionPolicy Bypass -File tools/run_pr_quick_check.ps1
 
 # Full gate, including the test run and the differential against the C# oracle
@@ -180,7 +181,7 @@ Which toolchain each entry point needs:
 | --- | --- | --- |
 | `run_delphi_tests.ps1` | fails | not used |
 | `run_fpc_tests.ps1` | not used | skipped with a warning; `-RequireFpc` makes it a failure |
-| `run_pr_quick_check.ps1` | the compile-only build of the test program and the FreePascal runtime check (it needs a Delphi reference build) are skipped with a warning; `-RequireDelphi` makes the build a failure | the compile and runtime checks and the FreePascal test suite are skipped with a warning; `-RequireFpc` makes them a failure |
+| `run_pr_quick_check.ps1` | the compile-only build of the test program and the FreePascal runtime check (it needs a Delphi reference build) are skipped with a warning; `-RequireDelphi` makes the build a failure | the compile and runtime checks and the FreePascal test suite are skipped with a warning, per toolchain of `-FpcToolchains` (default WSL 3.2.4 and 3.2.2); `-RequireFpc` makes any missing one a failure |
 | `run_update_workflow.ps1` | the Delphi test run fails, and so does `-RunMassDifferential` (it builds the probe with Delphi); with `-SkipTests` and without `-RunMassDifferential` only the runtime check is skipped, with a warning | as for the quick check (`-RequireFpc`) |
 
 The GitHub workflow (`.github/workflows/quick-check.yml`) has two jobs: the

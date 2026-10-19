@@ -50,6 +50,33 @@ All notable changes to this repository are documented in this file.
   turned into `^`). Known limitation there: `(?x)` comments are not modelled
   (KNOWN_ISSUES.md, permanent item 9).
 
+### Tooling
+
+- `tools/run_update_workflow.ps1` and `tools/run_pr_quick_check.ps1` run the
+  FreePascal runtime gate and the FreePascal test suite once per entry of the
+  new `-FpcToolchains` list, by default on the WSL FreePascal 3.2.4 AND the
+  3.2.2 of the WSL distribution package (`Wsl`, `Wsl=/usr/bin/fpc`). 3.2.2
+  ships regexpr 0.987, for which the regex layer has code paths of its own; a
+  regexpr 0.987 crash had passed the 3.2.4-only workflow unnoticed. Every
+  runtime run is compared byte for byte against one Delphi reference build.
+  `-FpcToolchains Wsl` restricts both steps to 3.2.4, `-SkipFpcRuntime` and
+  `-SkipFpcTests` still skip them entirely. `-RequireFpc` makes every
+  unreachable configured toolchain a failure; without it each one is skipped
+  with a warning (as on the GitHub runners, which have no WSL).
+- `tools/run_fpc_runtime_check.ps1 -ReferenceDir <dir>` stores the Delphi
+  reference there and reuses it on the next run while its fingerprint (driver
+  input, driver, every unit of `src/`, compiler identity, build options) still
+  matches. The FreePascal toolchain is now checked before the Delphi compiler,
+  so `-RequireFpc` fails on an unreachable toolchain even without Delphi.
+- New weekly GitHub workflow `.github/workflows/upstream-release-check.yml`
+  with `tools/check_upstream_release.ps1`: when google/libphonenumber has a
+  release newer than `Get-OraclePin`, it opens the issue "Upstream
+  libphonenumber vX.Y.Z released" with the release links, whether the
+  matching NuGet `libphonenumber-csharp` exists yet, and the refresh steps.
+  No duplicates (matched by title); an open issue for an older release is
+  closed as superseded only when it carries the script's hidden body marker.
+  `-DryRun` shows what it would do.
+
 ## 0.1.0 - 2026-10-19
 
 First release of the Pascal port of libphonenumber, built from upstream

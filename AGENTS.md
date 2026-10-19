@@ -22,18 +22,18 @@ nowhere else. `README.md`, `docs/ARCHITECTURE.md`, `tools/README.md` and
 many there are; a number repeated in one of them is a bug in that file. Update
 this block, with its date, in the same change that moves a number.
 
-As of 2026-10-19 (the parse driver steps `maybeStripInternationalPrefixAndNormalize` and `maybeExtractCountryCode` are public, their two upstream tests are ported, and an empty international prefix is a zero length IDD match as upstream - CO of the testing metadata parses differently, production does not; the regex layer validates every pattern unwrapped as well):
+As of 2026-10-19 (the parse driver steps `maybeStripInternationalPrefixAndNormalize` and `maybeExtractCountryCode` are public, their two upstream tests are ported, and an empty international prefix is a zero length IDD match as upstream - CO of the testing metadata parses differently, production does not; the regex layer validates every pattern unwrapped as well; the workflow and the quick check run the FreePascal runtime gate and test suite on WSL FreePascal 3.2.4 AND 3.2.2 by default):
 
 | item | value |
 | --- | --- |
 | Test suite (Delphi + FreePascal) | 563 tests in 10 fixtures, one program `tests/LibPhoneNumberTests.dpr`, all green on Delphi 13 Win64 (`tools/run_delphi_tests.ps1`) and on FreePascal 3.2.4 aarch64-linux (WSL, the default), 3.2.2 aarch64-linux (WSL distribution package), 3.3.1 aarch64-linux (WSL), 3.3.1 aarch64-win64 and 3.2.4 aarch64-darwin (Mac), plus 3.2.2 x86_64-linux (Ubuntu 24.04 distribution package, verified in an emulated container; CI) |
-| FreePascal test suite gate | `tools/run_fpc_tests.ps1`: build + run about 25-30 s on WSL, 8 s Native, 7 s on the Mac; a step of `run_update_workflow.ps1` (`-SkipFpcTests`) and of `run_pr_quick_check.ps1` (the whole quick check about 115 s on an otherwise idle machine) |
-| CI | `.github/workflows/quick-check.yml`: job `quick-check` (windows-latest; generator, generated unit check, compare gate - no compiler) and job `freepascal` (ubuntu-24.04, distribution FPC 3.2.2 x86_64: compile check, the whole suite with a JUnit artifact, the sample) |
+| FreePascal test suite gate | `tools/run_fpc_tests.ps1`: build + run about 25-30 s on WSL, 8 s Native, 7 s on the Mac; a step of `run_update_workflow.ps1` (`-SkipFpcTests`) and of `run_pr_quick_check.ps1`, run once per `-FpcToolchains` entry - by default WSL 3.2.4 AND WSL 3.2.2 (`/usr/bin/fpc`); the whole quick check about 110 s with both toolchains on an otherwise idle machine |
+| CI | `.github/workflows/quick-check.yml`: job `quick-check` (windows-latest; generator, generated unit check, compare gate - no compiler) and job `freepascal` (ubuntu-24.04, distribution FPC 3.2.2 x86_64: compile check, the whole suite with a JUnit artifact, the sample). `.github/workflows/upstream-release-check.yml` (ubuntu-latest, weekly and manual): `tools/check_upstream_release.ps1` opens an issue when google/libphonenumber has a release newer than `Get-OraclePin` |
 | Generator inputs | 4 upstream XMLs |
 | Generated units | 9 (`Metadata.{Data,Descs,Formats}`, `ShortMetadata.{Data,Descs}`, `TestingMetadata.{Data,Descs,Formats}`, `AlternateFormats.Data`) |
 | Hand written `src/` units | 13 |
 | FreePascal compile gate | 12 units listed = every hand written unit of `src/` (`LibPhoneNumber.Metadata.Types` is compiled through `LibPhoneNumber.Metadata`), the facade and the matcher included |
-| FreePascal runtime gate | `tools/run_fpc_runtime_check.ps1`, the same 12 units: 74468 observation lines (18923618 bytes). Core sections: 1144 production + 93 testing phone examples, 961 short number examples, 137 tricky inputs, 2784 AYTF sequences, 5548 compiled patterns each also compiled and matched in its counted quantifier rewrite - longest rewrite 1439 chars against a budget of 32768, 0 over budget - 71 targeted regex/rewrite/budget probes (19 of them on the empty input), 471 BMP class ranges. Facade and matcher sections (production and testing metadata): 1144 + 93 examples parsed back and found in sentences, 6938 parse inputs (6233 parse), 290 example number lookups (regions + non geo entities), 247 reference corpus cases, 17 mobileDialing + 12 keepingAlphaChars cases, 16196 matcher texts = 80980 `FindNumbers` calls with 63058 matches. The summary must show 0 exceptions, pattern failures, rewrite mismatches and expansion probe failures and a positive count in every section. Byte identical between Delphi and FPC 3.2.4 aarch64-linux (WSL, mandatory), 3.2.2 aarch64-linux (WSL), 3.3.1 aarch64-win64 (Windows) and 3.2.4 aarch64-darwin (Mac); before the import also 3.3.1 aarch64-linux (WSL). FPC build + run about 21 s on WSL, Delphi build + run about 11 s. RTL Unicode category sweep (reported, not gated): identical on 3.3.1, differs on 3.2.x (KNOWN_ISSUES.md, permanent item 7) |
+| FreePascal runtime gate | `tools/run_fpc_runtime_check.ps1`, the same 12 units: 74468 observation lines (18923618 bytes). Core sections: 1144 production + 93 testing phone examples, 961 short number examples, 137 tricky inputs, 2784 AYTF sequences, 5548 compiled patterns each also compiled and matched in its counted quantifier rewrite - longest rewrite 1439 chars against a budget of 32768, 0 over budget - 71 targeted regex/rewrite/budget probes (19 of them on the empty input), 471 BMP class ranges. Facade and matcher sections (production and testing metadata): 1144 + 93 examples parsed back and found in sentences, 6938 parse inputs (6233 parse), 290 example number lookups (regions + non geo entities), 247 reference corpus cases, 17 mobileDialing + 12 keepingAlphaChars cases, 16196 matcher texts = 80980 `FindNumbers` calls with 63058 matches. The summary must show 0 exceptions, pattern failures, rewrite mismatches and expansion probe failures and a positive count in every section. Byte identical between Delphi and FPC 3.2.4 aarch64-linux (WSL, mandatory), 3.2.2 aarch64-linux (WSL, mandatory: `run_update_workflow.ps1` and `run_pr_quick_check.ps1` run the gate once per `-FpcToolchains` entry, by default these two, against ONE Delphi reference build), 3.3.1 aarch64-win64 (Windows) and 3.2.4 aarch64-darwin (Mac); before the import also 3.3.1 aarch64-linux (WSL). FPC build + run about 18-21 s per WSL toolchain, Delphi build + run about 9-11 s (once per workflow run). RTL Unicode category sweep (reported, not gated): identical on 3.3.1, differs on 3.2.x (KNOWN_ISSUES.md, permanent item 7) |
 | Length compare gate | 254/254 territories, all four counters zero |
 | Mass differential | 1144 cases x 9 APIs = 10296 compared fields, 0 findings |
 | Reference corpus | 247 cases in `tests/data/reference_cases_java_csharp.json` |
@@ -199,12 +199,20 @@ What the workflow does, in order: refresh the reference cases (child `pwsh`;
 with `-FailOnDiff` verify with `git status --porcelain` that the nine generated
 units equal the committed state, the FreePascal compile check
 (`-SkipFpcCheck`), the FreePascal runtime check (`-SkipFpcRuntime`), the
-FreePascal test suite (`tools/run_fpc_tests.ps1`, WSL; `-SkipFpcTests`), the
+FreePascal test suite (`tools/run_fpc_tests.ps1`; `-SkipFpcTests`), the
 length compare gate (export snapshot, extract upstream rules, compare; with
 `-FailOnDiff` a non-zero counter fails), the Delphi test suite (`-SkipTests`,
 which skips the Delphi run only) and, with `-RunMassDifferential`, the mass
-differential (a hard gate with `-FailOnDiff`). `-RequireFpc` turns a missing
-FreePascal into a failure in all three FreePascal steps. The workflow needs
+differential (a hard gate with `-FailOnDiff`). The runtime check and the
+FreePascal test suite run once per entry of `-FpcToolchains` (`<Toolchain>` or
+`<Toolchain>=<compiler path>`; default `Wsl`, `Wsl=/usr/bin/fpc`, i.e. the WSL
+FreePascal 3.2.4 and the 3.2.2 of the distribution package, whose regexpr
+0.987 takes code paths of its own in the regex layer); every runtime run is
+compared against the same Delphi reference, which is built once. Pass one
+entry to restrict both steps (`-FpcToolchains Wsl`). `-RequireFpc` turns a
+missing FreePascal into a failure in all three FreePascal steps, for EVERY
+configured toolchain; without it an unreachable toolchain is skipped with a
+warning and the others still run. The workflow needs
 Delphi for the Delphi test run and for the mass
 differential (`run_delphi_tests.ps1` throws without it); a missing Delphi only
 skips the FreePascal runtime check with a warning, and the workflow has no
@@ -223,6 +231,18 @@ pinned upstream commit first); `freepascal` installs the FreePascal of the
 Ubuntu distribution and runs `check_fpc_compile.ps1 -RequireFpc`,
 `run_fpc_tests.ps1 -Toolchain Native -RequireFpc` with the JUnit report
 uploaded as an artifact, and the FreePascal build and run of the sample.
+Neither runner has WSL, so the WSL toolchains of `-FpcToolchains` are skipped
+there with a warning.
+
+`.github/workflows/upstream-release-check.yml` runs
+`tools/check_upstream_release.ps1` weekly (and on demand): when
+google/libphonenumber has a `vX.Y.Z` tag newer than `Get-OraclePin`, it opens
+the issue "Upstream libphonenumber vX.Y.Z released" with the NuGet status of
+the matching `libphonenumber-csharp` and the steps above - that issue is the
+trigger for a refresh. An open issue for the same version (matched by title) is never
+duplicated; an open issue for an older version is commented on and closed as
+superseded, but only when it carries the script's hidden body marker
+`<!-- upstream-release-check -->` - issues opened by a person are left alone.
 
 Interpretation:
 

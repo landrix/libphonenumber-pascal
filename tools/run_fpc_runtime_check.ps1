@@ -14,6 +14,14 @@ param(
   # its own uniquely named subdirectory below it and never deletes the
   # directory it was given.
   [string]$WorkDir = "",
+  # Directory of a REUSABLE Delphi reference, owned by the caller. When it
+  # holds a reference whose fingerprint (driver input, driver source, every
+  # unit of src/, dcc64 identity, build options) matches this run, the Delphi build is skipped and
+  # that reference is compared against; otherwise the reference is built as
+  # usual and stored there. tools/run_update_workflow.ps1 uses it to build the
+  # reference once for the runs on several FreePascal toolchains. The script
+  # never deletes this directory.
+  [string]$ReferenceDir = "",
   [int]$MaxDiffLines = 20,
   [switch]$RequireFpc,
   [switch]$RequireDelphi,
@@ -193,22 +201,106 @@ function Write-UnixScript {
 }
 
 # ---------------------------------------------------------------------------
+# Reusable Delphi reference (-ReferenceDir)
+# ---------------------------------------------------------------------------
+
+function Get-ReferenceFingerprint {
+  # SHA-256 over everything the Delphi observation files depend on: the
+  # generated driver input, the driver source, every unit of src/, the
+  # compiler (path, file version, size, time stamp) and the build options. A
+  # stored reference is reused only when this matches exactly.
+  param([string]$DriverInput, [string]$Compiler, [string[]]$Options)
+  $parts = New-Object System.Collections.Generic.List[string]
+  $compilerFile = Get-Item -LiteralPath $Compiler
+  $parts.Add(("compiler|{0}|{1}|{2}|{3}" -f $Compiler, $compilerFile.VersionInfo.FileVersion, $compilerFile.Length,
+    $compilerFile.LastWriteTimeUtc.ToString("o")))
+  $parts.Add("options|" + ($Options -join " "))
+  $parts.Add("input|" + (Get-FileHash -LiteralPath $DriverInput -Algorithm SHA256).Hash)
+  $parts.Add("driver|" + (Get-FileHash -LiteralPath $driverFile -Algorithm SHA256).Hash)
+  foreach ($unit in @(Get-ChildItem -LiteralPath $sourceDir -Filter "*.pas" -File | Sort-Object Name)) {
+    $parts.Add(("src|{0}|{1}" -f $unit.Name, (Get-FileHash -LiteralPath $unit.FullName -Algorithm SHA256).Hash))
+  }
+  $bytes = [System.Text.Encoding]::UTF8.GetBytes(($parts -join "`n"))
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  try {
+    return ([System.BitConverter]::ToString($sha.ComputeHash($bytes)) -replace '-', '')
+  } finally {
+    $sha.Dispose()
+  }
+}
+
+function Restore-DelphiReference {
+  # Copies a stored reference whose fingerprint matches into the Delphi output
+  # files of this run; answers whether it did.
+  param([string]$Directory, [string]$Fingerprint, [string]$Observations, [string]$RtlCharacters)
+  $names = @("fingerprint.txt", "delphi-version.txt", "observations.txt", "rtl-characters.txt")
+  foreach ($name in $names) {
+    if (-not (Test-Path -LiteralPath (Join-Path $Directory $name))) {
+      return $false
+    }
+  }
+  $stored = (Get-Content -LiteralPath (Join-Path $Directory "fingerprint.txt") | Select-Object -First 1)
+  if ($stored -ne $Fingerprint) {
+    return $false
+  }
+  Copy-Item -LiteralPath (Join-Path $Directory "observations.txt") -Destination $Observations -Force
+  Copy-Item -LiteralPath (Join-Path $Directory "rtl-characters.txt") -Destination $RtlCharacters -Force
+  return $true
+}
+
+function Save-DelphiReference {
+  # Stores the reference of this run; the fingerprint is written LAST, so an
+  # interrupted save never looks like a complete reference.
+  param([string]$Directory, [string]$Fingerprint, [string]$Version, [string]$Observations, [string]$RtlCharacters)
+  Remove-Item -LiteralPath (Join-Path $Directory "fingerprint.txt") -Force -ErrorAction SilentlyContinue
+  Copy-Item -LiteralPath $Observations -Destination (Join-Path $Directory "observations.txt") -Force
+  Copy-Item -LiteralPath $RtlCharacters -Destination (Join-Path $Directory "rtl-characters.txt") -Force
+  Write-LfAsciiFile -Path (Join-Path $Directory "delphi-version.txt") -Lines @($Version)
+  Write-LfAsciiFile -Path (Join-Path $Directory "fingerprint.txt") -Lines @($Fingerprint)
+}
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
-$dcc64 = Join-Path $StudioRoot "bin\dcc64.exe"
-if (-not (Test-Path -LiteralPath $dcc64)) {
-  Skip-OrFail "Delphi command line compiler not found at '$dcc64'; skipping the FPC runtime check (no reference build)." $RequireDelphi
-  return
-}
-
+# Both compilers are looked up before either may skip the check, so a
+# -RequireFpc or -RequireDelphi failure is raised even when the OTHER compiler
+# is missing too; the required failures come first, then the soft skips.
 $fpc = Resolve-FpcToolchain -Toolchain $Toolchain -FpcPath $FpcPath -MacHost $MacHost
-if ([string]::IsNullOrWhiteSpace($fpc)) {
-  Skip-OrFail "FreePascal toolchain '$Toolchain' not reachable; skipping the FPC runtime check." $RequireFpc
+$toolchainLabel = $Toolchain
+if (-not [string]::IsNullOrWhiteSpace($FpcPath)) {
+  $toolchainLabel = "$Toolchain, $FpcPath"
+}
+$fpcMissingMessage = "FreePascal toolchain '$toolchainLabel' not reachable; skipping the FPC runtime check."
+$dcc64 = Join-Path $StudioRoot "bin\dcc64.exe"
+$delphiMissingMessage = "Delphi command line compiler not found at '$dcc64'; skipping the FPC runtime check (no reference build)."
+$fpcMissing = [string]::IsNullOrWhiteSpace($fpc)
+$delphiMissing = -not (Test-Path -LiteralPath $dcc64)
+
+if ($fpcMissing -and $RequireFpc) {
+  throw $fpcMissingMessage
+}
+if ($delphiMissing -and $RequireDelphi) {
+  throw $delphiMissingMessage
+}
+if ($fpcMissing) {
+  Write-Warning $fpcMissingMessage
   return
 }
+if ($delphiMissing) {
+  Write-Warning $delphiMissingMessage
+  return
+}
+# The options of the Delphi reference build; part of the -ReferenceDir
+# fingerprint. The output directories are added at the call and do not change
+# what the build produces.
+$dccOptions = @("-B", "-Q", '-$R+', '-$Q+', "-U$sourceDir")
 
-Write-Info "FPC runtime check ($Toolchain)"
+if ([string]::IsNullOrWhiteSpace($FpcPath)) {
+  Write-Info "FPC runtime check ($Toolchain)"
+} else {
+  Write-Info "FPC runtime check ($Toolchain, $FpcPath)"
+}
 
 if (Test-Path -LiteralPath $scratchDir) {
   Remove-Item -LiteralPath $scratchDir -Recurse -Force
@@ -235,21 +327,39 @@ try {
 
   # ---- Delphi reference ---------------------------------------------------
   $watch.Restart()
-  $build = Invoke-Native $dcc64 @("-B", "-Q", '-$R+', '-$Q+', "-U$sourceDir",
-    ("-NU" + (Join-Path $delphiDir "dcu")), "-E$delphiDir", $driverFile)
-  $delphiVersion = ($build.Output | Select-Object -First 1)
-  if ($build.ExitCode -ne 0) {
-    $build.Output | ForEach-Object { Write-Host "    $_" }
-    throw "dcc64 failed for $driverFile (exit code $($build.ExitCode))."
+  $referenceFingerprint = ""
+  $reused = $false
+  if (-not [string]::IsNullOrWhiteSpace($ReferenceDir)) {
+    $ReferenceDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ReferenceDir)
+    [void](New-Item -ItemType Directory -Path $ReferenceDir -Force)
+    $referenceFingerprint = Get-ReferenceFingerprint -DriverInput $driverInput -Compiler $dcc64 -Options $dccOptions
+    $reused = Restore-DelphiReference -Directory $ReferenceDir -Fingerprint $referenceFingerprint `
+      -Observations $delphiOutput -RtlCharacters $delphiRtl
   }
-  $run = Invoke-Native (Join-Path $delphiDir ($driverName + ".exe")) @($driverInput, $delphiOutput, $delphiRtl)
-  if ($run.ExitCode -ne 0) {
-    $run.Output | ForEach-Object { Write-Host "    $_" }
-    throw "The Delphi build of the driver failed (exit code $($run.ExitCode))."
+  if ($reused) {
+    $delphiVersion = (Get-Content -LiteralPath (Join-Path $ReferenceDir "delphi-version.txt") | Select-Object -First 1)
+    Write-Info ("  Delphi     : {0}" -f $delphiVersion)
+    Write-Info ("               reference reused from {0}" -f $ReferenceDir)
+  } else {
+    $build = Invoke-Native $dcc64 ($dccOptions + @(("-NU" + (Join-Path $delphiDir "dcu")), "-E$delphiDir", $driverFile))
+    $delphiVersion = ($build.Output | Select-Object -First 1)
+    if ($build.ExitCode -ne 0) {
+      $build.Output | ForEach-Object { Write-Host "    $_" }
+      throw "dcc64 failed for $driverFile (exit code $($build.ExitCode))."
+    }
+    $run = Invoke-Native (Join-Path $delphiDir ($driverName + ".exe")) @($driverInput, $delphiOutput, $delphiRtl)
+    if ($run.ExitCode -ne 0) {
+      $run.Output | ForEach-Object { Write-Host "    $_" }
+      throw "The Delphi build of the driver failed (exit code $($run.ExitCode))."
+    }
+    $delphiSeconds = $watch.Elapsed.TotalSeconds
+    Write-Info ("  Delphi     : {0}" -f $delphiVersion)
+    Write-Info ("               build + run {0:N1} s" -f $delphiSeconds)
+    if ($referenceFingerprint -ne "") {
+      Save-DelphiReference -Directory $ReferenceDir -Fingerprint $referenceFingerprint -Version $delphiVersion `
+        -Observations $delphiOutput -RtlCharacters $delphiRtl
+    }
   }
-  $delphiSeconds = $watch.Elapsed.TotalSeconds
-  Write-Info ("  Delphi     : {0}" -f $delphiVersion)
-  Write-Info ("               build + run {0:N1} s" -f $delphiSeconds)
 
   # ---- FreePascal ---------------------------------------------------------
   $watch.Restart()

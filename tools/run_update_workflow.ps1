@@ -15,9 +15,20 @@ param(
   # of its own after the runtime check; -SkipFpcTests is the only way to skip
   # it, -SkipTests skips the Delphi run only.
   [switch]$SkipFpcTests,
+  # The FreePascal toolchains of the runtime check AND the test suite: each
+  # step runs once per entry, in this order. An entry is "<Toolchain>" or
+  # "<Toolchain>=<compiler path>" (Toolchain Wsl, Native or Mac as in
+  # tools/fpc_toolchains.ps1; the path becomes -FpcPath). The default is the
+  # WSL FreePascal 3.2.4 (the default compiler) AND the 3.2.2 of the WSL
+  # distribution package: 3.2.2 ships regexpr 0.987, for which the regex layer
+  # has code paths of its own. Pass one entry to restrict the steps to it.
+  # Comma separated entries in one string work too ("powershell -File").
+  [string[]]$FpcToolchains = @("Wsl", "Wsl=/usr/bin/fpc"),
   # Forwarded to tools/check_fpc_compile.ps1, tools/run_fpc_runtime_check.ps1
   # AND tools/run_fpc_tests.ps1: turn a missing FreePascal compiler from a
-  # warning into a failure.
+  # warning into a failure. In the runtime check and the test suite that holds
+  # for EVERY toolchain of -FpcToolchains; without it an unreachable one is
+  # skipped with a warning and the others still run.
   [switch]$RequireFpc,
   # Skips the Delphi test run.
   [switch]$SkipTests,
@@ -33,6 +44,9 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+
+# ConvertFrom-FpcToolchainList (the -FpcToolchains entries).
+. (Join-Path $PSScriptRoot "fpc_toolchains.ps1")
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $diffPath = Join-Path $repoRoot "tools\snapshots\generated_vs_upstream_diff.json"
@@ -87,6 +101,12 @@ function Get-PwshPath {
 
 Write-Host "Running update workflow..."
 Write-Host "Repo: $repoRoot"
+
+# Parsed up front, so a misspelt toolchain fails before any step runs.
+$fpcToolchainList = @(ConvertFrom-FpcToolchainList -Entries $FpcToolchains)
+if ($fpcToolchainList.Count -eq 0 -and -not ($SkipFpcRuntime -and $SkipFpcTests)) {
+  throw "-FpcToolchains is empty; use -SkipFpcRuntime / -SkipFpcTests to skip the FreePascal steps."
+}
 
 if (-not $SkipReference) {
   Invoke-Step "Refresh Java/C# reference cases" {
@@ -163,11 +183,25 @@ if (-not $SkipFpcCheck) {
 
 if (-not $SkipFpcRuntime) {
   Invoke-Step "FreePascal runtime check" {
-    # The default toolchain is FreePascal inside WSL. Like the compile check it
-    # is a soft skip with a warning when that toolchain (or the Delphi
-    # reference compiler) is missing; -RequireFpc makes a missing FreePascal a
-    # failure here as well.
-    & (Join-Path $PSScriptRoot "run_fpc_runtime_check.ps1") -RequireFpc:$RequireFpc -StudioRoot $StudioRoot
+    # One run per -FpcToolchains entry, each compared byte for byte against the
+    # SAME Delphi reference: the first run builds it into a scratch directory
+    # of this workflow (-ReferenceDir), the later runs reuse it as long as its
+    # fingerprint still matches. Like the compile check every run is a soft
+    # skip with a warning when its toolchain (or the Delphi reference
+    # compiler) is missing; -RequireFpc makes a missing FreePascal a failure.
+    $referenceDir = Join-Path ([System.IO.Path]::GetTempPath()) ("libphonenumber-fpcruntime-reference-{0}" -f $PID)
+    try {
+      foreach ($entry in $fpcToolchainList) {
+        Write-Host ""
+        Write-Host "--- runtime check on $($entry.Label)"
+        & (Join-Path $PSScriptRoot "run_fpc_runtime_check.ps1") -Toolchain $entry.Toolchain -FpcPath $entry.FpcPath `
+          -ReferenceDir $referenceDir -RequireFpc:$RequireFpc -StudioRoot $StudioRoot
+      }
+    } finally {
+      if (Test-Path -LiteralPath $referenceDir) {
+        Remove-Item -LiteralPath $referenceDir -Recurse -Force -ErrorAction SilentlyContinue
+      }
+    }
   }
 } else {
   Write-Host "Skipping the FreePascal runtime check (-SkipFpcRuntime)."
@@ -176,9 +210,16 @@ if (-not $SkipFpcRuntime) {
 if (-not $SkipFpcTests) {
   Invoke-Step "FreePascal test suite" {
     # The same test program the Delphi step runs, built and run with
-    # FreePascal (default toolchain: WSL). A soft skip with a warning when the
+    # FreePascal, once per -FpcToolchains entry: the runtime driver does not
+    # reach every regex path the tests do, and on the regexpr 0.987 of 3.2.2 a
+    # run costs about half a minute. A soft skip with a warning when a
     # toolchain is missing; -RequireFpc makes that a failure.
-    & (Join-Path $PSScriptRoot "run_fpc_tests.ps1") -RequireFpc:$RequireFpc
+    foreach ($entry in $fpcToolchainList) {
+      Write-Host ""
+      Write-Host "--- test suite on $($entry.Label)"
+      & (Join-Path $PSScriptRoot "run_fpc_tests.ps1") -Toolchain $entry.Toolchain -FpcPath $entry.FpcPath `
+        -RequireFpc:$RequireFpc
+    }
   }
 } else {
   Write-Host "Skipping the FreePascal test suite (-SkipFpcTests)."

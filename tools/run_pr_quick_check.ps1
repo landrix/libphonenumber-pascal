@@ -10,13 +10,17 @@ param(
   [switch]$RequireDelphi,
   [switch]$SkipDelphiCompile,
   # Forwarded to the workflow. The FreePascal runtime check is part of the
-  # quick check by default: it takes well under a minute (WSL; the build
-  # dominates), which is cheap next to what it covers.
+  # quick check by default: it takes well under a minute per toolchain (WSL;
+  # the build dominates), which is cheap next to what it covers.
   [switch]$SkipFpcRuntime,
   # Forwarded to the workflow. The FreePascal test suite (build and run of the
   # whole test program with FreePascal in WSL) is part of the quick check by
-  # default for the same reason: it adds well under a minute.
-  [switch]$SkipFpcTests
+  # default for the same reason: it adds well under a minute per toolchain.
+  [switch]$SkipFpcTests,
+  # Forwarded to the workflow when given: the toolchains of the runtime check
+  # and the test suite ("<Toolchain>" or "<Toolchain>=<compiler path>"). The
+  # default - WSL FreePascal 3.2.4 and 3.2.2 - is defined there, not here.
+  [string[]]$FpcToolchains
 )
 
 <#
@@ -38,9 +42,9 @@ param(
 
   The workflow behind it also runs the FreePascal RUNTIME check
   (tools/run_fpc_runtime_check.ps1) and the FreePascal TEST SUITE
-  (tools/run_fpc_tests.ps1), both on the WSL toolchain by default; each takes
-  well under a minute end to end, so both stay in (-SkipFpcRuntime,
-  -SkipFpcTests opt out).
+  (tools/run_fpc_tests.ps1), both on the WSL FreePascal 3.2.4 AND 3.2.2 by
+  default (-FpcToolchains); each run takes well under a minute end to end, so
+  both stay in (-SkipFpcRuntime, -SkipFpcTests opt out).
 
   The compile step is skipped with a warning when no Delphi installation is
   found at -StudioRoot (the GitHub runner has none); -RequireDelphi turns that
@@ -64,6 +68,9 @@ $workflowArguments = @{
 }
 if (-not $RefreshReference) {
   $workflowArguments["SkipReference"] = $true
+}
+if ($PSBoundParameters.ContainsKey("FpcToolchains")) {
+  $workflowArguments["FpcToolchains"] = $FpcToolchains
 }
 
 & $workflowScript @workflowArguments

@@ -136,6 +136,41 @@ function Resolve-FpcToolchain {
   throw "Unknown FreePascal toolchain '$Toolchain'."
 }
 
+function ConvertFrom-FpcToolchainList {
+  # The toolchain list of tools/run_update_workflow.ps1 (-FpcToolchains): every
+  # entry is "<Toolchain>" or "<Toolchain>=<compiler path>", the path being
+  # handed on as -FpcPath. An entry may itself carry several comma separated
+  # entries, because "powershell -File" passes "Wsl,Wsl=/usr/bin/fpc" as ONE
+  # string. Answers one object per entry (Toolchain, FpcPath, Label) in the
+  # given order; an unknown toolchain name is an error, never a skip.
+  param([string[]]$Entries)
+  $result = @()
+  foreach ($entry in @($Entries)) {
+    foreach ($part in @("$entry" -split ',')) {
+      $text = $part.Trim()
+      if ($text -eq "") {
+        continue
+      }
+      $pair = $text -split '=', 2
+      $name = $pair[0].Trim()
+      $path = ""
+      if ($pair.Count -eq 2) {
+        $path = $pair[1].Trim()
+      }
+      $known = @("Wsl", "Native", "Mac") | Where-Object { $_ -eq $name } | Select-Object -First 1
+      if ($null -eq $known) {
+        throw "Unknown FreePascal toolchain '$name' in '$text' (expected Wsl, Native or Mac, optionally followed by =<compiler path>)."
+      }
+      $label = $known
+      if ($path -ne "") {
+        $label = "$known, $path"
+      }
+      $result += [pscustomobject]@{ Toolchain = $known; FpcPath = $path; Label = $label }
+    }
+  }
+  return $result
+}
+
 function Get-NativeFpcDescription {
   # "<version> (<cpu>-<os>)" of a compiler this machine runs directly.
   param([string]$Fpc)
