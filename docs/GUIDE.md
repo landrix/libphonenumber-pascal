@@ -956,9 +956,13 @@ many data questions ("why is this number not mobile").
   MetadataSourceName: resources/PhoneNumberMetadata.xml
   ```
 
-- [`vendor/versions.md`](../vendor/versions.md) maps the commit to the
-  upstream release; [`CHANGELOG.md`](../CHANGELOG.md) and the release notes
-  say which release a version of this library carries.
+- The version of this library names the upstream metadata release it carries,
+  plus a fourth part for releases of the port alone: `X.Y.Z.0` is the first
+  release on upstream metadata X.Y.Z, `X.Y.Z.1` and later are releases of the
+  port with the same metadata. (The first release, 0.1.0, predates the
+  scheme; 9.0.41.0 is the first release under it.) [`vendor/versions.md`](../vendor/versions.md)
+  maps the upstream commit to the release; the
+  [`CHANGELOG.md`](../CHANGELOG.md) explains the scheme.
 - New metadata comes with a new version of this library: update your copy of
   `src/`. The tables are generated from the upstream XML, never edited by
   hand; the procedure is in [`AGENTS.md`](../AGENTS.md#vendor-update-workflow).

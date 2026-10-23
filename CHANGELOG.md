@@ -2,7 +2,29 @@
 
 All notable changes to this repository are documented in this file.
 
-## Unreleased
+## Versioning
+
+From 9.0.41.0 on, the version follows the upstream metadata release it is
+built from, with a fourth part for releases of the port alone:
+
+| version | meaning |
+| --- | --- |
+| `X.Y.Z.0`, e.g. `9.0.42.0` | the first release on upstream metadata X.Y.Z |
+| `X.Y.Z.1`, `X.Y.Z.2`, ... | fixes or features of the port, metadata unchanged |
+
+Four numeric parts compare part by part, like Delphi and Lazarus file
+versions and NuGet / .NET versions; a semver suffix would order wrongly
+(`9.0.41-1` is a pre-release and sorts before `9.0.41`, build metadata `+1`
+is ignored in comparisons). Strict SemVer 2.0 tools do not accept four parts
+at all. The libphonenumber-csharp port follows the
+upstream release in the same way. The first release, 0.1.0, predates the
+scheme and already carried metadata 9.0.41; 9.0.41.0 is the first release
+under the scheme and contains everything since.
+
+## 9.0.41.0 - 2026-10-23
+
+Built from upstream metadata release 9.0.41, like 0.1.0; the changes are in
+the port.
 
 ### Features
 

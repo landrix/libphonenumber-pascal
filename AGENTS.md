@@ -194,6 +194,8 @@ out the pinned commits. To refresh upstream:
    `tests/data/aytf_reference_cases.json` (`tools/generate_aytf_cases.ps1`) is
    a separate, conscious step.
 4. Review the diffs, update the manifest above and `CHANGELOG.md`, commit.
+   A metadata refresh is released as `X.Y.Z.0`, X.Y.Z being the new upstream
+   release (see "Releases" below).
    The samples step of the workflow fails when a refresh changed a value a
    sample prints (an example number, a format): review the difference,
    rewrite the golden files with
@@ -265,6 +267,21 @@ Interpretation:
 2. A non-zero compare means the generator, the emitted tables or the pinned
    XML disagree about possible lengths. Fix the generator, never the generated
    unit.
+
+## Releases
+
+The version is the upstream metadata release plus a fourth part
+(`CHANGELOG.md`, "Versioning"): `X.Y.Z.0` is the first release on upstream
+metadata X.Y.Z, `X.Y.Z.1`, `X.Y.Z.2`, ... are releases of the port alone with
+the same metadata. Never use a semver suffix (`-1` sorts as a pre-release,
+`+1` is ignored). To release:
+
+1. Run `tools/run_update_workflow.ps1 -FailOnDiff -RunMassDifferential` on
+   the committed state.
+2. Rename the `## Unreleased` section of `CHANGELOG.md` to
+   `## X.Y.Z.N - <date>`, commit, push, wait for green CI.
+3. Tag `vX.Y.Z.N` (annotated) on that commit and create the GitHub release
+   from it.
 
 ## Reference Oracle
 
