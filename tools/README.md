@@ -138,7 +138,7 @@ Current utility:
 9. JSON snapshots are only rewritten when semantic content changes; volatile timestamps are ignored where configured.
 10. Individual scripts support `-ForceWrite` to intentionally rewrite output files even when content is unchanged.
 11. `generate_reference_cases.ps1` supports `-IncludeAllRegions` to auto-add one example case per supported upstream region.
-12. `refresh_vendor_versions.ps1` fast-forwards both vendor repos (`libphonenumber`, `libphonenumber-csharp`) and updates `vendor/versions.md` to current commit links plus the pinned reference oracle package. The pin comes from `Get-OraclePin` in `oracle_helpers.ps1` (override via `-OraclePackageId`/`-OraclePackageVersion`); if it cannot be resolved the script aborts instead of writing an incomplete file.
+12. `refresh_vendor_versions.ps1` points both vendor repos (`libphonenumber`, `libphonenumber-csharp`) at an upstream release and updates `vendor/versions.md` to their commit links plus the pinned reference oracle package. It fetches the tags of both clones and checks out the release tag `vX.Y.Z` in both as a detached HEAD - the highest `vX.Y.Z` tag of google/libphonenumber, or `-Version X.Y.Z`; never a branch, because the Java release commit is not on master. Both tags are resolved before a clone is touched: a missing C# tag (C# release and NuGet package not published yet) or an unknown version stops the script with nothing changed, and a clone with local modifications is refused; when the second checkout fails (an untracked file in the way, say), the first clone is put back to its previous commit or branch. A `Get-OraclePin` that differs from the release checked out is reported as a warning. `-SkipPull` skips fetch and checkout and only rewrites the file from the current clone state (it excludes `-Version`). Native commands run so that git's progress on stderr is not an error, so the script works under Windows PowerShell 5.1 as well as `pwsh`. The pin comes from `Get-OraclePin` in `oracle_helpers.ps1` (override via `-OraclePackageId`/`-OraclePackageVersion`); if it cannot be resolved the script aborts instead of writing an incomplete file.
 13. `run_delphi_tests.ps1` builds `tests/LibPhoneNumberTests.dproj` with msbuild and runs it; it fails when the runner reports a failing or raising test (exit code `1`) or a usage error / empty run (exit code `2`). `-BuildOnly` builds the program and stops there, which is what the quick check uses as a compile gate for the whole port; `-Filter` and `-JUnit` are handed to the runner (see `tests/README.md`).
 14. `generate_aytf_cases.ps1` writes `tests/data/aytf_reference_cases.json`, the expectation set of the AsYouTypeFormatter tests (AsYouTypeFormatter sequences, remembered positions, clear/reuse, the mass smoke table, `formatNumberForMobileDialing` and `formatOutOfCountryKeepingAlphaChars`). It reuses the SAME NuGet oracle cache as `generate_reference_cases.ps1` and therefore also requires `pwsh`; it does not restore the package itself (`-NoRestore`), so run `generate_reference_cases.ps1` first when the cache is missing. It is deliberately NOT part of `run_update_workflow.ps1`: the file is a hand curated case list, not a derived artefact of the metadata baseline, and regenerating it must be a conscious act.
 
@@ -162,9 +162,10 @@ Usage examples:
 	- `pwsh -NoProfile -ExecutionPolicy Bypass -File tools/run_benchmark.ps1`
 6. Expand reference cases to all supported regions:
 	- `pwsh -NoProfile -ExecutionPolicy Bypass -File tools/generate_reference_cases.ps1 -IncludeAllRegions`
-7. Pull both vendor repos and refresh commit references:
+7. Check out the newest upstream release in both vendor repos (or a given one) and refresh commit references:
 	- `powershell -ExecutionPolicy Bypass -File tools/refresh_vendor_versions.ps1`
-8. Refresh `vendor/versions.md` only (no pull):
+	- `powershell -ExecutionPolicy Bypass -File tools/refresh_vendor_versions.ps1 -Version 9.0.42`
+8. Refresh `vendor/versions.md` only (no fetch, no checkout):
 	- `powershell -ExecutionPolicy Bypass -File tools/refresh_vendor_versions.ps1 -SkipPull`
 9. Regenerate the metadata units only:
 	- `pwsh -NoProfile -ExecutionPolicy Bypass -File tools/generate_metadata.ps1`

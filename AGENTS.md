@@ -173,14 +173,27 @@ C# `PhoneNumberMatcher` deviates from the Java one in five documented places
 The upstream clones `vendor/libphonenumber` and `vendor/libphonenumber-csharp`
 are git-ignored; `vendor/versions.md` records the pinned commits and the oracle
 package. To set them up from scratch, clone both repositories there and check
-out the pinned commits. To refresh upstream:
+out the pinned commits (or run step 1 below). Both pins are upstream RELEASE
+tags, checked out as a detached HEAD: the Java release commit of a `vX.Y.Z`
+tag is not on master (upstream squashes its maven release commits), so the
+clones are never fast-forwarded to a branch. To refresh upstream:
 
 1. `powershell -ExecutionPolicy Bypass -File tools/refresh_vendor_versions.ps1`
-   (fast-forwards both clones and rewrites `vendor/versions.md`).
+   (runs under Windows PowerShell 5.1 and `pwsh`): fetches the tags of both
+   clones, checks out the highest `vX.Y.Z` tag of google/libphonenumber
+   (`-Version X.Y.Z` picks another release) and the tag of the SAME name in
+   libphonenumber-csharp, and rewrites `vendor/versions.md`. Both tags are
+   resolved before either clone is touched; when the C# tag does not exist
+   yet, the C# release and with it the NuGet package are not published yet,
+   and the script stops with that message and changes nothing. A clone with
+   local modifications is refused, and a failed checkout puts the other
+   clone back where it was. When `Get-OraclePin` differs from the
+   release checked out, the script warns.
 2. Set `Get-OraclePin` in `tools/oracle_helpers.ps1` to the
    `libphonenumber-csharp` release matching the new metadata release, then
    `powershell -ExecutionPolicy Bypass -File tools/refresh_vendor_versions.ps1 -SkipPull`
-   to record the new pin in `vendor/versions.md`.
+   to record the new pin in `vendor/versions.md` (`-SkipPull`: no fetch, no
+   checkout, only the file from the current clone state and the pin).
 3. `pwsh -NoProfile -ExecutionPolicy Bypass -File tools/run_update_workflow.ps1 -RunMassDifferential`
    WITHOUT `-FailOnDiff`: the regenerated units are not committed yet, and the
    generated-unit check compares against the committed state. This run

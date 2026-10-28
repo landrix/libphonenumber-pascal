@@ -21,6 +21,26 @@ upstream release in the same way. The first release, 0.1.0, predates the
 scheme and already carried metadata 9.0.41; 9.0.41.0 is the first release
 under the scheme and contains everything since.
 
+## Unreleased
+
+### Tooling
+
+- `tools/refresh_vendor_versions.ps1` pins upstream RELEASES: it fetches the
+  tags of both vendor clones and checks out the release tag `vX.Y.Z` as a
+  detached HEAD - by default the highest `vX.Y.Z` tag of google/libphonenumber,
+  `-Version X.Y.Z` for another one - in both clones, instead of fast-forwarding
+  them to master (the Java release commit is not on master, upstream squashes
+  its maven release commits). A missing libphonenumber-csharp tag (C# release
+  and NuGet package not published yet) or an unknown version stops the script
+  before either clone is touched; a clone with local modifications is refused,
+  and when the second checkout fails the first clone is put back where it was;
+  a `Get-OraclePin` that differs from the release checked out is a warning.
+  `-SkipPull` is unchanged.
+- The same script now runs under Windows PowerShell 5.1, as `AGENTS.md`
+  prescribes: git's progress output on stderr no longer aborts it; the exit
+  code decides. The issue text of `tools/check_upstream_release.ps1`
+  describes the new behaviour.
+
 ## 9.0.42.0 - 2026-10-28
 
 Metadata refresh to upstream 9.0.42 (Java `8d8d75272c351b60b87163db5328e439c53a6b56`,

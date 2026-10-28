@@ -179,7 +179,7 @@ libphonenumber **{{TAG}}** is out; this repository is pinned to **{{PINNED}}** (
 
 Refresh, as described in `AGENTS.md`, section "Vendor Update Workflow":
 
-1. `tools/refresh_vendor_versions.ps1` (fast-forwards the upstream clones, rewrites `vendor/versions.md`).
+1. `tools/refresh_vendor_versions.ps1 -Version {{VERSION}}` (checks out the release tag {{TAG}} in both upstream clones, rewrites `vendor/versions.md`; it stops while the C# tag is missing).
 2. Set `Get-OraclePin` in `tools/oracle_helpers.ps1` to {{VERSION}}, then `tools/refresh_vendor_versions.ps1 -SkipPull`.
 3. `tools/run_update_workflow.ps1 -RunMassDifferential` (without `-FailOnDiff`), read the compare summary and the mass differential findings.
 4. Review the diffs, update the manifest in `AGENTS.md` and `CHANGELOG.md`, commit.
