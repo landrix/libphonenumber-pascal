@@ -21,6 +21,54 @@ upstream release in the same way. The first release, 0.1.0, predates the
 scheme and already carried metadata 9.0.41; 9.0.41.0 is the first release
 under the scheme and contains everything since.
 
+## 9.0.42.0 - 2026-10-28
+
+Metadata refresh to upstream 9.0.42 (Java `8d8d75272c351b60b87163db5328e439c53a6b56`,
+the `v9.0.42` tag; C# `dcaee5a42ab993d26a4bac47ef1cac4f1150ade2`; reference
+oracle NuGet `libphonenumber-csharp` 9.0.42). The nine generated units are
+regenerated; upstream changed no Java code between 9.0.41 and 9.0.42, so the
+port itself is unchanged.
+
+### Metadata
+
+- AU, CC, CX: mobile ranges 496[0-4] added.
+- AX, FI: the mobile range 4946 is removed.
+- BW: the fixed line and mobile ranges are rewritten (mobile still excludes
+  70 and parts of 79), the separate voip description (79...) is gone, and the national
+  formats change accordingly. Short numbers: the shortCode, tollFree,
+  carrierSpecific and emergency descriptions are rewritten (new example
+  numbers 100, 110, 100, 111; possible lengths 3 to 5).
+- CN: fixed line and shared cost ranges and the national formats are reworked
+  (the 1010 carrier and 16[08] premium formats get formats of their own, the
+  `(\d{4})(\d{3})(\d{4})` format is dropped).
+- CO: mobile ranges 3[0-35]x and 9101 are regrouped (9101 removed), the
+  national formats follow; short numbers: carrierSpecific and smsServices take
+  six digit codes.
+- CR: fixed line 20 narrowed to 2010; voip 200[0-3] added.
+- CV: mobile 57 added. DK: mobile and fixed line 37 removed.
+- ES: mobile 59010[0-2] and 590600 removed, general description narrowed.
+- GH: fixed line ranges reworked (new 3181, 3285, 3381, 3284, 308x, 309x, 3060).
+- GY: fixed line 516 and mobile 768, 781 added.
+- IN: fixed line 796 removed, a few mobile ranges changed, national formats
+  and the alternate formats of +91 (796) adjusted.
+- KE: mobile 13[5-9], 146 added. KW: mobile 5999 added.
+- PG: voip 206 added. PY: mobile 9881 added.
+- RU: mobile 9xx narrowed (part of 93 removed). SH: mobile 9 added.
+
+### Tests and tooling
+
+- The example number corpus shrinks from 1144 to 1143 (the BW voip example is
+  gone) and the production national number patterns from 1431 to 1430: the
+  inventory counts in `tests/LibPhoneNumber.Metadata.Tests.pas` and
+  `tests/LibPhoneNumber.MetadataCore.Tests.pas`, and the `-ExpectedCaseCount`
+  default of `tools/run_mass_differential.ps1`, follow.
+- The oracle 9.0.42 carries three C# code fixes (decimal digit normalisation
+  as Java's `Character.digit`, formatting buffer sizes); the reference cases,
+  the AYTF cases and the mass differential are unchanged by them.
+  `tests/data/aytf_reference_cases.json`, regenerated with
+  `tools/generate_aytf_cases.ps1`, differs only in the recorded oracle version.
+- Samples and their golden outputs are unchanged.
+
 ## 9.0.41.0 - 2026-10-23
 
 Built from upstream metadata release 9.0.41, like 0.1.0; the changes are in

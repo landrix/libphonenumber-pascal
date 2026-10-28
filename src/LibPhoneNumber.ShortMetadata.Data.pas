@@ -6,7 +6,7 @@ unit LibPhoneNumber.ShortMetadata.Data;
   Short number territory table, possible length pool and the region index.
 
   Source:    vendor/libphonenumber/resources/ShortNumberMetadata.xml
-  Commit:    33be5664343676b27761213d8f5500d682568ea7
+  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
   Generator: tools/generate_metadata.ps1 (short-metadata-v1)
 
   Regenerate with:
@@ -28,7 +28,7 @@ uses
 const
   ShortMetadataGeneratorVersion = 'short-metadata-v1';
   ShortMetadataSourceFile = 'resources/ShortNumberMetadata.xml';
-  ShortMetadataSourceCommit = '33be5664343676b27761213d8f5500d682568ea7';
+  ShortMetadataSourceCommit = '8d8d75272c351b60b87163db5328e439c53a6b56';
 
   ShortMetadataTerritoryCount = 241;
   ShortMetadataPossibleLengthCount = 149;

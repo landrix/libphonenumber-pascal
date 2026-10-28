@@ -6,7 +6,7 @@ unit LibPhoneNumber.Metadata.Descs;
   Phone number descriptions (patterns, example numbers, possible length slices) for every territory and number type.
 
   Source:    vendor/libphonenumber/resources/PhoneNumberMetadata.xml
-  Commit:    33be5664343676b27761213d8f5500d682568ea7
+  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
   Generator: tools/generate_metadata.ps1 (metadata-v1)
 
   Regenerate with:
@@ -946,7 +946,8 @@ const
      LocalOnlyOffset: 10; LocalOnlyCount: 1),
     { AU mobile }
     (HasData: True;
-     NationalNumberPattern: '4(?:79[01]|83[0-36-9]|95[0-3])\d{5}|4(?:[0-36]\d|4[047-9]|[58][0-24-9]|7[02-8]|9[0-47-9])\d{6}';
+     NationalNumberPattern: '4(?:79[01]|83[0-36-9]|9(?:5[0-3]|6[0-4]))\d{5}|4(?:[0-36]\d|4[047-9]|[58][0-24-9]|7[02-8]|9[0-47' +
+       '-9])\d{6}';
      ExampleNumber: '412345678';
      LengthOffset: 20; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -1090,7 +1091,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { AX mobile }
     (HasData: True;
-     NationalNumberPattern: '4946\d{2,6}|(?:4[0-8]|50)\d{4,8}';
+     NationalNumberPattern: '(?:4[0-8]|50)\d{4,8}';
      ExampleNumber: '412345678';
      LengthOffset: 95; LengthCount: 5;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -2475,20 +2476,20 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW generalDesc }
     (HasData: True;
-     NationalNumberPattern: '(?:0800|(?:[37]|800)\d)\d{6}|(?:[2-6]\d|90)\d{5}';
+     NationalNumberPattern: '90\d{5}|(?:0800|[2-6]|(?:7|800)\d)\d{6}';
      ExampleNumber: '';
      LengthOffset: 127; LengthCount: 3;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW fixedLine }
     (HasData: True;
-     NationalNumberPattern: '(?:2(?:4[0-48]|6[0-24]|9[0578])|3(?:1[0-35-9]|55|[69]\d|7[013]|81)|4(?:6[03]|7[1267]|9[0-5])|5(?' +
-       ':3[03489]|4[0489]|7[1-47]|88|9[0-49])|6(?:2[1-35]|5[149]|8[013467]))\d{4}';
+     NationalNumberPattern: '(?:2(?:1[01]|31|[469]\d|5[0-2]|7[5-7]|89)|3(?:[15-79]\d|2[1-5]|45|8[0-5])|4(?:[38]0|42|51|[679]\' +
+       'd)|5(?:[056][01]|1[23]|2[034]|[347-9]\d)|6(?:0[01]|[258]\d|[34]0|6[03]))\d{4}';
      ExampleNumber: '2401234';
      LengthOffset: 19; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW mobile }
     (HasData: True;
-     NationalNumberPattern: '(?:321|7(?:[1-8]\d|9[03]))\d{5}';
+     NationalNumberPattern: '7(?:[1-8]\d{3}|9(?:(?:[03]\d|2[0-7])\d|1(?:0[13-9]|1[0-35-9]|2\d|3[0-8])))\d{3}';
      ExampleNumber: '71123456';
      LengthOffset: 10; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -2517,10 +2518,10 @@ const
      LengthOffset: 3; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW voip }
-    (HasData: True;
-     NationalNumberPattern: '79(?:1(?:[0-2]\d|3[0-8])|2[0-7]\d)\d{3}';
-     ExampleNumber: '79101234';
-     LengthOffset: 10; LengthCount: 1;
+    (HasData: False;
+     NationalNumberPattern: '';
+     ExampleNumber: '';
+     LengthOffset: 3; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW pager }
     (HasData: False;
@@ -2785,7 +2786,8 @@ const
      LocalOnlyOffset: 10; LocalOnlyCount: 1),
     { CC mobile }
     (HasData: True;
-     NationalNumberPattern: '4(?:79[01]|83[0-36-9]|95[0-3])\d{5}|4(?:[0-36]\d|4[047-9]|[58][0-24-9]|7[02-8]|9[0-47-9])\d{6}';
+     NationalNumberPattern: '4(?:79[01]|83[0-36-9]|9(?:5[0-3]|6[0-4]))\d{5}|4(?:[0-36]\d|4[047-9]|[58][0-24-9]|7[02-8]|9[0-47' +
+       '-9])\d{6}';
      ExampleNumber: '412345678';
      LengthOffset: 20; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -3436,16 +3438,16 @@ const
     { CN fixedLine }
     (HasData: True;
      NationalNumberPattern: '(?:10(?:[02-79]\d\d|[18](?:0[1-9]|[1-9]\d))|2(?:[02-57-9]\d{3}|1(?:[18](?:0[1-9]|[1-9]\d)|[2-79]' +
-       '\d\d))|(?:41[03]|8078|9(?:78|94))\d\d)\d{5}|(?:10|2[0-57-9])(?:1(?:00|23)\d\d|95\d{3,4})|(?:41[0' +
-       '3]|9(?:78|94))(?:100\d\d|95\d{3,4})|8078123|(?:43[35]|754|851)\d{7,8}|(?:43[35]|754|851)(?:1(?:0' +
-       '0\d|23)\d|95\d{3,4})|(?:3(?:11|7[179])|4(?:[15]1|3[12])|5(?:1\d|2[37]|3[12]|51|7[13-79]|9[15])|7' +
-       '(?:[39]1|5[57]|6[09])|8(?:71|98))(?:[02-8]\d{7}|1(?:0(?:0\d\d(?:\d{3})?|[1-9]\d{5})|[13-9]\d{6}|' +
-       '2(?:[0-24-9]\d{5}|3\d(?:\d{4})?))|9(?:[0-46-9]\d{6}|5\d{3}(?:\d(?:\d{2})?)?))|(?:3(?:1[02-9]|35|' +
-       '49|5\d|7[02-68]|9[1-68])|4(?:1[24-9]|2[179]|3[46-9]|5[2-9]|6[47-9]|7\d|8[23])|5(?:3[03-9]|4[36]|' +
-       '5[02-9]|6[1-46]|7[028]|80|9[2-46-9])|6(?:3[1-5]|6[0238]|9[12])|7(?:01|[17]\d|2[248]|3[04-9]|4[3-' +
-       '6]|5[0-3689]|6[2368]|9[02-9])|8(?:1[236-8]|2[5-7]|3\d|5[2-9]|7[02-9]|8[36-8]|9[1-7])|9(?:0[1-368' +
-       '9]|1[1-79]|3\d|4[13]|5[1-5]|7[0-79]|9[0-35-9]))(?:[02-8]\d{6}|1(?:0(?:0\d\d(?:\d{2})?|[1-9]\d{4}' +
-       ')|[13-9]\d{5}|2(?:[0-24-9]\d{4}|3\d(?:\d{3})?))|9(?:[0-46-9]\d{5}|5\d{3,5}))';
+       '\d\d))|9(?:78|94)\d\d)\d{5}|(?:43[35]|754|851)\d{7,8}|(?:10|2[0-57-9])(?:1(?:00|23)\d\d|95\d{3,4' +
+       '})|(?:43[35]|754|851)(?:1(?:00\d|23)\d|95\d{3,4})|9(?:78|94)(?:100\d\d|95\d{3,4})|(?:3(?:11|7[17' +
+       '9])|4(?:[15]1|3[12])|5(?:1\d|2[37]|3[12]|51|7[13-79]|9[15])|7(?:[39]1|5[57]|6[09])|8(?:71|98))(?' +
+       ':[02-8]\d{7}|1(?:0(?:0\d\d(?:\d{3})?|[1-9]\d{5})|[13-9]\d{6}|2(?:[0-24-9]\d{5}|3\d(?:\d{4})?))|9' +
+       '(?:[0-46-9]\d{6}|5\d{3}(?:\d(?:\d{2})?)?))|(?:3(?:1[02-9]|35|49|5\d|7[02-6]|9[1-68])|4(?:1[25-9]' +
+       '|2[179]|3[46-9]|5[2-9]|6[47-9]|7\d|8[23])|5(?:3[03-9]|4[36]|5[02-9]|6[1-46]|7[028]|80|9[2-46-9])' +
+       '|6(?:3[1-35]|6[0238]|9[12])|7(?:01|[17]\d|2[248]|3[04-9]|4[3-6]|5[0-3689]|6[2368]|9[02-9])|8(?:1' +
+       '[236-8]|2[5-7]|3\d|5[4-9]|7[02-9]|8[36-8]|9[1-7])|9(?:0[1-3689]|1[1-79]|3\d|4[13]|5[1-5]|7[0-79]' +
+       '|9[0-35-9]))(?:[02-8]\d{6}|1(?:0(?:0\d\d(?:\d{2})?|[1-9]\d{4})|[13-9]\d{5}|2(?:[0-24-9]\d{4}|3\d' +
+       '(?:\d{3})?))|9(?:[0-46-9]\d{5}|5\d{3,5}))';
      ExampleNumber: '1012345678';
      LengthOffset: 165; LengthCount: 5;
      LocalOnlyOffset: 0; LocalOnlyCount: 2),
@@ -3469,10 +3471,10 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { CN sharedCost }
     (HasData: True;
-     NationalNumberPattern: '10(?:10\d{4}|96\d{3,4})|400\d{7}|950\d{7,8}|(?:2[0-57-9]|3(?:[157]\d|35|49|9[1-68])|4(?:[17]\d|2' +
-       '[179]|[35][1-9]|6[47-9]|8[23])|5(?:[1357]\d|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-5]|6[0238]|9[' +
-       '12])|7(?:01|[1579]\d|2[248]|3[014-9]|4[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]\d|5[14-9]|8[36-8' +
-       ']|9[1-8])|9(?:0[1-3689]|1[1-79]|[379]\d|4[13]|5[1-5]))96\d{3,4}';
+     NationalNumberPattern: '10(?:10\d{4}|96\d{3,4})|400\d{7}|950\d{7,8}|(?:2[0-57-9]|3(?:[15]\d|35|49|7[0-79]|9[1-68])|4(?:1' +
+       '[125-9]|2[179]|[35][1-9]|6[47-9]|7\d|8[23])|5(?:[1357]\d|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-' +
+       '35]|6[0238]|9[12])|7(?:01|[1579]\d|2[248]|3[014-9]|4[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]\d|' +
+       '5[14-9]|8[36-8]|9[1-8])|9(?:0[1-3689]|1[1-79]|[379]\d|4[13]|5[1-5]))96\d{3,4}';
      ExampleNumber: '4001234567';
      LengthOffset: 165; LengthCount: 5;
      LocalOnlyOffset: 0; LocalOnlyCount: 2),
@@ -3526,8 +3528,8 @@ const
      LocalOnlyOffset: 178; LocalOnlyCount: 2),
     { CO mobile }
     (HasData: True;
-     NationalNumberPattern: '333301[0-5]\d{3}|3333(?:00|2[5-9]|[3-9]\d)\d{4}|(?:3(?:(?:0[0-5]|1\d|5[01]|70)\d|2(?:[0-3]\d|4[1' +
-       '-9])|3(?:00|3[0-24-9]))|9(?:101|408))\d{6}';
+     NationalNumberPattern: '333301[0-5]\d{3}|3333(?:00|2[5-9]|[3-9]\d)\d{4}|(?:3(?:24[1-9]|3(?:00|3[0-24-9]))|9408)\d{6}|3(?' +
+       ':0[0-5]|1\d|2[0-3]|5[01]|70)\d{7}';
      ExampleNumber: '3211234567';
      LengthOffset: 21; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -3593,7 +3595,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { CR fixedLine }
     (HasData: True;
-     NationalNumberPattern: '210[7-9]\d{4}|2(?:[024-7]\d|1[1-9])\d{5}';
+     NationalNumberPattern: '2(?:010|1(?:0[7-9]|[1-9]\d)|[24-7]\d\d)\d{4}';
      ExampleNumber: '22123456';
      LengthOffset: 10; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -3629,7 +3631,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { CR voip }
     (HasData: True;
-     NationalNumberPattern: '(?:210[0-6]|4\d{3}|5100)\d{4}';
+     NationalNumberPattern: '(?:2(?:00[0-3]|10[0-6])|4\d{3}|5100)\d{4}';
      ExampleNumber: '40001234';
      LengthOffset: 10; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -3743,7 +3745,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { CV mobile }
     (HasData: True;
-     NationalNumberPattern: '(?:36|5[1-389]|9\d)\d{5}';
+     NationalNumberPattern: '(?:36|5[1-37-9]|9\d)\d{5}';
      ExampleNumber: '9911234';
      LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -3889,7 +3891,8 @@ const
      LocalOnlyOffset: 10; LocalOnlyCount: 1),
     { CX mobile }
     (HasData: True;
-     NationalNumberPattern: '4(?:79[01]|83[0-36-9]|95[0-3])\d{5}|4(?:[0-36]\d|4[047-9]|[58][0-24-9]|7[02-8]|9[0-47-9])\d{6}';
+     NationalNumberPattern: '4(?:79[01]|83[0-36-9]|9(?:5[0-3]|6[0-4]))\d{5}|4(?:[0-36]\d|4[047-9]|[58][0-24-9]|7[02-8]|9[0-47' +
+       '-9])\d{6}';
      ExampleNumber: '412345678';
      LengthOffset: 20; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -4249,16 +4252,16 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { DK fixedLine }
     (HasData: True;
-     NationalNumberPattern: '(?:2(?:[0-59][1-9]|[6-8]\d)|3(?:[0-3][1-9]|4[13]|5[1-58]|6[1347-9]|7\d|8[1-8]|9[1-79])|4(?:[0-25' +
-       '][1-9]|[34][2-9]|6[13-579]|7[13579]|8[1-47]|9[127])|5(?:[0-36][1-9]|4[146-9]|5[3-57-9]|7[568]|8[' +
-       '1-358]|9[1-69])|6(?:[0135][1-9]|2[1-68]|4[2-8]|6[1689]|[78]\d|9[15689])|7(?:[0-69][1-9]|7[3-9]|8' +
-       '[147])|8(?:[16-9][1-9]|2[1-58])|9(?:[1-47-9][1-9]|6\d))\d{5}';
+     NationalNumberPattern: '(?:2(?:[0-59][1-9]|[6-8]\d)|3(?:[0-3][1-9]|4[13]|5[1-58]|6[1347-9]|8[1-8]|9[1-79])|4(?:[0-25][1-' +
+       '9]|[34][2-9]|6[13-579]|7[13579]|8[1-47]|9[127])|5(?:[0-36][1-9]|4[146-9]|5[3-57-9]|7[568]|8[1-35' +
+       '8]|9[1-69])|6(?:[0135][1-9]|2[1-68]|4[2-8]|6[1689]|[78]\d|9[15689])|7(?:[0-69][1-9]|7[3-9]|8[147' +
+       '])|8(?:[16-9][1-9]|2[1-58])|9(?:[1-47-9][1-9]|6\d))\d{5}';
      ExampleNumber: '32123456';
      LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { DK mobile }
     (HasData: True;
-     NationalNumberPattern: '(?:2[6-8]|37|6[78]|96)\d{6}|(?:2[0-59]|3[0-689]|[457]\d|6[0-69]|8[126-9]|9[1-47-9])[1-9]\d{5}';
+     NationalNumberPattern: '(?:2[6-8]|6[78]|96)\d{6}|(?:2[0-59]|3[0-689]|[457]\d|6[0-69]|8[126-9]|9[1-47-9])[1-9]\d{5}';
      ExampleNumber: '34412345';
      LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -4903,7 +4906,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { ES generalDesc }
     (HasData: True;
-     NationalNumberPattern: '(?:400|[5-9]\d\d)\d{6}';
+     NationalNumberPattern: '400\d{6}|(?:51|[6-9]\d)\d{7}';
      ExampleNumber: '';
      LengthOffset: 20; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -4916,7 +4919,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { ES mobile }
     (HasData: True;
-     NationalNumberPattern: '96906(?:09|10)\d\d|(?:590(?:10[0-2]|600)|97390\d)\d{3}|(?:6\d|7[1-48])\d{7}';
+     NationalNumberPattern: '9(?:6906(?:09|10)|7390\d\d)\d\d|(?:6\d|7[1-48])\d{7}';
      ExampleNumber: '612345678';
      LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -5065,7 +5068,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { FI mobile }
     (HasData: True;
-     NationalNumberPattern: '4946\d{2,6}|(?:4[0-8]|50)\d{4,8}';
+     NationalNumberPattern: '(?:4[0-8]|50)\d{4,8}';
      ExampleNumber: '412345678';
      LengthOffset: 95; LengthCount: 5;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -5949,8 +5952,9 @@ const
      LocalOnlyOffset: 19; LocalOnlyCount: 1),
     { GH fixedLine }
     (HasData: True;
-     NationalNumberPattern: '3082[0-5]\d{4}|3(?:0(?:[237]\d|8[01])|[167](?:2[0-6]|7\d|80)|2(?:2[0-5]|7\d|80)|3(?:2[0-3]|7\d|8' +
-       '0)|4(?:2[013-9]|3[01]|7\d|80)|5(?:2[0-7]|7\d|80)|8(?:2[0-2]|7\d|80)|9(?:[28]0|7\d))\d{5}';
+     NationalNumberPattern: '3(?:181[0-5]|285[0-7]|3810)\d{4}|3(?:0(?:[237-9]\d|60)|[167](?:2[0-6]|7\d|80)|2(?:2[0-5]|7\d|8[0' +
+       '-4])|3(?:2[0-3]|7\d|80)|4(?:2[013-9]|3[01]|7\d|80)|5(?:2[0-7]|7\d|80)|8(?:2[0-2]|7\d|80)|9(?:[28' +
+       ']0|7\d))\d{5}';
      ExampleNumber: '302345678';
      LengthOffset: 20; LengthCount: 1;
      LocalOnlyOffset: 19; LocalOnlyCount: 1),
@@ -6754,14 +6758,14 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { GY fixedLine }
     (HasData: True;
-     NationalNumberPattern: '(?:2(?:1[6-9]|2[0-35-9]|3[1-4]|5[3-9]|6\d|7[0-79])|3(?:2[25-9]|3\d)|4(?:4[0-24]|5[56])|50[0-6]|7' +
-       '7[1-57])\d{4}';
+     NationalNumberPattern: '(?:2(?:1[6-9]|2[0-35-9]|3[1-4]|5[3-9]|6\d|7[0-79])|3(?:2[25-9]|3\d)|4(?:4[0-24]|5[56])|5(?:0[0-6' +
+       ']|16)|77[1-57])\d{4}';
      ExampleNumber: '2201234';
      LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { GY mobile }
     (HasData: True;
-     NationalNumberPattern: '(?:51[01]|6\d\d|7(?:[0-5]\d|6[0-79]|70|8[067]))\d{4}';
+     NationalNumberPattern: '(?:51[01]|6\d\d|7(?:[0-6]\d|70|8[0167]))\d{4}';
      ExampleNumber: '6091234';
      LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -7493,7 +7497,7 @@ const
     { IN fixedLine }
     (HasData: True;
      NationalNumberPattern: '(?:2717(?:[2-7]\d|95)|6828[235-7]\d)\d{4}|(?:170[24]|280[13468]|4(?:20[24]|72[2-8])|552[1-7])\d{' +
-       '6}|(?:271[0-689]|682[0-79]|782[0-6])[2-7]\d{5}|(?:2(?:[02][2-79]|90)|3(?:23|80)|683|79[1-6])\d{7' +
+       '6}|(?:271[0-689]|682[0-79]|782[0-6])[2-7]\d{5}|(?:2(?:[02][2-79]|90)|3(?:23|80)|683|79[1-5])\d{7' +
        '}|(?:11|33|4[04]|80)[2-7]\d{7}|(?:342|674|788)(?:[0189][2-7]|[2-7]\d)\d{5}|(?:1(?:2[0-249]|3[0-2' +
        '5]|4[145]|[59][14]|6[014]|7[1257]|8[01346])|2(?:1[257]|3[013]|4[01]|5[0137]|6[0158]|78|8[1568]|9' +
        '[14])|3(?:26|4[13]|5[34]|6[01489]|7[02-46]|8[159])|4(?:1[36]|2[1-47]|3[15]|5[12]|6[0-26-9]|7[014' +
@@ -7519,7 +7523,7 @@ const
        '9]|6[24578])\d|7(?:[23569]\d|4[0189]|8[0-57-9])|8(?:[14-6]\d|2[0-79]))|7(?:1(?:[013-8]\d|9[6-9])' +
        '|3(?:2[0-49]|9[2-5])|5(?:2[1-3]|9[0-6])|6(?:0[5689]|2[5-9]|3[02-8]|4\d|5[0-367])|70[13-7]|881))[' +
        '0189]\d{5}|(?:6(?:[09]\d|1[04679]|2[03689]|3[05-9]|4[0489]|50|6[069]|7[07]|8[7-9])|7(?:[024]\d|3' +
-       '[05-8]|5[0346-8]|6[6-9]|7[1-9]|8[0-79]|9[07-9])|8(?:0[01589]|1[0-57-9]|2[235-9]|3[03-57-9]|[45]\' +
+       '[05-8]|5[0346-8]|6[6-9]|7[1-9]|8[0-79]|9[06-9])|8(?:0[01589]|1[0-57-9]|2[235-9]|3[03-57-9]|[45]\' +
        'd|6[02457-9]|7[1-69]|8[0-25-9]|9[02-9])|9\d\d)\d{7}';
      ExampleNumber: '8123456789';
      LengthOffset: 21; LengthCount: 1;
@@ -8263,7 +8267,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { KE mobile }
     (HasData: True;
-     NationalNumberPattern: '(?:1(?:0[0-8]|[18]\d|2[014]|30|4[0-5])|7\d\d)\d{6}';
+     NationalNumberPattern: '(?:1(?:0[0-8]|[18]\d|2[014]|3[05-9]|4[0-6])|7\d\d)\d{6}';
      ExampleNumber: '712123456';
      LengthOffset: 20; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -8849,9 +8853,9 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { KW mobile }
     (HasData: True;
-     NationalNumberPattern: '(?:41\d\d|5(?:(?:[05]\d|1[0-7]|6[56])\d|2(?:22|5[25])|7(?:55|77)|88[58])|6(?:(?:0[034679]|5[015-' +
-       '9]|6\d)\d|1(?:00|11|6[16])|2[26]2|3[36]3|4[46]4|7(?:0[013-9]|[67]\d)|8[68]8|9(?:[069]\d|3[039]))' +
-       '|9(?:(?:[04679]\d|8[057-9])\d|1(?:00|1[01]|99)|2(?:00|2\d)|3(?:00|3[03])|5(?:00|5\d)))\d{4}';
+     NationalNumberPattern: '(?:41\d\d|5(?:(?:[05]\d|1[0-7]|6[56])\d|2(?:22|5[25])|7(?:55|77)|88[58]|999)|6(?:(?:0[034679]|5[' +
+       '015-9]|6\d)\d|1(?:00|11|6[16])|2[26]2|3[36]3|4[46]4|7(?:0[013-9]|[67]\d)|8[68]8|9(?:[069]\d|3[03' +
+       '9]))|9(?:(?:[04679]\d|8[057-9])\d|1(?:00|1[01]|99)|2(?:00|2\d)|3(?:00|3[03])|5(?:00|5\d)))\d{4}';
      ExampleNumber: '50012345';
      LengthOffset: 10; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -12760,7 +12764,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { PG voip }
     (HasData: True;
-     NationalNumberPattern: '2(?:0[0-57]|7[568])\d{4}';
+     NationalNumberPattern: '2(?:0[0-7]|7[568])\d{4}';
      ExampleNumber: '2751234';
      LengthOffset: 19; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -13390,7 +13394,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 2),
     { PY mobile }
     (HasData: True;
-     NationalNumberPattern: '9(?:51|6[129]|7[1-6]|8[1-7]|9[1-5])\d{6}';
+     NationalNumberPattern: '9881\d{5}|9(?:51|6[129]|7[1-6]|8[1-7]|9[1-5])\d{6}';
      ExampleNumber: '961456789';
      LengthOffset: 20; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -13752,7 +13756,7 @@ const
      LocalOnlyOffset: 19; LocalOnlyCount: 1),
     { RU mobile }
     (HasData: True;
-     NationalNumberPattern: '9\d{9}';
+     NationalNumberPattern: '9(?:[0-24-9]\d{4}|3(?:0(?:0(?:05|[124579]\d|3[0-7]|6[0-49]|8[04-9])|[1-9]\d\d)|[1-9]\d{3}))\d{4}';
      ExampleNumber: '9123456789';
      LengthOffset: 21; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -14320,7 +14324,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { SH generalDesc }
     (HasData: True;
-     NationalNumberPattern: '(?:[256]\d|8)\d{3}';
+     NationalNumberPattern: '(?:[2569]\d|8)\d{3}';
      ExampleNumber: '';
      LengthOffset: 110; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -14332,7 +14336,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { SH mobile }
     (HasData: True;
-     NationalNumberPattern: '[56]\d{4}';
+     NationalNumberPattern: '[569]\d{4}';
      ExampleNumber: '51234';
      LengthOffset: 2; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),

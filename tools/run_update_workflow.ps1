@@ -43,7 +43,7 @@ param(
   [switch]$SkipTests,
   [switch]$FailOnDiff,
   # The mass differential runner parses and
-  # formats all 1144 upstream example numbers through both the Pascal port and
+  # formats all 1143 upstream example numbers through both the Pascal port and
   # the C# oracle. That takes minutes and needs the oracle package, so it is
   # opt in rather than part of every run.
   [switch]$RunMassDifferential,

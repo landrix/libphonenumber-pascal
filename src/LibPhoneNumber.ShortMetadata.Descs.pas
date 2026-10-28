@@ -6,7 +6,7 @@ unit LibPhoneNumber.ShortMetadata.Descs;
   Short number descriptions (patterns, example numbers, possible length slices) for every territory and short number desc kind.
 
   Source:    vendor/libphonenumber/resources/ShortNumberMetadata.xml
-  Commit:    33be5664343676b27761213d8f5500d682568ea7
+  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
   Generator: tools/generate_metadata.ps1 (short-metadata-v1)
 
   Regenerate with:
@@ -1627,9 +1627,9 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW generalDesc }
     (HasData: True;
-     NationalNumberPattern: '[19]\d\d(?:\d{2})?';
+     NationalNumberPattern: '[19]\d{2,4}';
      ExampleNumber: '';
-     LengthOffset: 5; LengthCount: 2;
+     LengthOffset: 14; LengthCount: 3;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW standardRate }
     (HasData: False;
@@ -1639,26 +1639,26 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW shortCode }
     (HasData: True;
-     NationalNumberPattern: '1(?:1[26]|3123)|9(?:1[14]|9[1-57-9])';
-     ExampleNumber: '112';
+     NationalNumberPattern: '1(?:(?:[02]|[6-9]\d\d)\d|1[0-2469]|3123)|9(?:1[0-4]|2[02-69]|9\d)|1[0-28]\d\d';
+     ExampleNumber: '100';
      LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW carrierSpecific }
     (HasData: True;
-     NationalNumberPattern: '131\d\d';
-     ExampleNumber: '13100';
-     LengthOffset: 7; LengthCount: 1;
+     NationalNumberPattern: '1(?:[0-2]|31)\d\d|9(?:1[02-4]|2[02-69]|9[0-3])|1(?:[02]\d|1[49])';
+     ExampleNumber: '100';
+     LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW emergency }
     (HasData: True;
-     NationalNumberPattern: '9(?:11|9[7-9])';
-     ExampleNumber: '911';
+     NationalNumberPattern: '11[12]|9(?:11|9[7-9])';
+     ExampleNumber: '111';
      LengthOffset: 0; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW tollFree }
     (HasData: True;
-     NationalNumberPattern: '9(?:11|9[7-9])';
-     ExampleNumber: '911';
+     NationalNumberPattern: '11[0-246]|9(?:1[0-4]|2[02-69]|9[06-9])';
+     ExampleNumber: '110';
      LengthOffset: 0; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BW premiumRate }
@@ -2321,16 +2321,16 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { CO shortCode }
     (HasData: True;
-     NationalNumberPattern: '1(?:06|1[2-9]|2[35-7]|3[27]|4[467]|5[36]|6[4-7]|95)|(?:29002|39003)9|40404|5930\d\d|85432|(?:[23' +
-       '59][57]|8(?:7|9\d))\d{3}';
+     NationalNumberPattern: '1(?:06|1[2-9]|2[35-7]|3[27]|4[467]|5[36]|6[4-7]|95)|(?:29002|39003)9|40404|5930\d\d|89\d{4}|[235' +
+       '89][57]\d{3}';
      ExampleNumber: '106';
      LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { CO carrierSpecific }
     (HasData: True;
-     NationalNumberPattern: '(?:40|85)4\d\d';
+     NationalNumberPattern: '404\d\d|8(?:[57]|9\d)\d{3}';
      ExampleNumber: '40400';
-     LengthOffset: 7; LengthCount: 1;
+     LengthOffset: 56; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { CO emergency }
     (HasData: True;
@@ -2352,9 +2352,9 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { CO smsServices }
     (HasData: True;
-     NationalNumberPattern: '(?:40|85)4\d\d';
+     NationalNumberPattern: '404\d\d|8(?:[57]|9\d)\d{3}';
      ExampleNumber: '40400';
-     LengthOffset: 7; LengthCount: 1;
+     LengthOffset: 56; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { CR generalDesc }
     (HasData: True;

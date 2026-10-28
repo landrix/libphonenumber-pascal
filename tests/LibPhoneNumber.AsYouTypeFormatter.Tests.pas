@@ -673,7 +673,7 @@ begin
       [Total, Eligible]));
     ReportList('Distinct rejected formats', Rejected);
 
-    { Baseline 33be5664343676b27761213d8f5500d682568ea7: 761 national plus 205
+    { Baseline 8d8d75272c351b60b87163db5328e439c53a6b56: 761 national plus 205
       international formats. }
     Assert.AreEqual(966, Total,
       'The baseline format inventory changed; re-check the numbers below '

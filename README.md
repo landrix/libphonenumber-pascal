@@ -19,8 +19,8 @@ types, and find them in free text.
   `BuildMetadataFromXml.java`. A metadata update is a regeneration, not a hand
   edit.
 
-The current metadata is built from upstream **libphonenumber 9.0.41**
-(`google/libphonenumber` commit `33be566`); the exact pins are in
+The current metadata is built from upstream **libphonenumber 9.0.42**
+(`google/libphonenumber` commit `8d8d752`); the exact pins are in
 [`vendor/versions.md`](vendor/versions.md). The version number follows that
 release: `X.Y.Z.0` is the first release on upstream metadata X.Y.Z,
 `X.Y.Z.1` and later are releases of the port with the same metadata

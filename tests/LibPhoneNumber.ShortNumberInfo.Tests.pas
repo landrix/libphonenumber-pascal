@@ -830,7 +830,7 @@ var
   ShortCode: PPhoneNumberDescRec;
   Example: string;
 begin
-  { Mass gate, the short number counterpart of the 1144 example number gate of
+  { Mass gate, the short number counterpart of the 1143 example number gate of
     the phone metadata: the shortCode example number of every territory must be
     a valid short number in that very territory.
 

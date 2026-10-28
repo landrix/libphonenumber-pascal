@@ -229,7 +229,7 @@ uses
 const
   { Example number inventory of the pinned baseline; see
     LibPhoneNumber.Metadata.Tests. }
-  ExpectedExampleNumberCount = 1144;
+  ExpectedExampleNumberCount = 1143;
 
   { Divergence inventories of the two parser gates below, as exact lists rather
     than budgets: a plain count would let a documented divergence disappear

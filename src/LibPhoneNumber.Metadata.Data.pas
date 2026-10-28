@@ -6,7 +6,7 @@ unit LibPhoneNumber.Metadata.Data;
   Territory table, possible length pool and the region / country calling code indices.
 
   Source:    vendor/libphonenumber/resources/PhoneNumberMetadata.xml
-  Commit:    33be5664343676b27761213d8f5500d682568ea7
+  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
   Generator: tools/generate_metadata.ps1 (metadata-v1)
 
   Regenerate with:
@@ -28,7 +28,7 @@ uses
 const
   MetadataGeneratorVersion = 'metadata-v1';
   MetadataSourceFile = 'resources/PhoneNumberMetadata.xml';
-  MetadataSourceCommit = '33be5664343676b27761213d8f5500d682568ea7';
+  MetadataSourceCommit = '8d8d75272c351b60b87163db5328e439c53a6b56';
 
   PhoneMetadataTerritoryCount = 254;
   PhoneMetadataRegionCount = 245;
@@ -3173,7 +3173,7 @@ const
     { SH cc=290 }
     (Id: 'SH';
      CountryCode: 290;
-     LeadingDigits: '[256]';
+     LeadingDigits: '[2569]';
      InternationalPrefix: '00';
      PreferredInternationalPrefix: '';
      NationalPrefix: '';

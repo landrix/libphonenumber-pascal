@@ -1,7 +1,7 @@
 {
   "generator": "tools/generate_aytf_cases.ps1",
-  "oraclePackage": "libphonenumber-csharp 9.0.41",
-  "oracleAssembly": "9.0.41.0",
+  "oraclePackage": "libphonenumber-csharp 9.0.42",
+  "oracleAssembly": "9.0.42.0",
   "note": "Generated expectations. Test IDEAS come from the upstream Java suites; every value here is computed against the SHIPPED metadata by the C# NuGet oracle, never copied from PhoneNumberMetadataForTesting.xml based tests.",
   "aytfSequences": [
     {

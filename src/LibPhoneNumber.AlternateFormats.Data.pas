@@ -6,7 +6,7 @@ unit LibPhoneNumber.AlternateFormats.Data;
   Alternate number format table plus its own leadingDigits pattern pool, keyed by country calling code.
 
   Source:    vendor/libphonenumber/resources/PhoneNumberAlternateFormats.xml
-  Commit:    33be5664343676b27761213d8f5500d682568ea7
+  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
   Generator: tools/generate_metadata.ps1 (alternate-formats-v1)
 
   Regenerate with:
@@ -28,7 +28,7 @@ uses
 const
   AlternateFormatsGeneratorVersion = 'alternate-formats-v1';
   AlternateFormatsSourceFile = 'resources/PhoneNumberAlternateFormats.xml';
-  AlternateFormatsSourceCommit = '33be5664343676b27761213d8f5500d682568ea7';
+  AlternateFormatsSourceCommit = '8d8d75272c351b60b87163db5328e439c53a6b56';
 
   AlternateFormatsGroupCount = 46;
   AlternateFormatsNumberFormatCount = 158;
@@ -137,11 +137,11 @@ const
     '[2-4]|5(?:[02-9]|1[06])',
     '512|[89]',
     '160[01]|6(?:[09]|2(?:[02-7]|8[0-35-9])|4[02-9]|5[02-689]|6[024-9]|7[0235-9]|8[124-9])|7(?:[0247]' +
-       '|3[025-9]|6(?:[02-9]|1[0-257-9])|8[0-79]|9(?:[07-9]|31))|8(?:0(?:[01589]|6[67]|7[02-9])|1[0-57-9' +
+       '|3[025-9]|6(?:[02-9]|1[0-257-9])|8[0-79]|9(?:[06-9]|31))|8(?:0(?:[01589]|6[67]|7[02-9])|1[0-57-9' +
        ']|2[235-9]|3[03-57-9]|[45]|6[02457-9]|7[1-69]|8(?:[0-25-9]|4[0147-9])|9(?:[02-9]|1[0-27-9]))|9|[' +
        '67]1[013-9]|(?:63|75)[02-46-9]|6(?:29|35)[0-46-9]|(?:6(?:[2-4]1|5[17]|6[13]|7[14]|80)|7(?:12|88)' +
        ')[0189]|(?:612|7(?:3[134]|5[15])|8(?:16|2[014]|3[126]|6[136]|7[078]|83))[017-9]',
-    '79(?:[07-9]|31)|80(?:[01589]|6[67]|7[02-9])',
+    '79(?:[06-9]|31)|80(?:[01589]|6[67]|7[02-9])',
     '7(?:1[013-9]|[247]|3[025-9]|5[02-46-9]|6(?:[02-9]|1[0-257-9])|8[0-79])|8(?:1[0-57-9]|2[235-9]|3[' +
        '03-57-9]|[45]|6[02457-9]|7[1-69]|8(?:[0-25-9]|4[0147-9])|9(?:[02-9]|1[0-27-9]))|7(?:12|88)[0189]' +
        '|(?:7(?:3[134]|5[15])|8(?:16|2[014]|3[126]|6[136]|7[078]|83))[017-9]',

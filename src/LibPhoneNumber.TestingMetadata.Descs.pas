@@ -6,7 +6,7 @@ unit LibPhoneNumber.TestingMetadata.Descs;
   Phone number descriptions (patterns, example numbers, possible length slices) for every territory and number type.
 
   Source:    vendor/libphonenumber/resources/PhoneNumberMetadataForTesting.xml
-  Commit:    33be5664343676b27761213d8f5500d682568ea7
+  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
   Generator: tools/generate_metadata.ps1 (testing-metadata-v1)
 
   Regenerate with:

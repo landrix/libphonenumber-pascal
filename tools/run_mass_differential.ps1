@@ -16,7 +16,7 @@ param(
   # a failure and not a quietly smaller, still "clean" run. Bump it together
   # with the baseline numbers in the AGENTS.md manifest when a vendor
   # refresh legitimately changes it.
-  [int]$ExpectedCaseCount = 1144,
+  [int]$ExpectedCaseCount = 1143,
   [switch]$SkipBuild,
   [switch]$KeepWorkDir,
   [switch]$RefreshOracle,
@@ -28,7 +28,7 @@ param(
   Mass differential runner.
 
   For every description of every territory of the generated metadata that has
-  an example number - 1144 cases over all 254 territories - it compares the
+  an example number - 1143 cases over all 254 territories - it compares the
   Pascal port against the C# NuGet oracle on nine answers:
 
     Parse (success and, on failure, the error), E164, INTERNATIONAL, NATIONAL

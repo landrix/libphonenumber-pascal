@@ -4,7 +4,7 @@ program PhoneNumbersDifferential;
   Mass differential probe, Pascal side.
 
   Walks EVERY description of EVERY territory of the generated metadata that
-  carries an example number - 1144 of the 3048 descriptions - and records what
+  carries an example number - 1143 of the 3048 descriptions - and records what
   the port answers for each of them:
 
     Parse -> E164, INTERNATIONAL, NATIONAL, RFC3966,

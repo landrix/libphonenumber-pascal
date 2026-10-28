@@ -533,7 +533,7 @@ begin
         [I, PhoneMetadataDescs[I].NationalNumberPattern, Error]));
     Inc(Compiled);
   end;
-  Assert.AreEqual(1431, Compiled,
+  Assert.AreEqual(1430, Compiled,
     'Number of national number patterns in the pinned baseline changed.');
 end;
 
@@ -647,7 +647,7 @@ begin
       Format('Example number %s (desc #%d) does not match its own pattern.',
         [Desc^.ExampleNumber, I]));
   end;
-  Assert.AreEqual(1144, Checked,
+  Assert.AreEqual(1143, Checked,
     'Number of example numbers in the pinned baseline changed.');
 end;
 

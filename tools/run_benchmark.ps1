@@ -14,7 +14,7 @@ param(
   Performance benchmark of the library.
 
   Builds tools/benchmark/PhoneNumbersBenchmark.dpr with dcc64 and runs it over
-  the 1144 example numbers of the generated production metadata: parse,
+  the 1143 example numbers of the generated production metadata: parse,
   isValid, format(INTERNATIONAL) and the three of them back to back.
 
   This is DOCUMENTATION, not a gate. Nothing here fails on a slow machine, the

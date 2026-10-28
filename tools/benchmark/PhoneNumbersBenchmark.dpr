@@ -3,7 +3,7 @@ program PhoneNumbersBenchmark;
 {
   Performance benchmark of the library.
 
-  Data set: the 1144 example numbers of the generated production metadata, i.e.
+  Data set: the 1143 example numbers of the generated production metadata, i.e.
   every description of every territory that carries one - the same corpus the
   mass differential runs on, so the numbers below describe real, valid input
   spread over all 254 territories rather than one hot region.
