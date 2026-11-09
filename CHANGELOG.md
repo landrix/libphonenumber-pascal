@@ -25,6 +25,16 @@ under the scheme and contains everything since.
 
 ### Tests and tooling
 
+- New `tools/check_readme_quickstart.ps1`: the ```` ```pascal ```` block of
+  the `## Quick start` section of `README.md` must be `samples/QuickStart.dpr`
+  verbatim (line ends normalised, a final line end ignored, everything else
+  exact). A difference fails with the first differing line and both
+  versions; a missing heading or block fails too. Text only, no compiler;
+  Windows PowerShell 5.1 and `pwsh`. `tools/run_samples.ps1` runs it first,
+  whatever the compiler (`-SkipReadmeCheck` opts out); the update workflow
+  and the quick check run it once, with the Delphi samples run, and so do
+  both CI jobs (the Windows `quick-check` job, where the Delphi samples are
+  then skipped, and the `freepascal` job).
 - The matcher documentation follows the oracle 9.0.43: the C#
   `PhoneNumberMatcher` no longer has its older `extractInnerMatch` and no
   longer tests `PUB_PAGES` in `extractMatch`, so three of the five documented

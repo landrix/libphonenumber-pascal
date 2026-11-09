@@ -30,6 +30,10 @@ param(
   [switch]$RequireFpc,
   [switch]$RequireDelphi,
   [switch]$KeepWorkDir,
+  # Skip the README quick start check (tools/check_readme_quickstart.ps1) that
+  # runs first. The update workflow passes it to every run after the first,
+  # so the text comparison runs once per workflow run.
+  [switch]$SkipReadmeCheck,
   [switch]$Quiet
 )
 
@@ -51,6 +55,12 @@ param(
   an error (hints and notes are tolerated), when it exits with a non zero exit
   code, or when its output differs from the golden file. The same golden files
   hold for every compiler; that is the point of the check.
+
+  Before anything else, and whatever the compiler, it runs
+  tools/check_readme_quickstart.ps1: the ```pascal block of the "## Quick
+  start" section of README.md must be samples/QuickStart.dpr verbatim (line
+  ends normalised). That check needs no compiler, so it runs even where the
+  samples themselves are skipped; -SkipReadmeCheck opts out.
 
   Like the FreePascal gates the script is a no-op with a warning when the
   selected compiler is not reachable; -RequireFpc / -RequireDelphi turn that
@@ -84,6 +94,12 @@ function Write-Info {
   if (-not $Quiet) {
     Write-Host $Message
   }
+}
+
+# --- The README quick start ---------------------------------------------------
+
+if (-not $SkipReadmeCheck) {
+  & (Join-Path $PSScriptRoot "check_readme_quickstart.ps1") -Quiet:$Quiet
 }
 
 # --- The samples -------------------------------------------------------------

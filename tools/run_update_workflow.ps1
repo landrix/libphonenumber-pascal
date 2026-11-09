@@ -242,7 +242,10 @@ if (-not $SkipSamples) {
     # value: review the diff, rewrite the golden files with
     # tools/run_samples.ps1 -UpdateExpected and check the values docs/GUIDE.md
     # quotes. Missing compilers are soft skips with a warning, like the other
-    # FreePascal steps (-RequireFpc).
+    # FreePascal steps (-RequireFpc). The first run also checks that the
+    # README quick start is samples/QuickStart.dpr verbatim (a text
+    # comparison that needs no compiler, so it runs even without Delphi); the
+    # FreePascal runs skip that check (-SkipReadmeCheck).
     Write-Host ""
     Write-Host "--- samples on Delphi"
     & (Join-Path $PSScriptRoot "run_samples.ps1") -Compiler Delphi -StudioRoot $StudioRoot
@@ -250,7 +253,7 @@ if (-not $SkipSamples) {
       Write-Host ""
       Write-Host "--- samples on $($entry.Label)"
       & (Join-Path $PSScriptRoot "run_samples.ps1") -Compiler Fpc -Toolchain $entry.Toolchain `
-        -FpcPath $entry.FpcPath -RequireFpc:$RequireFpc
+        -FpcPath $entry.FpcPath -RequireFpc:$RequireFpc -SkipReadmeCheck
     }
   }
 } else {

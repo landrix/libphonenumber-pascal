@@ -37,9 +37,10 @@ jobs:
       # The hosted Windows runner has neither Delphi nor FreePascal: the Delphi
       # build of the test program and the three FreePascal steps skip with a
       # warning. What runs here is the metadata generator, the check that the
-      # committed generated units are its exact output, and the length compare
-      # gate against the upstream XML. The FreePascal job below covers the
-      # compilers.
+      # committed generated units are its exact output, the length compare
+      # gate against the upstream XML, and the README quick start check
+      # (tools/check_readme_quickstart.ps1, run by the samples step before it
+      # skips Delphi). The FreePascal job below covers the compilers.
       - name: Run quick check
         shell: pwsh
         run: powershell -ExecutionPolicy Bypass -File tools/run_pr_quick_check.ps1
@@ -88,6 +89,8 @@ jobs:
       # Every program of samples/ built with the fpc on PATH, run, and its
       # output compared with samples/expected/<name>.txt (the same golden
       # files the Delphi and the local FreePascal builds must reproduce).
+      # The script first checks that the README quick start is
+      # samples/QuickStart.dpr verbatim.
       - name: Build, run and compare the samples
         shell: pwsh
         run: ./tools/run_samples.ps1 -Compiler Fpc -Toolchain Native -RequireFpc

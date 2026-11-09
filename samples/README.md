@@ -58,8 +58,12 @@ The expected outputs are checked: `tools/run_samples.ps1` builds every
 program, runs it and compares its output with `expected/<name>.txt`, with
 Delphi and with FreePascal; the quick check, the update workflow and the
 FreePascal job of the GitHub workflow run it (see
-[`tools/README.md`](../tools/README.md)). So that one expected file holds for
-every compiler:
+[`tools/README.md`](../tools/README.md)). Before it builds anything it
+checks that the quick start of the README is `QuickStart.dpr` verbatim
+(`tools/check_readme_quickstart.ps1`, a text comparison), so change both
+together.
+
+So that one expected file holds for every compiler:
 
 1. **ASCII output only.** The Delphi console maps non ASCII text through the
    ANSI code page, FreePascal writes UTF-8, so the bytes would differ. Build
