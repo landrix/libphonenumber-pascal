@@ -6,7 +6,7 @@ unit LibPhoneNumber.AlternateFormats.Data;
   Alternate number format table plus its own leadingDigits pattern pool, keyed by country calling code.
 
   Source:    vendor/libphonenumber/resources/PhoneNumberAlternateFormats.xml
-  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
+  Commit:    86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7
   Generator: tools/generate_metadata.ps1 (alternate-formats-v1)
 
   Regenerate with:
@@ -28,7 +28,7 @@ uses
 const
   AlternateFormatsGeneratorVersion = 'alternate-formats-v1';
   AlternateFormatsSourceFile = 'resources/PhoneNumberAlternateFormats.xml';
-  AlternateFormatsSourceCommit = '8d8d75272c351b60b87163db5328e439c53a6b56';
+  AlternateFormatsSourceCommit = '86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7';
 
   AlternateFormatsGroupCount = 46;
   AlternateFormatsNumberFormatCount = 158;

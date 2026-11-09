@@ -673,12 +673,12 @@ begin
       [Total, Eligible]));
     ReportList('Distinct rejected formats', Rejected);
 
-    { Baseline 8d8d75272c351b60b87163db5328e439c53a6b56: 761 national plus 205
+    { Baseline 86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7: 758 national plus 206
       international formats. }
-    Assert.AreEqual(966, Total,
+    Assert.AreEqual(964, Total,
       'The baseline format inventory changed; re-check the numbers below '
       + 'against the new metadata before touching them.');
-    Assert.AreEqual(963, Eligible,
+    Assert.AreEqual(961, Eligible,
       'The number of formats the AsYouTypeFormatter can use changed.');
     Assert.AreEqual(3, Total - Eligible,
       'The number of rejected format OCCURRENCES changed.');

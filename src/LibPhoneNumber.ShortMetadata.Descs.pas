@@ -6,7 +6,7 @@ unit LibPhoneNumber.ShortMetadata.Descs;
   Short number descriptions (patterns, example numbers, possible length slices) for every territory and short number desc kind.
 
   Source:    vendor/libphonenumber/resources/ShortNumberMetadata.xml
-  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
+  Commit:    86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7
   Generator: tools/generate_metadata.ps1 (short-metadata-v1)
 
   Regenerate with:

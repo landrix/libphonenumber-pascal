@@ -6,7 +6,7 @@ unit LibPhoneNumber.TestingMetadata.Formats;
   Number format tables (national and international) plus the shared leadingDigits pattern pool.
 
   Source:    vendor/libphonenumber/resources/PhoneNumberMetadataForTesting.xml
-  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
+  Commit:    86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7
   Generator: tools/generate_metadata.ps1 (testing-metadata-v1)
 
   Regenerate with:

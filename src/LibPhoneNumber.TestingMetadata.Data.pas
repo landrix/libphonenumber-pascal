@@ -6,7 +6,7 @@ unit LibPhoneNumber.TestingMetadata.Data;
   Territory table, possible length pool and the region / country calling code indices.
 
   Source:    vendor/libphonenumber/resources/PhoneNumberMetadataForTesting.xml
-  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
+  Commit:    86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7
   Generator: tools/generate_metadata.ps1 (testing-metadata-v1)
 
   Regenerate with:
@@ -28,7 +28,7 @@ uses
 const
   MetadataGeneratorVersion = 'testing-metadata-v1';
   MetadataSourceFile = 'resources/PhoneNumberMetadataForTesting.xml';
-  MetadataSourceCommit = '8d8d75272c351b60b87163db5328e439c53a6b56';
+  MetadataSourceCommit = '86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7';
 
   PhoneMetadataTerritoryCount = 36;
   PhoneMetadataRegionCount = 33;

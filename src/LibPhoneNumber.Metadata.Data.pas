@@ -6,7 +6,7 @@ unit LibPhoneNumber.Metadata.Data;
   Territory table, possible length pool and the region / country calling code indices.
 
   Source:    vendor/libphonenumber/resources/PhoneNumberMetadata.xml
-  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
+  Commit:    86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7
   Generator: tools/generate_metadata.ps1 (metadata-v1)
 
   Regenerate with:
@@ -28,21 +28,21 @@ uses
 const
   MetadataGeneratorVersion = 'metadata-v1';
   MetadataSourceFile = 'resources/PhoneNumberMetadata.xml';
-  MetadataSourceCommit = '8d8d75272c351b60b87163db5328e439c53a6b56';
+  MetadataSourceCommit = '86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7';
 
   PhoneMetadataTerritoryCount = 254;
   PhoneMetadataRegionCount = 245;
   PhoneMetadataNonGeoCount = 9;
   PhoneMetadataCountryCodeCount = 215;
-  PhoneMetadataPossibleLengthCount = 490;
+  PhoneMetadataPossibleLengthCount = 486;
 
-  PhoneMetadataPossibleLengths: array[0..489] of SmallInt = (
+  PhoneMetadataPossibleLengths: array[0..485] of SmallInt = (
     5, 6, 5, -1, 6, 6, 8, 9, 6, 9, 8, 5, 6, 7, 8, 9, 10, 11, 12, 7, 9, 10, 6, 7,
     8, 9, 5, 6, 7, 10, 11, 6, 7, 8, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 3, 7, 8, 9,
     10, 11, 12, 13, 9, 10, 11, 12, 13, 8, 9, 10, 11, 12, 13, 5, 6, 7, 8, 9, 10, 11, 12, 13,
     5, 6, 7, 8, 9, 10, 12, 7, 10, 6, 8, 10, 12, 5, 6, 7, 8, 9, 6, 7, 8, 10, 12, 6,
-    7, 8, 9, 10, 7, 8, 9, 8, 9, 6, 7, 8, 9, 12, 4, 5, 8, 12, 8, 10, 8, 9, 10, 11,
-    9, 10, 8, 9, 10, 7, 8, 7, 8, 10, 6, 7, 8, 9, 10, 11, 7, 11, 11, 6, 7, 8, 9, 10,
+    7, 8, 9, 10, 7, 8, 9, 8, 9, 6, 7, 8, 9, 12, 4, 5, 8, 12, 8, 9, 10, 11, 9, 10,
+    8, 10, 8, 9, 10, 7, 8, 7, 8, 10, 6, 7, 8, 9, 10, 11, 7, 11, 11, 6, 7, 8, 9, 10,
     12, 7, 8, 9, 10, 7, 9, 9, 12, 12, 9, 10, 11, 9, 11, 7, 8, 9, 10, 11, 12, 7, 8, 9,
     10, 11, 10, 12, 10, 11, 12, 8, 10, 11, 4, 7, 6, 7, 8, 10, 9, 10, 11, 12, 4, 5, 6, 7,
     8, 9, 10, 11, 12, 13, 14, 15, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 2, 3, 4,
@@ -57,7 +57,7 @@ const
     8, 10, 11, 6, 8, 9, 10, 11, 12, 13, 4, 5, 7, 11, 12, 13, 8, 9, 10, 11, 12, 5, 6, 7,
     8, 7, 8, 9, 11, 7, 9, 11, 5, 7, 6, 7, 9, 7, 8, 11, 8, 9, 10, 13, 10, 13, 3, 5,
     6, 7, 4, 5, 6, 7, 7, 10, 12, 13, 10, 12, 13, 6, 7, 8, 9, 10, 11, 12, 13, 5, 6, 7,
-    10, 3, 4, 5, 6, 7, 8, 9, 10, 12
+    10, 7, 8, 9, 10, 12
   );
 
   PhoneMetadataTerritories: array[0..253] of TPhoneMetadataRec = (
@@ -464,7 +464,7 @@ const
      MobileNumberPortableRegion: True;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 288;
-     FormatOffset: 79; FormatCount: 2;
+     FormatOffset: 79; FormatCount: 1;
      IntlFormatOffset: 35; IntlFormatCount: 0),
     { BL cc=590 }
     (Id: 'BL';
@@ -480,7 +480,7 @@ const
      MobileNumberPortableRegion: True;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 300;
-     FormatOffset: 81; FormatCount: 0;
+     FormatOffset: 80; FormatCount: 0;
      IntlFormatOffset: 35; IntlFormatCount: 0),
     { BM cc=1 }
     (Id: 'BM';
@@ -496,7 +496,7 @@ const
      MobileNumberPortableRegion: True;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 312;
-     FormatOffset: 81; FormatCount: 0;
+     FormatOffset: 80; FormatCount: 0;
      IntlFormatOffset: 35; IntlFormatCount: 0),
     { BN cc=673 }
     (Id: 'BN';
@@ -512,7 +512,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 324;
-     FormatOffset: 81; FormatCount: 1;
+     FormatOffset: 80; FormatCount: 1;
      IntlFormatOffset: 35; IntlFormatCount: 0),
     { BO cc=591 }
     (Id: 'BO';
@@ -528,7 +528,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 336;
-     FormatOffset: 82; FormatCount: 3;
+     FormatOffset: 81; FormatCount: 3;
      IntlFormatOffset: 35; IntlFormatCount: 0),
     { BQ cc=599 }
     (Id: 'BQ';
@@ -544,7 +544,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 348;
-     FormatOffset: 85; FormatCount: 0;
+     FormatOffset: 84; FormatCount: 0;
      IntlFormatOffset: 35; IntlFormatCount: 0),
     { BR cc=55 }
     (Id: 'BR';
@@ -560,7 +560,7 @@ const
      MobileNumberPortableRegion: True;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 360;
-     FormatOffset: 85; FormatCount: 7;
+     FormatOffset: 84; FormatCount: 7;
      IntlFormatOffset: 35; IntlFormatCount: 4),
     { BS cc=1 }
     (Id: 'BS';
@@ -576,7 +576,7 @@ const
      MobileNumberPortableRegion: True;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 372;
-     FormatOffset: 92; FormatCount: 0;
+     FormatOffset: 91; FormatCount: 0;
      IntlFormatOffset: 39; IntlFormatCount: 0),
     { BT cc=975 }
     (Id: 'BT';
@@ -592,7 +592,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 384;
-     FormatOffset: 92; FormatCount: 3;
+     FormatOffset: 91; FormatCount: 3;
      IntlFormatOffset: 39; IntlFormatCount: 2),
     { BW cc=267 }
     (Id: 'BW';
@@ -608,7 +608,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 396;
-     FormatOffset: 95; FormatCount: 5;
+     FormatOffset: 94; FormatCount: 5;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { BY cc=375 }
     (Id: 'BY';
@@ -624,7 +624,7 @@ const
      MobileNumberPortableRegion: True;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 408;
-     FormatOffset: 100; FormatCount: 6;
+     FormatOffset: 99; FormatCount: 6;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { BZ cc=501 }
     (Id: 'BZ';
@@ -640,7 +640,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 420;
-     FormatOffset: 106; FormatCount: 2;
+     FormatOffset: 105; FormatCount: 2;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { CA cc=1 }
     (Id: 'CA';
@@ -656,7 +656,7 @@ const
      MobileNumberPortableRegion: True;
      SameMobileAndFixedLinePattern: True;
      DescOffset: 432;
-     FormatOffset: 108; FormatCount: 0;
+     FormatOffset: 107; FormatCount: 0;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { CC cc=61 }
     (Id: 'CC';
@@ -672,7 +672,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 444;
-     FormatOffset: 108; FormatCount: 0;
+     FormatOffset: 107; FormatCount: 0;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { CD cc=243 }
     (Id: 'CD';
@@ -688,7 +688,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 456;
-     FormatOffset: 108; FormatCount: 6;
+     FormatOffset: 107; FormatCount: 6;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { CF cc=236 }
     (Id: 'CF';
@@ -704,7 +704,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 468;
-     FormatOffset: 114; FormatCount: 1;
+     FormatOffset: 113; FormatCount: 1;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { CG cc=242 }
     (Id: 'CG';
@@ -720,7 +720,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 480;
-     FormatOffset: 115; FormatCount: 2;
+     FormatOffset: 114; FormatCount: 2;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { CH cc=41 }
     (Id: 'CH';
@@ -736,7 +736,7 @@ const
      MobileNumberPortableRegion: True;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 492;
-     FormatOffset: 117; FormatCount: 3;
+     FormatOffset: 116; FormatCount: 3;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { CI cc=225 }
     (Id: 'CI';
@@ -752,7 +752,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 504;
-     FormatOffset: 120; FormatCount: 2;
+     FormatOffset: 119; FormatCount: 2;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { CK cc=682 }
     (Id: 'CK';
@@ -768,7 +768,7 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 516;
-     FormatOffset: 122; FormatCount: 1;
+     FormatOffset: 121; FormatCount: 1;
      IntlFormatOffset: 41; IntlFormatCount: 0),
     { CL cc=56 }
     (Id: 'CL';
@@ -784,7 +784,7 @@ const
      MobileNumberPortableRegion: True;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 528;
-     FormatOffset: 123; FormatCount: 10;
+     FormatOffset: 122; FormatCount: 10;
      IntlFormatOffset: 41; IntlFormatCount: 9),
     { CM cc=237 }
     (Id: 'CM';
@@ -800,7 +800,7 @@ const
      MobileNumberPortableRegion: True;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 540;
-     FormatOffset: 133; FormatCount: 2;
+     FormatOffset: 132; FormatCount: 2;
      IntlFormatOffset: 50; IntlFormatCount: 0),
     { CN cc=86 }
     (Id: 'CN';
@@ -816,8 +816,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 552;
-     FormatOffset: 135; FormatCount: 17;
-     IntlFormatOffset: 50; IntlFormatCount: 10),
+     FormatOffset: 134; FormatCount: 18;
+     IntlFormatOffset: 50; IntlFormatCount: 11),
     { CO cc=57 }
     (Id: 'CO';
      CountryCode: 57;
@@ -833,7 +833,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 564;
      FormatOffset: 152; FormatCount: 4;
-     IntlFormatOffset: 60; IntlFormatCount: 4),
+     IntlFormatOffset: 61; IntlFormatCount: 4),
     { CR cc=506 }
     (Id: 'CR';
      CountryCode: 506;
@@ -849,7 +849,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 576;
      FormatOffset: 156; FormatCount: 2;
-     IntlFormatOffset: 64; IntlFormatCount: 0),
+     IntlFormatOffset: 65; IntlFormatCount: 0),
     { CU cc=53 }
     (Id: 'CU';
      CountryCode: 53;
@@ -865,7 +865,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 588;
      FormatOffset: 158; FormatCount: 4;
-     IntlFormatOffset: 64; IntlFormatCount: 0),
+     IntlFormatOffset: 65; IntlFormatCount: 0),
     { CV cc=238 }
     (Id: 'CV';
      CountryCode: 238;
@@ -881,7 +881,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 600;
      FormatOffset: 162; FormatCount: 1;
-     IntlFormatOffset: 64; IntlFormatCount: 0),
+     IntlFormatOffset: 65; IntlFormatCount: 0),
     { CW cc=599 }
     (Id: 'CW';
      CountryCode: 599;
@@ -897,7 +897,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 612;
      FormatOffset: 163; FormatCount: 2;
-     IntlFormatOffset: 64; IntlFormatCount: 0),
+     IntlFormatOffset: 65; IntlFormatCount: 0),
     { CX cc=61 }
     (Id: 'CX';
      CountryCode: 61;
@@ -913,7 +913,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 624;
      FormatOffset: 165; FormatCount: 0;
-     IntlFormatOffset: 64; IntlFormatCount: 0),
+     IntlFormatOffset: 65; IntlFormatCount: 0),
     { CY cc=357 }
     (Id: 'CY';
      CountryCode: 357;
@@ -929,7 +929,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 636;
      FormatOffset: 165; FormatCount: 1;
-     IntlFormatOffset: 64; IntlFormatCount: 0),
+     IntlFormatOffset: 65; IntlFormatCount: 0),
     { CZ cc=420 }
     (Id: 'CZ';
      CountryCode: 420;
@@ -945,7 +945,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 648;
      FormatOffset: 166; FormatCount: 4;
-     IntlFormatOffset: 64; IntlFormatCount: 0),
+     IntlFormatOffset: 65; IntlFormatCount: 0),
     { DE cc=49 }
     (Id: 'DE';
      CountryCode: 49;
@@ -961,7 +961,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 660;
      FormatOffset: 170; FormatCount: 19;
-     IntlFormatOffset: 64; IntlFormatCount: 18),
+     IntlFormatOffset: 65; IntlFormatCount: 18),
     { DJ cc=253 }
     (Id: 'DJ';
      CountryCode: 253;
@@ -977,7 +977,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 672;
      FormatOffset: 189; FormatCount: 1;
-     IntlFormatOffset: 82; IntlFormatCount: 0),
+     IntlFormatOffset: 83; IntlFormatCount: 0),
     { DK cc=45 }
     (Id: 'DK';
      CountryCode: 45;
@@ -993,7 +993,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 684;
      FormatOffset: 190; FormatCount: 1;
-     IntlFormatOffset: 82; IntlFormatCount: 0),
+     IntlFormatOffset: 83; IntlFormatCount: 0),
     { DM cc=1 }
     (Id: 'DM';
      CountryCode: 1;
@@ -1009,7 +1009,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 696;
      FormatOffset: 191; FormatCount: 0;
-     IntlFormatOffset: 82; IntlFormatCount: 0),
+     IntlFormatOffset: 83; IntlFormatCount: 0),
     { DO cc=1 }
     (Id: 'DO';
      CountryCode: 1;
@@ -1025,7 +1025,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 708;
      FormatOffset: 191; FormatCount: 0;
-     IntlFormatOffset: 82; IntlFormatCount: 0),
+     IntlFormatOffset: 83; IntlFormatCount: 0),
     { DZ cc=213 }
     (Id: 'DZ';
      CountryCode: 213;
@@ -1041,7 +1041,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 720;
      FormatOffset: 191; FormatCount: 3;
-     IntlFormatOffset: 82; IntlFormatCount: 0),
+     IntlFormatOffset: 83; IntlFormatCount: 0),
     { EC cc=593 }
     (Id: 'EC';
      CountryCode: 593;
@@ -1057,7 +1057,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 732;
      FormatOffset: 194; FormatCount: 4;
-     IntlFormatOffset: 82; IntlFormatCount: 3),
+     IntlFormatOffset: 83; IntlFormatCount: 3),
     { EE cc=372 }
     (Id: 'EE';
      CountryCode: 372;
@@ -1073,7 +1073,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 744;
      FormatOffset: 198; FormatCount: 4;
-     IntlFormatOffset: 85; IntlFormatCount: 0),
+     IntlFormatOffset: 86; IntlFormatCount: 0),
     { EG cc=20 }
     (Id: 'EG';
      CountryCode: 20;
@@ -1089,7 +1089,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 756;
      FormatOffset: 202; FormatCount: 4;
-     IntlFormatOffset: 85; IntlFormatCount: 0),
+     IntlFormatOffset: 86; IntlFormatCount: 0),
     { EH cc=212 }
     (Id: 'EH';
      CountryCode: 212;
@@ -1105,7 +1105,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 768;
      FormatOffset: 206; FormatCount: 0;
-     IntlFormatOffset: 85; IntlFormatCount: 0),
+     IntlFormatOffset: 86; IntlFormatCount: 0),
     { ER cc=291 }
     (Id: 'ER';
      CountryCode: 291;
@@ -1121,7 +1121,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 780;
      FormatOffset: 206; FormatCount: 1;
-     IntlFormatOffset: 85; IntlFormatCount: 0),
+     IntlFormatOffset: 86; IntlFormatCount: 0),
     { ES cc=34 }
     (Id: 'ES';
      CountryCode: 34;
@@ -1137,7 +1137,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 792;
      FormatOffset: 207; FormatCount: 4;
-     IntlFormatOffset: 85; IntlFormatCount: 2),
+     IntlFormatOffset: 86; IntlFormatCount: 2),
     { ET cc=251 }
     (Id: 'ET';
      CountryCode: 251;
@@ -1153,7 +1153,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 804;
      FormatOffset: 211; FormatCount: 1;
-     IntlFormatOffset: 87; IntlFormatCount: 0),
+     IntlFormatOffset: 88; IntlFormatCount: 0),
     { FI cc=358 }
     (Id: 'FI';
      CountryCode: 358;
@@ -1169,7 +1169,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 816;
      FormatOffset: 212; FormatCount: 7;
-     IntlFormatOffset: 87; IntlFormatCount: 5),
+     IntlFormatOffset: 88; IntlFormatCount: 5),
     { FJ cc=679 }
     (Id: 'FJ';
      CountryCode: 679;
@@ -1185,7 +1185,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 828;
      FormatOffset: 219; FormatCount: 2;
-     IntlFormatOffset: 92; IntlFormatCount: 0),
+     IntlFormatOffset: 93; IntlFormatCount: 0),
     { FK cc=500 }
     (Id: 'FK';
      CountryCode: 500;
@@ -1201,7 +1201,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 840;
      FormatOffset: 221; FormatCount: 0;
-     IntlFormatOffset: 92; IntlFormatCount: 0),
+     IntlFormatOffset: 93; IntlFormatCount: 0),
     { FM cc=691 }
     (Id: 'FM';
      CountryCode: 691;
@@ -1217,7 +1217,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 852;
      FormatOffset: 221; FormatCount: 1;
-     IntlFormatOffset: 92; IntlFormatCount: 0),
+     IntlFormatOffset: 93; IntlFormatCount: 0),
     { FO cc=298 }
     (Id: 'FO';
      CountryCode: 298;
@@ -1233,7 +1233,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 864;
      FormatOffset: 222; FormatCount: 1;
-     IntlFormatOffset: 92; IntlFormatCount: 0),
+     IntlFormatOffset: 93; IntlFormatCount: 0),
     { FR cc=33 }
     (Id: 'FR';
      CountryCode: 33;
@@ -1249,7 +1249,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 876;
      FormatOffset: 223; FormatCount: 4;
-     IntlFormatOffset: 92; IntlFormatCount: 2),
+     IntlFormatOffset: 93; IntlFormatCount: 2),
     { GA cc=241 }
     (Id: 'GA';
      CountryCode: 241;
@@ -1265,7 +1265,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 888;
      FormatOffset: 227; FormatCount: 3;
-     IntlFormatOffset: 94; IntlFormatCount: 0),
+     IntlFormatOffset: 95; IntlFormatCount: 0),
     { GB cc=44 }
     (Id: 'GB';
      CountryCode: 44;
@@ -1281,7 +1281,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 900;
      FormatOffset: 230; FormatCount: 8;
-     IntlFormatOffset: 94; IntlFormatCount: 0),
+     IntlFormatOffset: 95; IntlFormatCount: 0),
     { GD cc=1 }
     (Id: 'GD';
      CountryCode: 1;
@@ -1297,7 +1297,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 912;
      FormatOffset: 238; FormatCount: 0;
-     IntlFormatOffset: 94; IntlFormatCount: 0),
+     IntlFormatOffset: 95; IntlFormatCount: 0),
     { GE cc=995 }
     (Id: 'GE';
      CountryCode: 995;
@@ -1313,7 +1313,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 924;
      FormatOffset: 238; FormatCount: 4;
-     IntlFormatOffset: 94; IntlFormatCount: 0),
+     IntlFormatOffset: 95; IntlFormatCount: 0),
     { GF cc=594 }
     (Id: 'GF';
      CountryCode: 594;
@@ -1329,7 +1329,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 936;
      FormatOffset: 242; FormatCount: 2;
-     IntlFormatOffset: 94; IntlFormatCount: 0),
+     IntlFormatOffset: 95; IntlFormatCount: 0),
     { GG cc=44 }
     (Id: 'GG';
      CountryCode: 44;
@@ -1345,7 +1345,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 948;
      FormatOffset: 244; FormatCount: 0;
-     IntlFormatOffset: 94; IntlFormatCount: 0),
+     IntlFormatOffset: 95; IntlFormatCount: 0),
     { GH cc=233 }
     (Id: 'GH';
      CountryCode: 233;
@@ -1361,7 +1361,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 960;
      FormatOffset: 244; FormatCount: 3;
-     IntlFormatOffset: 94; IntlFormatCount: 2),
+     IntlFormatOffset: 95; IntlFormatCount: 2),
     { GI cc=350 }
     (Id: 'GI';
      CountryCode: 350;
@@ -1377,7 +1377,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 972;
      FormatOffset: 247; FormatCount: 1;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { GL cc=299 }
     (Id: 'GL';
      CountryCode: 299;
@@ -1393,7 +1393,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 984;
      FormatOffset: 248; FormatCount: 1;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { GM cc=220 }
     (Id: 'GM';
      CountryCode: 220;
@@ -1409,7 +1409,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 996;
      FormatOffset: 249; FormatCount: 2;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { GN cc=224 }
     (Id: 'GN';
      CountryCode: 224;
@@ -1425,7 +1425,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1008;
      FormatOffset: 251; FormatCount: 2;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { GP cc=590 }
     (Id: 'GP';
      CountryCode: 590;
@@ -1441,7 +1441,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1020;
      FormatOffset: 253; FormatCount: 2;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { GQ cc=240 }
     (Id: 'GQ';
      CountryCode: 240;
@@ -1457,7 +1457,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1032;
      FormatOffset: 255; FormatCount: 2;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { GR cc=30 }
     (Id: 'GR';
      CountryCode: 30;
@@ -1473,7 +1473,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1044;
      FormatOffset: 257; FormatCount: 4;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { GT cc=502 }
     (Id: 'GT';
      CountryCode: 502;
@@ -1489,7 +1489,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1056;
      FormatOffset: 261; FormatCount: 2;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { GU cc=1 }
     (Id: 'GU';
      CountryCode: 1;
@@ -1505,7 +1505,7 @@ const
      SameMobileAndFixedLinePattern: True;
      DescOffset: 1068;
      FormatOffset: 263; FormatCount: 0;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { GW cc=245 }
     (Id: 'GW';
      CountryCode: 245;
@@ -1521,7 +1521,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1080;
      FormatOffset: 263; FormatCount: 2;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { GY cc=592 }
     (Id: 'GY';
      CountryCode: 592;
@@ -1537,7 +1537,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1092;
      FormatOffset: 265; FormatCount: 1;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { HK cc=852 }
     (Id: 'HK';
      CountryCode: 852;
@@ -1553,7 +1553,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1104;
      FormatOffset: 266; FormatCount: 4;
-     IntlFormatOffset: 96; IntlFormatCount: 0),
+     IntlFormatOffset: 97; IntlFormatCount: 0),
     { HN cc=504 }
     (Id: 'HN';
      CountryCode: 504;
@@ -1569,7 +1569,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1116;
      FormatOffset: 270; FormatCount: 2;
-     IntlFormatOffset: 96; IntlFormatCount: 1),
+     IntlFormatOffset: 97; IntlFormatCount: 1),
     { HR cc=385 }
     (Id: 'HR';
      CountryCode: 385;
@@ -1585,7 +1585,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1128;
      FormatOffset: 272; FormatCount: 7;
-     IntlFormatOffset: 97; IntlFormatCount: 0),
+     IntlFormatOffset: 98; IntlFormatCount: 0),
     { HT cc=509 }
     (Id: 'HT';
      CountryCode: 509;
@@ -1601,7 +1601,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1140;
      FormatOffset: 279; FormatCount: 1;
-     IntlFormatOffset: 97; IntlFormatCount: 0),
+     IntlFormatOffset: 98; IntlFormatCount: 0),
     { HU cc=36 }
     (Id: 'HU';
      CountryCode: 36;
@@ -1617,7 +1617,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1152;
      FormatOffset: 280; FormatCount: 3;
-     IntlFormatOffset: 97; IntlFormatCount: 0),
+     IntlFormatOffset: 98; IntlFormatCount: 0),
     { ID cc=62 }
     (Id: 'ID';
      CountryCode: 62;
@@ -1633,7 +1633,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1164;
      FormatOffset: 283; FormatCount: 11;
-     IntlFormatOffset: 97; IntlFormatCount: 9),
+     IntlFormatOffset: 98; IntlFormatCount: 9),
     { IE cc=353 }
     (Id: 'IE';
      CountryCode: 353;
@@ -1649,7 +1649,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1176;
      FormatOffset: 294; FormatCount: 10;
-     IntlFormatOffset: 106; IntlFormatCount: 0),
+     IntlFormatOffset: 107; IntlFormatCount: 0),
     { IL cc=972 }
     (Id: 'IL';
      CountryCode: 972;
@@ -1665,7 +1665,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1188;
      FormatOffset: 304; FormatCount: 8;
-     IntlFormatOffset: 106; IntlFormatCount: 0),
+     IntlFormatOffset: 107; IntlFormatCount: 0),
     { IM cc=44 }
     (Id: 'IM';
      CountryCode: 44;
@@ -1681,7 +1681,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1200;
      FormatOffset: 312; FormatCount: 0;
-     IntlFormatOffset: 106; IntlFormatCount: 0),
+     IntlFormatOffset: 107; IntlFormatCount: 0),
     { IN cc=91 }
     (Id: 'IN';
      CountryCode: 91;
@@ -1697,7 +1697,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1212;
      FormatOffset: 312; FormatCount: 11;
-     IntlFormatOffset: 106; IntlFormatCount: 9),
+     IntlFormatOffset: 107; IntlFormatCount: 9),
     { IO cc=246 }
     (Id: 'IO';
      CountryCode: 246;
@@ -1713,7 +1713,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1224;
      FormatOffset: 323; FormatCount: 1;
-     IntlFormatOffset: 115; IntlFormatCount: 0),
+     IntlFormatOffset: 116; IntlFormatCount: 0),
     { IQ cc=964 }
     (Id: 'IQ';
      CountryCode: 964;
@@ -1729,7 +1729,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1236;
      FormatOffset: 324; FormatCount: 3;
-     IntlFormatOffset: 115; IntlFormatCount: 0),
+     IntlFormatOffset: 116; IntlFormatCount: 0),
     { IR cc=98 }
     (Id: 'IR';
      CountryCode: 98;
@@ -1745,7 +1745,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1248;
      FormatOffset: 327; FormatCount: 4;
-     IntlFormatOffset: 115; IntlFormatCount: 0),
+     IntlFormatOffset: 116; IntlFormatCount: 0),
     { IS cc=354 }
     (Id: 'IS';
      CountryCode: 354;
@@ -1761,7 +1761,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1260;
      FormatOffset: 331; FormatCount: 2;
-     IntlFormatOffset: 115; IntlFormatCount: 0),
+     IntlFormatOffset: 116; IntlFormatCount: 0),
     { IT cc=39 }
     (Id: 'IT';
      CountryCode: 39;
@@ -1777,7 +1777,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1272;
      FormatOffset: 333; FormatCount: 12;
-     IntlFormatOffset: 115; IntlFormatCount: 10),
+     IntlFormatOffset: 116; IntlFormatCount: 10),
     { JE cc=44 }
     (Id: 'JE';
      CountryCode: 44;
@@ -1793,7 +1793,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1284;
      FormatOffset: 345; FormatCount: 0;
-     IntlFormatOffset: 125; IntlFormatCount: 0),
+     IntlFormatOffset: 126; IntlFormatCount: 0),
     { JM cc=1 }
     (Id: 'JM';
      CountryCode: 1;
@@ -1809,7 +1809,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1296;
      FormatOffset: 345; FormatCount: 0;
-     IntlFormatOffset: 125; IntlFormatCount: 0),
+     IntlFormatOffset: 126; IntlFormatCount: 0),
     { JO cc=962 }
     (Id: 'JO';
      CountryCode: 962;
@@ -1825,7 +1825,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1308;
      FormatOffset: 345; FormatCount: 4;
-     IntlFormatOffset: 125; IntlFormatCount: 0),
+     IntlFormatOffset: 126; IntlFormatCount: 0),
     { JP cc=81 }
     (Id: 'JP';
      CountryCode: 81;
@@ -1841,7 +1841,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1320;
      FormatOffset: 349; FormatCount: 16;
-     IntlFormatOffset: 125; IntlFormatCount: 8),
+     IntlFormatOffset: 126; IntlFormatCount: 8),
     { KE cc=254 }
     (Id: 'KE';
      CountryCode: 254;
@@ -1857,7 +1857,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1332;
      FormatOffset: 365; FormatCount: 3;
-     IntlFormatOffset: 133; IntlFormatCount: 0),
+     IntlFormatOffset: 134; IntlFormatCount: 0),
     { KG cc=996 }
     (Id: 'KG';
      CountryCode: 996;
@@ -1873,7 +1873,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1344;
      FormatOffset: 368; FormatCount: 3;
-     IntlFormatOffset: 133; IntlFormatCount: 0),
+     IntlFormatOffset: 134; IntlFormatCount: 0),
     { KH cc=855 }
     (Id: 'KH';
      CountryCode: 855;
@@ -1889,7 +1889,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1356;
      FormatOffset: 371; FormatCount: 2;
-     IntlFormatOffset: 133; IntlFormatCount: 0),
+     IntlFormatOffset: 134; IntlFormatCount: 0),
     { KI cc=686 }
     (Id: 'KI';
      CountryCode: 686;
@@ -1905,7 +1905,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1368;
      FormatOffset: 373; FormatCount: 0;
-     IntlFormatOffset: 133; IntlFormatCount: 0),
+     IntlFormatOffset: 134; IntlFormatCount: 0),
     { KM cc=269 }
     (Id: 'KM';
      CountryCode: 269;
@@ -1921,7 +1921,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1380;
      FormatOffset: 373; FormatCount: 1;
-     IntlFormatOffset: 133; IntlFormatCount: 0),
+     IntlFormatOffset: 134; IntlFormatCount: 0),
     { KN cc=1 }
     (Id: 'KN';
      CountryCode: 1;
@@ -1937,7 +1937,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1392;
      FormatOffset: 374; FormatCount: 0;
-     IntlFormatOffset: 133; IntlFormatCount: 0),
+     IntlFormatOffset: 134; IntlFormatCount: 0),
     { KP cc=850 }
     (Id: 'KP';
      CountryCode: 850;
@@ -1953,7 +1953,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1404;
      FormatOffset: 374; FormatCount: 3;
-     IntlFormatOffset: 133; IntlFormatCount: 0),
+     IntlFormatOffset: 134; IntlFormatCount: 0),
     { KR cc=82 }
     (Id: 'KR';
      CountryCode: 82;
@@ -1969,7 +1969,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1416;
      FormatOffset: 377; FormatCount: 11;
-     IntlFormatOffset: 133; IntlFormatCount: 7),
+     IntlFormatOffset: 134; IntlFormatCount: 7),
     { KW cc=965 }
     (Id: 'KW';
      CountryCode: 965;
@@ -1985,7 +1985,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1428;
      FormatOffset: 388; FormatCount: 2;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { KY cc=1 }
     (Id: 'KY';
      CountryCode: 1;
@@ -2001,7 +2001,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1440;
      FormatOffset: 390; FormatCount: 0;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { KZ cc=7 }
     (Id: 'KZ';
      CountryCode: 7;
@@ -2017,7 +2017,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1452;
      FormatOffset: 390; FormatCount: 0;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LA cc=856 }
     (Id: 'LA';
      CountryCode: 856;
@@ -2033,7 +2033,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1464;
      FormatOffset: 390; FormatCount: 3;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LB cc=961 }
     (Id: 'LB';
      CountryCode: 961;
@@ -2049,7 +2049,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1476;
      FormatOffset: 393; FormatCount: 2;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LC cc=1 }
     (Id: 'LC';
      CountryCode: 1;
@@ -2065,7 +2065,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1488;
      FormatOffset: 395; FormatCount: 0;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LI cc=423 }
     (Id: 'LI';
      CountryCode: 423;
@@ -2081,7 +2081,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1500;
      FormatOffset: 395; FormatCount: 4;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LK cc=94 }
     (Id: 'LK';
      CountryCode: 94;
@@ -2097,7 +2097,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1512;
      FormatOffset: 399; FormatCount: 2;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LR cc=231 }
     (Id: 'LR';
      CountryCode: 231;
@@ -2113,7 +2113,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1524;
      FormatOffset: 401; FormatCount: 3;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LS cc=266 }
     (Id: 'LS';
      CountryCode: 266;
@@ -2129,7 +2129,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1536;
      FormatOffset: 404; FormatCount: 1;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LT cc=370 }
     (Id: 'LT';
      CountryCode: 370;
@@ -2145,7 +2145,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1548;
      FormatOffset: 405; FormatCount: 4;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LU cc=352 }
     (Id: 'LU';
      CountryCode: 352;
@@ -2161,7 +2161,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1560;
      FormatOffset: 409; FormatCount: 9;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LV cc=371 }
     (Id: 'LV';
      CountryCode: 371;
@@ -2177,7 +2177,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1572;
      FormatOffset: 418; FormatCount: 1;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { LY cc=218 }
     (Id: 'LY';
      CountryCode: 218;
@@ -2193,7 +2193,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1584;
      FormatOffset: 419; FormatCount: 1;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { MA cc=212 }
     (Id: 'MA';
      CountryCode: 212;
@@ -2209,7 +2209,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1596;
      FormatOffset: 420; FormatCount: 3;
-     IntlFormatOffset: 140; IntlFormatCount: 0),
+     IntlFormatOffset: 141; IntlFormatCount: 0),
     { MC cc=377 }
     (Id: 'MC';
      CountryCode: 377;
@@ -2225,7 +2225,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1608;
      FormatOffset: 423; FormatCount: 4;
-     IntlFormatOffset: 140; IntlFormatCount: 3),
+     IntlFormatOffset: 141; IntlFormatCount: 3),
     { MD cc=373 }
     (Id: 'MD';
      CountryCode: 373;
@@ -2241,7 +2241,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1620;
      FormatOffset: 427; FormatCount: 3;
-     IntlFormatOffset: 143; IntlFormatCount: 0),
+     IntlFormatOffset: 144; IntlFormatCount: 0),
     { ME cc=382 }
     (Id: 'ME';
      CountryCode: 382;
@@ -2257,7 +2257,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1632;
      FormatOffset: 430; FormatCount: 1;
-     IntlFormatOffset: 143; IntlFormatCount: 0),
+     IntlFormatOffset: 144; IntlFormatCount: 0),
     { MF cc=590 }
     (Id: 'MF';
      CountryCode: 590;
@@ -2273,7 +2273,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1644;
      FormatOffset: 431; FormatCount: 0;
-     IntlFormatOffset: 143; IntlFormatCount: 0),
+     IntlFormatOffset: 144; IntlFormatCount: 0),
     { MG cc=261 }
     (Id: 'MG';
      CountryCode: 261;
@@ -2289,7 +2289,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1656;
      FormatOffset: 431; FormatCount: 1;
-     IntlFormatOffset: 143; IntlFormatCount: 0),
+     IntlFormatOffset: 144; IntlFormatCount: 0),
     { MH cc=692 }
     (Id: 'MH';
      CountryCode: 692;
@@ -2305,7 +2305,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1668;
      FormatOffset: 432; FormatCount: 1;
-     IntlFormatOffset: 143; IntlFormatCount: 0),
+     IntlFormatOffset: 144; IntlFormatCount: 0),
     { MK cc=389 }
     (Id: 'MK';
      CountryCode: 389;
@@ -2321,7 +2321,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1680;
      FormatOffset: 433; FormatCount: 3;
-     IntlFormatOffset: 143; IntlFormatCount: 0),
+     IntlFormatOffset: 144; IntlFormatCount: 0),
     { ML cc=223 }
     (Id: 'ML';
      CountryCode: 223;
@@ -2337,7 +2337,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1692;
      FormatOffset: 436; FormatCount: 2;
-     IntlFormatOffset: 143; IntlFormatCount: 1),
+     IntlFormatOffset: 144; IntlFormatCount: 1),
     { MM cc=95 }
     (Id: 'MM';
      CountryCode: 95;
@@ -2353,7 +2353,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1704;
      FormatOffset: 438; FormatCount: 9;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MN cc=976 }
     (Id: 'MN';
      CountryCode: 976;
@@ -2369,7 +2369,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1716;
      FormatOffset: 447; FormatCount: 5;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MO cc=853 }
     (Id: 'MO';
      CountryCode: 853;
@@ -2385,7 +2385,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1728;
      FormatOffset: 452; FormatCount: 2;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MP cc=1 }
     (Id: 'MP';
      CountryCode: 1;
@@ -2401,7 +2401,7 @@ const
      SameMobileAndFixedLinePattern: True;
      DescOffset: 1740;
      FormatOffset: 454; FormatCount: 0;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MQ cc=596 }
     (Id: 'MQ';
      CountryCode: 596;
@@ -2417,7 +2417,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1752;
      FormatOffset: 454; FormatCount: 2;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MR cc=222 }
     (Id: 'MR';
      CountryCode: 222;
@@ -2433,7 +2433,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1764;
      FormatOffset: 456; FormatCount: 1;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MS cc=1 }
     (Id: 'MS';
      CountryCode: 1;
@@ -2449,7 +2449,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1776;
      FormatOffset: 457; FormatCount: 0;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MT cc=356 }
     (Id: 'MT';
      CountryCode: 356;
@@ -2465,7 +2465,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1788;
      FormatOffset: 457; FormatCount: 1;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MU cc=230 }
     (Id: 'MU';
      CountryCode: 230;
@@ -2481,7 +2481,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1800;
      FormatOffset: 458; FormatCount: 3;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MV cc=960 }
     (Id: 'MV';
      CountryCode: 960;
@@ -2497,7 +2497,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1812;
      FormatOffset: 461; FormatCount: 2;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MW cc=265 }
     (Id: 'MW';
      CountryCode: 265;
@@ -2513,7 +2513,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1824;
      FormatOffset: 463; FormatCount: 2;
-     IntlFormatOffset: 144; IntlFormatCount: 0),
+     IntlFormatOffset: 145; IntlFormatCount: 0),
     { MX cc=52 }
     (Id: 'MX';
      CountryCode: 52;
@@ -2529,7 +2529,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1836;
      FormatOffset: 465; FormatCount: 3;
-     IntlFormatOffset: 144; IntlFormatCount: 2),
+     IntlFormatOffset: 145; IntlFormatCount: 2),
     { MY cc=60 }
     (Id: 'MY';
      CountryCode: 60;
@@ -2545,7 +2545,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1848;
      FormatOffset: 468; FormatCount: 6;
-     IntlFormatOffset: 146; IntlFormatCount: 0),
+     IntlFormatOffset: 147; IntlFormatCount: 0),
     { MZ cc=258 }
     (Id: 'MZ';
      CountryCode: 258;
@@ -2561,7 +2561,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1860;
      FormatOffset: 474; FormatCount: 2;
-     IntlFormatOffset: 146; IntlFormatCount: 0),
+     IntlFormatOffset: 147; IntlFormatCount: 0),
     { NA cc=264 }
     (Id: 'NA';
      CountryCode: 264;
@@ -2577,7 +2577,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1872;
      FormatOffset: 476; FormatCount: 4;
-     IntlFormatOffset: 146; IntlFormatCount: 0),
+     IntlFormatOffset: 147; IntlFormatCount: 0),
     { NC cc=687 }
     (Id: 'NC';
      CountryCode: 687;
@@ -2593,7 +2593,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1884;
      FormatOffset: 480; FormatCount: 2;
-     IntlFormatOffset: 146; IntlFormatCount: 1),
+     IntlFormatOffset: 147; IntlFormatCount: 1),
     { NE cc=227 }
     (Id: 'NE';
      CountryCode: 227;
@@ -2609,7 +2609,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1896;
      FormatOffset: 482; FormatCount: 2;
-     IntlFormatOffset: 147; IntlFormatCount: 0),
+     IntlFormatOffset: 148; IntlFormatCount: 0),
     { NF cc=672 }
     (Id: 'NF';
      CountryCode: 672;
@@ -2625,7 +2625,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1908;
      FormatOffset: 484; FormatCount: 2;
-     IntlFormatOffset: 147; IntlFormatCount: 0),
+     IntlFormatOffset: 148; IntlFormatCount: 0),
     { NG cc=234 }
     (Id: 'NG';
      CountryCode: 234;
@@ -2641,7 +2641,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1920;
      FormatOffset: 486; FormatCount: 5;
-     IntlFormatOffset: 147; IntlFormatCount: 0),
+     IntlFormatOffset: 148; IntlFormatCount: 0),
     { NI cc=505 }
     (Id: 'NI';
      CountryCode: 505;
@@ -2657,7 +2657,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1932;
      FormatOffset: 491; FormatCount: 1;
-     IntlFormatOffset: 147; IntlFormatCount: 0),
+     IntlFormatOffset: 148; IntlFormatCount: 0),
     { NL cc=31 }
     (Id: 'NL';
      CountryCode: 31;
@@ -2673,7 +2673,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1944;
      FormatOffset: 492; FormatCount: 9;
-     IntlFormatOffset: 147; IntlFormatCount: 6),
+     IntlFormatOffset: 148; IntlFormatCount: 6),
     { NO cc=47 }
     (Id: 'NO';
      CountryCode: 47;
@@ -2689,7 +2689,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1956;
      FormatOffset: 501; FormatCount: 2;
-     IntlFormatOffset: 153; IntlFormatCount: 0),
+     IntlFormatOffset: 154; IntlFormatCount: 0),
     { NP cc=977 }
     (Id: 'NP';
      CountryCode: 977;
@@ -2705,7 +2705,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1968;
      FormatOffset: 503; FormatCount: 4;
-     IntlFormatOffset: 153; IntlFormatCount: 3),
+     IntlFormatOffset: 154; IntlFormatCount: 3),
     { NR cc=674 }
     (Id: 'NR';
      CountryCode: 674;
@@ -2721,7 +2721,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1980;
      FormatOffset: 507; FormatCount: 1;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { NU cc=683 }
     (Id: 'NU';
      CountryCode: 683;
@@ -2737,7 +2737,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 1992;
      FormatOffset: 508; FormatCount: 1;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { NZ cc=64 }
     (Id: 'NZ';
      CountryCode: 64;
@@ -2753,7 +2753,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2004;
      FormatOffset: 509; FormatCount: 6;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { OM cc=968 }
     (Id: 'OM';
      CountryCode: 968;
@@ -2769,7 +2769,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2016;
      FormatOffset: 515; FormatCount: 3;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PA cc=507 }
     (Id: 'PA';
      CountryCode: 507;
@@ -2785,7 +2785,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2028;
      FormatOffset: 518; FormatCount: 3;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PE cc=51 }
     (Id: 'PE';
      CountryCode: 51;
@@ -2801,7 +2801,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2040;
      FormatOffset: 521; FormatCount: 4;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PF cc=689 }
     (Id: 'PF';
      CountryCode: 689;
@@ -2817,7 +2817,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2052;
      FormatOffset: 525; FormatCount: 3;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PG cc=675 }
     (Id: 'PG';
      CountryCode: 675;
@@ -2833,7 +2833,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2064;
      FormatOffset: 528; FormatCount: 2;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PH cc=63 }
     (Id: 'PH';
      CountryCode: 63;
@@ -2849,7 +2849,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2076;
      FormatOffset: 530; FormatCount: 8;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PK cc=92 }
     (Id: 'PK';
      CountryCode: 92;
@@ -2865,7 +2865,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2088;
      FormatOffset: 538; FormatCount: 8;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PL cc=48 }
     (Id: 'PL';
      CountryCode: 48;
@@ -2881,7 +2881,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2100;
      FormatOffset: 546; FormatCount: 7;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PM cc=508 }
     (Id: 'PM';
      CountryCode: 508;
@@ -2897,7 +2897,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2112;
      FormatOffset: 553; FormatCount: 3;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PR cc=1 }
     (Id: 'PR';
      CountryCode: 1;
@@ -2913,7 +2913,7 @@ const
      SameMobileAndFixedLinePattern: True;
      DescOffset: 2124;
      FormatOffset: 556; FormatCount: 0;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PS cc=970 }
     (Id: 'PS';
      CountryCode: 970;
@@ -2929,7 +2929,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2136;
      FormatOffset: 556; FormatCount: 3;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PT cc=351 }
     (Id: 'PT';
      CountryCode: 351;
@@ -2945,7 +2945,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2148;
      FormatOffset: 559; FormatCount: 2;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PW cc=680 }
     (Id: 'PW';
      CountryCode: 680;
@@ -2961,7 +2961,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2160;
      FormatOffset: 561; FormatCount: 1;
-     IntlFormatOffset: 156; IntlFormatCount: 0),
+     IntlFormatOffset: 157; IntlFormatCount: 0),
     { PY cc=595 }
     (Id: 'PY';
      CountryCode: 595;
@@ -2977,7 +2977,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2172;
      FormatOffset: 562; FormatCount: 9;
-     IntlFormatOffset: 156; IntlFormatCount: 8),
+     IntlFormatOffset: 157; IntlFormatCount: 8),
     { QA cc=974 }
     (Id: 'QA';
      CountryCode: 974;
@@ -2993,7 +2993,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2184;
      FormatOffset: 571; FormatCount: 2;
-     IntlFormatOffset: 164; IntlFormatCount: 0),
+     IntlFormatOffset: 165; IntlFormatCount: 0),
     { RE cc=262 }
     (Id: 'RE';
      CountryCode: 262;
@@ -3009,7 +3009,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2196;
      FormatOffset: 573; FormatCount: 1;
-     IntlFormatOffset: 164; IntlFormatCount: 0),
+     IntlFormatOffset: 165; IntlFormatCount: 0),
     { RO cc=40 }
     (Id: 'RO';
      CountryCode: 40;
@@ -3025,7 +3025,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2208;
      FormatOffset: 574; FormatCount: 4;
-     IntlFormatOffset: 164; IntlFormatCount: 0),
+     IntlFormatOffset: 165; IntlFormatCount: 0),
     { RS cc=381 }
     (Id: 'RS';
      CountryCode: 381;
@@ -3041,7 +3041,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2220;
      FormatOffset: 578; FormatCount: 2;
-     IntlFormatOffset: 164; IntlFormatCount: 0),
+     IntlFormatOffset: 165; IntlFormatCount: 0),
     { RU cc=7 }
     (Id: 'RU';
      CountryCode: 7;
@@ -3057,7 +3057,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2232;
      FormatOffset: 580; FormatCount: 6;
-     IntlFormatOffset: 164; IntlFormatCount: 5),
+     IntlFormatOffset: 165; IntlFormatCount: 5),
     { RW cc=250 }
     (Id: 'RW';
      CountryCode: 250;
@@ -3073,7 +3073,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2244;
      FormatOffset: 586; FormatCount: 3;
-     IntlFormatOffset: 169; IntlFormatCount: 0),
+     IntlFormatOffset: 170; IntlFormatCount: 0),
     { SA cc=966 }
     (Id: 'SA';
      CountryCode: 966;
@@ -3089,7 +3089,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2256;
      FormatOffset: 589; FormatCount: 4;
-     IntlFormatOffset: 169; IntlFormatCount: 0),
+     IntlFormatOffset: 170; IntlFormatCount: 0),
     { SB cc=677 }
     (Id: 'SB';
      CountryCode: 677;
@@ -3105,7 +3105,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2268;
      FormatOffset: 593; FormatCount: 1;
-     IntlFormatOffset: 169; IntlFormatCount: 0),
+     IntlFormatOffset: 170; IntlFormatCount: 0),
     { SC cc=248 }
     (Id: 'SC';
      CountryCode: 248;
@@ -3121,7 +3121,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2280;
      FormatOffset: 594; FormatCount: 1;
-     IntlFormatOffset: 169; IntlFormatCount: 0),
+     IntlFormatOffset: 170; IntlFormatCount: 0),
     { SD cc=249 }
     (Id: 'SD';
      CountryCode: 249;
@@ -3137,7 +3137,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2292;
      FormatOffset: 595; FormatCount: 1;
-     IntlFormatOffset: 169; IntlFormatCount: 0),
+     IntlFormatOffset: 170; IntlFormatCount: 0),
     { SE cc=46 }
     (Id: 'SE';
      CountryCode: 46;
@@ -3153,7 +3153,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2304;
      FormatOffset: 596; FormatCount: 12;
-     IntlFormatOffset: 169; IntlFormatCount: 12),
+     IntlFormatOffset: 170; IntlFormatCount: 12),
     { SG cc=65 }
     (Id: 'SG';
      CountryCode: 65;
@@ -3169,7 +3169,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2316;
      FormatOffset: 608; FormatCount: 5;
-     IntlFormatOffset: 181; IntlFormatCount: 4),
+     IntlFormatOffset: 182; IntlFormatCount: 4),
     { SH cc=290 }
     (Id: 'SH';
      CountryCode: 290;
@@ -3185,7 +3185,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2328;
      FormatOffset: 613; FormatCount: 0;
-     IntlFormatOffset: 185; IntlFormatCount: 0),
+     IntlFormatOffset: 186; IntlFormatCount: 0),
     { SI cc=386 }
     (Id: 'SI';
      CountryCode: 386;
@@ -3201,7 +3201,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2340;
      FormatOffset: 613; FormatCount: 4;
-     IntlFormatOffset: 185; IntlFormatCount: 0),
+     IntlFormatOffset: 186; IntlFormatCount: 0),
     { SJ cc=47 }
     (Id: 'SJ';
      CountryCode: 47;
@@ -3217,7 +3217,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2352;
      FormatOffset: 617; FormatCount: 0;
-     IntlFormatOffset: 185; IntlFormatCount: 0),
+     IntlFormatOffset: 186; IntlFormatCount: 0),
     { SK cc=421 }
     (Id: 'SK';
      CountryCode: 421;
@@ -3233,7 +3233,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2364;
      FormatOffset: 617; FormatCount: 6;
-     IntlFormatOffset: 185; IntlFormatCount: 5),
+     IntlFormatOffset: 186; IntlFormatCount: 5),
     { SL cc=232 }
     (Id: 'SL';
      CountryCode: 232;
@@ -3249,7 +3249,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2376;
      FormatOffset: 623; FormatCount: 1;
-     IntlFormatOffset: 190; IntlFormatCount: 0),
+     IntlFormatOffset: 191; IntlFormatCount: 0),
     { SM cc=378 }
     (Id: 'SM';
      CountryCode: 378;
@@ -3265,7 +3265,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2388;
      FormatOffset: 624; FormatCount: 3;
-     IntlFormatOffset: 190; IntlFormatCount: 2),
+     IntlFormatOffset: 191; IntlFormatCount: 2),
     { SN cc=221 }
     (Id: 'SN';
      CountryCode: 221;
@@ -3281,7 +3281,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2400;
      FormatOffset: 627; FormatCount: 2;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { SO cc=252 }
     (Id: 'SO';
      CountryCode: 252;
@@ -3297,7 +3297,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2412;
      FormatOffset: 629; FormatCount: 6;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { SR cc=597 }
     (Id: 'SR';
      CountryCode: 597;
@@ -3313,7 +3313,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2424;
      FormatOffset: 635; FormatCount: 3;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { SS cc=211 }
     (Id: 'SS';
      CountryCode: 211;
@@ -3329,7 +3329,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2436;
      FormatOffset: 638; FormatCount: 1;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { ST cc=239 }
     (Id: 'ST';
      CountryCode: 239;
@@ -3345,7 +3345,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2448;
      FormatOffset: 639; FormatCount: 1;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { SV cc=503 }
     (Id: 'SV';
      CountryCode: 503;
@@ -3361,7 +3361,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2460;
      FormatOffset: 640; FormatCount: 3;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { SX cc=1 }
     (Id: 'SX';
      CountryCode: 1;
@@ -3377,7 +3377,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2472;
      FormatOffset: 643; FormatCount: 0;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { SY cc=963 }
     (Id: 'SY';
      CountryCode: 963;
@@ -3393,7 +3393,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2484;
      FormatOffset: 643; FormatCount: 2;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { SZ cc=268 }
     (Id: 'SZ';
      CountryCode: 268;
@@ -3409,7 +3409,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2496;
      FormatOffset: 645; FormatCount: 2;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TA cc=290 }
     (Id: 'TA';
      CountryCode: 290;
@@ -3425,7 +3425,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2508;
      FormatOffset: 647; FormatCount: 0;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TC cc=1 }
     (Id: 'TC';
      CountryCode: 1;
@@ -3441,7 +3441,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2520;
      FormatOffset: 647; FormatCount: 0;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TD cc=235 }
     (Id: 'TD';
      CountryCode: 235;
@@ -3457,7 +3457,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2532;
      FormatOffset: 647; FormatCount: 1;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TG cc=228 }
     (Id: 'TG';
      CountryCode: 228;
@@ -3473,7 +3473,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2544;
      FormatOffset: 648; FormatCount: 1;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TH cc=66 }
     (Id: 'TH';
      CountryCode: 66;
@@ -3489,7 +3489,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2556;
      FormatOffset: 649; FormatCount: 3;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TJ cc=992 }
     (Id: 'TJ';
      CountryCode: 992;
@@ -3505,7 +3505,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2568;
      FormatOffset: 652; FormatCount: 4;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TK cc=690 }
     (Id: 'TK';
      CountryCode: 690;
@@ -3521,7 +3521,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2580;
      FormatOffset: 656; FormatCount: 0;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TL cc=670 }
     (Id: 'TL';
      CountryCode: 670;
@@ -3537,7 +3537,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2592;
      FormatOffset: 656; FormatCount: 2;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TM cc=993 }
     (Id: 'TM';
      CountryCode: 993;
@@ -3553,7 +3553,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2604;
      FormatOffset: 658; FormatCount: 3;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TN cc=216 }
     (Id: 'TN';
      CountryCode: 216;
@@ -3569,7 +3569,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2616;
      FormatOffset: 661; FormatCount: 1;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TO cc=676 }
     (Id: 'TO';
      CountryCode: 676;
@@ -3585,7 +3585,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2628;
      FormatOffset: 662; FormatCount: 3;
-     IntlFormatOffset: 192; IntlFormatCount: 0),
+     IntlFormatOffset: 193; IntlFormatCount: 0),
     { TR cc=90 }
     (Id: 'TR';
      CountryCode: 90;
@@ -3601,7 +3601,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2640;
      FormatOffset: 665; FormatCount: 5;
-     IntlFormatOffset: 192; IntlFormatCount: 4),
+     IntlFormatOffset: 193; IntlFormatCount: 4),
     { TT cc=1 }
     (Id: 'TT';
      CountryCode: 1;
@@ -3617,7 +3617,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2652;
      FormatOffset: 670; FormatCount: 0;
-     IntlFormatOffset: 196; IntlFormatCount: 0),
+     IntlFormatOffset: 197; IntlFormatCount: 0),
     { TV cc=688 }
     (Id: 'TV';
      CountryCode: 688;
@@ -3633,7 +3633,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2664;
      FormatOffset: 670; FormatCount: 3;
-     IntlFormatOffset: 196; IntlFormatCount: 0),
+     IntlFormatOffset: 197; IntlFormatCount: 0),
     { TW cc=886 }
     (Id: 'TW';
      CountryCode: 886;
@@ -3649,7 +3649,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2676;
      FormatOffset: 673; FormatCount: 8;
-     IntlFormatOffset: 196; IntlFormatCount: 0),
+     IntlFormatOffset: 197; IntlFormatCount: 0),
     { TZ cc=255 }
     (Id: 'TZ';
      CountryCode: 255;
@@ -3665,7 +3665,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2688;
      FormatOffset: 681; FormatCount: 4;
-     IntlFormatOffset: 196; IntlFormatCount: 0),
+     IntlFormatOffset: 197; IntlFormatCount: 0),
     { UA cc=380 }
     (Id: 'UA';
      CountryCode: 380;
@@ -3681,7 +3681,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2700;
      FormatOffset: 685; FormatCount: 4;
-     IntlFormatOffset: 196; IntlFormatCount: 0),
+     IntlFormatOffset: 197; IntlFormatCount: 0),
     { UG cc=256 }
     (Id: 'UG';
      CountryCode: 256;
@@ -3697,7 +3697,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2712;
      FormatOffset: 689; FormatCount: 3;
-     IntlFormatOffset: 196; IntlFormatCount: 0),
+     IntlFormatOffset: 197; IntlFormatCount: 0),
     { US cc=1 }
     (Id: 'US';
      CountryCode: 1;
@@ -3713,7 +3713,7 @@ const
      SameMobileAndFixedLinePattern: True;
      DescOffset: 2724;
      FormatOffset: 692; FormatCount: 3;
-     IntlFormatOffset: 196; IntlFormatCount: 2),
+     IntlFormatOffset: 197; IntlFormatCount: 2),
     { UY cc=598 }
     (Id: 'UY';
      CountryCode: 598;
@@ -3729,7 +3729,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2736;
      FormatOffset: 695; FormatCount: 7;
-     IntlFormatOffset: 198; IntlFormatCount: 0),
+     IntlFormatOffset: 199; IntlFormatCount: 0),
     { UZ cc=998 }
     (Id: 'UZ';
      CountryCode: 998;
@@ -3745,7 +3745,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2748;
      FormatOffset: 702; FormatCount: 1;
-     IntlFormatOffset: 198; IntlFormatCount: 0),
+     IntlFormatOffset: 199; IntlFormatCount: 0),
     { VA cc=39 }
     (Id: 'VA';
      CountryCode: 39;
@@ -3761,7 +3761,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2760;
      FormatOffset: 703; FormatCount: 0;
-     IntlFormatOffset: 198; IntlFormatCount: 0),
+     IntlFormatOffset: 199; IntlFormatCount: 0),
     { VC cc=1 }
     (Id: 'VC';
      CountryCode: 1;
@@ -3777,7 +3777,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2772;
      FormatOffset: 703; FormatCount: 0;
-     IntlFormatOffset: 198; IntlFormatCount: 0),
+     IntlFormatOffset: 199; IntlFormatCount: 0),
     { VE cc=58 }
     (Id: 'VE';
      CountryCode: 58;
@@ -3793,7 +3793,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2784;
      FormatOffset: 703; FormatCount: 1;
-     IntlFormatOffset: 198; IntlFormatCount: 0),
+     IntlFormatOffset: 199; IntlFormatCount: 0),
     { VG cc=1 }
     (Id: 'VG';
      CountryCode: 1;
@@ -3809,7 +3809,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2796;
      FormatOffset: 704; FormatCount: 0;
-     IntlFormatOffset: 198; IntlFormatCount: 0),
+     IntlFormatOffset: 199; IntlFormatCount: 0),
     { VI cc=1 }
     (Id: 'VI';
      CountryCode: 1;
@@ -3825,7 +3825,7 @@ const
      SameMobileAndFixedLinePattern: True;
      DescOffset: 2808;
      FormatOffset: 704; FormatCount: 0;
-     IntlFormatOffset: 198; IntlFormatCount: 0),
+     IntlFormatOffset: 199; IntlFormatCount: 0),
     { VN cc=84 }
     (Id: 'VN';
      CountryCode: 84;
@@ -3841,7 +3841,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2820;
      FormatOffset: 704; FormatCount: 7;
-     IntlFormatOffset: 198; IntlFormatCount: 5),
+     IntlFormatOffset: 199; IntlFormatCount: 5),
     { VU cc=678 }
     (Id: 'VU';
      CountryCode: 678;
@@ -3857,7 +3857,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2832;
      FormatOffset: 711; FormatCount: 1;
-     IntlFormatOffset: 203; IntlFormatCount: 0),
+     IntlFormatOffset: 204; IntlFormatCount: 0),
     { WF cc=681 }
     (Id: 'WF';
      CountryCode: 681;
@@ -3873,7 +3873,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2844;
      FormatOffset: 712; FormatCount: 2;
-     IntlFormatOffset: 203; IntlFormatCount: 0),
+     IntlFormatOffset: 204; IntlFormatCount: 0),
     { WS cc=685 }
     (Id: 'WS';
      CountryCode: 685;
@@ -3889,7 +3889,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2856;
      FormatOffset: 714; FormatCount: 3;
-     IntlFormatOffset: 203; IntlFormatCount: 0),
+     IntlFormatOffset: 204; IntlFormatCount: 0),
     { XK cc=383 }
     (Id: 'XK';
      CountryCode: 383;
@@ -3905,7 +3905,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2868;
      FormatOffset: 717; FormatCount: 4;
-     IntlFormatOffset: 203; IntlFormatCount: 0),
+     IntlFormatOffset: 204; IntlFormatCount: 0),
     { YE cc=967 }
     (Id: 'YE';
      CountryCode: 967;
@@ -3921,7 +3921,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2880;
      FormatOffset: 721; FormatCount: 2;
-     IntlFormatOffset: 203; IntlFormatCount: 0),
+     IntlFormatOffset: 204; IntlFormatCount: 0),
     { YT cc=262 }
     (Id: 'YT';
      CountryCode: 262;
@@ -3937,7 +3937,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2892;
      FormatOffset: 723; FormatCount: 0;
-     IntlFormatOffset: 203; IntlFormatCount: 0),
+     IntlFormatOffset: 204; IntlFormatCount: 0),
     { ZA cc=27 }
     (Id: 'ZA';
      CountryCode: 27;
@@ -3953,7 +3953,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2904;
      FormatOffset: 723; FormatCount: 5;
-     IntlFormatOffset: 203; IntlFormatCount: 0),
+     IntlFormatOffset: 204; IntlFormatCount: 0),
     { ZM cc=260 }
     (Id: 'ZM';
      CountryCode: 260;
@@ -3969,7 +3969,7 @@ const
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2916;
      FormatOffset: 728; FormatCount: 3;
-     IntlFormatOffset: 203; IntlFormatCount: 2),
+     IntlFormatOffset: 204; IntlFormatCount: 2),
     { ZW cc=263 }
     (Id: 'ZW';
      CountryCode: 263;
@@ -3984,8 +3984,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2928;
-     FormatOffset: 731; FormatCount: 9;
-     IntlFormatOffset: 205; IntlFormatCount: 0),
+     FormatOffset: 731; FormatCount: 6;
+     IntlFormatOffset: 206; IntlFormatCount: 0),
     { 001 cc=800 }
     (Id: '001';
      CountryCode: 800;
@@ -4000,8 +4000,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: True;
      DescOffset: 2940;
-     FormatOffset: 740; FormatCount: 1;
-     IntlFormatOffset: 205; IntlFormatCount: 0),
+     FormatOffset: 737; FormatCount: 1;
+     IntlFormatOffset: 206; IntlFormatCount: 0),
     { 001 cc=808 }
     (Id: '001';
      CountryCode: 808;
@@ -4016,8 +4016,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: True;
      DescOffset: 2952;
-     FormatOffset: 741; FormatCount: 1;
-     IntlFormatOffset: 205; IntlFormatCount: 0),
+     FormatOffset: 738; FormatCount: 1;
+     IntlFormatOffset: 206; IntlFormatCount: 0),
     { 001 cc=870 }
     (Id: '001';
      CountryCode: 870;
@@ -4032,8 +4032,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2964;
-     FormatOffset: 742; FormatCount: 1;
-     IntlFormatOffset: 205; IntlFormatCount: 0),
+     FormatOffset: 739; FormatCount: 1;
+     IntlFormatOffset: 206; IntlFormatCount: 0),
     { 001 cc=878 }
     (Id: '001';
      CountryCode: 878;
@@ -4048,8 +4048,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: True;
      DescOffset: 2976;
-     FormatOffset: 743; FormatCount: 1;
-     IntlFormatOffset: 205; IntlFormatCount: 0),
+     FormatOffset: 740; FormatCount: 1;
+     IntlFormatOffset: 206; IntlFormatCount: 0),
     { 001 cc=881 }
     (Id: '001';
      CountryCode: 881;
@@ -4064,8 +4064,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 2988;
-     FormatOffset: 744; FormatCount: 2;
-     IntlFormatOffset: 205; IntlFormatCount: 0),
+     FormatOffset: 741; FormatCount: 2;
+     IntlFormatOffset: 206; IntlFormatCount: 0),
     { 001 cc=882 }
     (Id: '001';
      CountryCode: 882;
@@ -4080,8 +4080,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: False;
      DescOffset: 3000;
-     FormatOffset: 746; FormatCount: 8;
-     IntlFormatOffset: 205; IntlFormatCount: 0),
+     FormatOffset: 743; FormatCount: 8;
+     IntlFormatOffset: 206; IntlFormatCount: 0),
     { 001 cc=883 }
     (Id: '001';
      CountryCode: 883;
@@ -4096,8 +4096,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: True;
      DescOffset: 3012;
-     FormatOffset: 754; FormatCount: 5;
-     IntlFormatOffset: 205; IntlFormatCount: 0),
+     FormatOffset: 751; FormatCount: 5;
+     IntlFormatOffset: 206; IntlFormatCount: 0),
     { 001 cc=888 }
     (Id: '001';
      CountryCode: 888;
@@ -4112,8 +4112,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: True;
      DescOffset: 3024;
-     FormatOffset: 759; FormatCount: 1;
-     IntlFormatOffset: 205; IntlFormatCount: 0),
+     FormatOffset: 756; FormatCount: 1;
+     IntlFormatOffset: 206; IntlFormatCount: 0),
     { 001 cc=979 }
     (Id: '001';
      CountryCode: 979;
@@ -4128,8 +4128,8 @@ const
      MobileNumberPortableRegion: False;
      SameMobileAndFixedLinePattern: True;
      DescOffset: 3036;
-     FormatOffset: 760; FormatCount: 1;
-     IntlFormatOffset: 205; IntlFormatCount: 0)
+     FormatOffset: 757; FormatCount: 1;
+     IntlFormatOffset: 206; IntlFormatCount: 0)
   );
 
   { Territory indices of the geographical regions, sorted by ordinal region code. }

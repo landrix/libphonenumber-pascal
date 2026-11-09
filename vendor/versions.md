@@ -1,12 +1,12 @@
 libphonenumber-csharp
 
-    https://github.com/twcclegg/libphonenumber-csharp/commit/dcaee5a42ab993d26a4bac47ef1cac4f1150ade2
+    https://github.com/twcclegg/libphonenumber-csharp/commit/b1d2be7422defe0ccf125eecac389f42e12f6d1b
 
 libphonenumber
 
-    https://github.com/google/libphonenumber/commit/8d8d75272c351b60b87163db5328e439c53a6b56
+    https://github.com/google/libphonenumber/commit/86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7
 
 reference oracle (NuGet package used by tools/generate_reference_cases.ps1)
 
-    https://www.nuget.org/packages/libphonenumber-csharp/9.0.42
+    https://www.nuget.org/packages/libphonenumber-csharp/9.0.43
 

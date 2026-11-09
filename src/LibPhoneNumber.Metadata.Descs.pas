@@ -6,7 +6,7 @@ unit LibPhoneNumber.Metadata.Descs;
   Phone number descriptions (patterns, example numbers, possible length slices) for every territory and number type.
 
   Source:    vendor/libphonenumber/resources/PhoneNumberMetadata.xml
-  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
+  Commit:    86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7
   Generator: tools/generate_metadata.ps1 (metadata-v1)
 
   Regenerate with:
@@ -1820,21 +1820,21 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BJ generalDesc }
     (HasData: True;
-     NationalNumberPattern: '(?:01\d|8)\d{7}';
+     NationalNumberPattern: '01\d{8}';
      ExampleNumber: '';
-     LengthOffset: 114; LengthCount: 2;
+     LengthOffset: 21; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BJ fixedLine }
     (HasData: True;
      NationalNumberPattern: '012\d{7}';
      ExampleNumber: '0120211234';
-     LengthOffset: 21; LengthCount: 1;
+     LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BJ mobile }
     (HasData: True;
      NationalNumberPattern: '01(?:2[5-9]|[4-69]\d)\d{6}';
      ExampleNumber: '0195123456';
-     LengthOffset: 21; LengthCount: 1;
+     LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BJ tollFree }
     (HasData: False;
@@ -1861,10 +1861,10 @@ const
      LengthOffset: 3; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BJ voip }
-    (HasData: True;
-     NationalNumberPattern: '857[58]\d{4}';
-     ExampleNumber: '85751234';
-     LengthOffset: 10; LengthCount: 1;
+    (HasData: False;
+     NationalNumberPattern: '';
+     ExampleNumber: '';
+     LengthOffset: 3; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BJ pager }
     (HasData: False;
@@ -1873,10 +1873,10 @@ const
      LengthOffset: 3; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BJ uan }
-    (HasData: True;
-     NationalNumberPattern: '81\d{6}';
-     ExampleNumber: '81123456';
-     LengthOffset: 10; LengthCount: 1;
+    (HasData: False;
+     NationalNumberPattern: '';
+     ExampleNumber: '';
+     LengthOffset: 3; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BJ voicemail }
     (HasData: False;
@@ -2258,7 +2258,7 @@ const
     (HasData: True;
      NationalNumberPattern: '[1-467]\d{9,10}|55[0-46-9]\d{8}|[34]\d{7}|55\d{7,8}|(?:5[0-46-9]|[89]\d)\d{7,9}';
      ExampleNumber: '';
-     LengthOffset: 116; LengthCount: 4;
+     LengthOffset: 114; LengthCount: 4;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BR fixedLine }
     (HasData: True;
@@ -2276,19 +2276,19 @@ const
     (HasData: True;
      NationalNumberPattern: '800\d{6,7}';
      ExampleNumber: '800123456';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BR premiumRate }
     (HasData: True;
      NationalNumberPattern: '[59]00\d{6,7}';
      ExampleNumber: '500123456';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BR sharedCost }
     (HasData: True;
      NationalNumberPattern: '(?:30[03]\d{3}|4(?:0(?:0\d|20)|370|864))\d{4}|300\d{5}';
      ExampleNumber: '40041234';
-     LengthOffset: 114; LengthCount: 2;
+     LengthOffset: 120; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { BR personalNumber }
     (HasData: False;
@@ -3524,7 +3524,7 @@ const
     (HasData: True;
      NationalNumberPattern: '601055(?:[0-4]\d|50)\d\d|6010(?:[0-4]\d|5[0-4])\d{4}|(?:46|60(?:[18][1-9]|[24-7][2-9]))\d{6}';
      ExampleNumber: '6012345678';
-     LengthOffset: 114; LengthCount: 2;
+     LengthOffset: 120; LengthCount: 2;
      LocalOnlyOffset: 178; LocalOnlyCount: 2),
     { CO mobile }
     (HasData: True;
@@ -3591,7 +3591,7 @@ const
     (HasData: True;
      NationalNumberPattern: '(?:8\d|90)\d{8}|(?:[24-8]\d{3}|3005)\d{4}';
      ExampleNumber: '';
-     LengthOffset: 114; LengthCount: 2;
+     LengthOffset: 120; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { CR fixedLine }
     (HasData: True;
@@ -4113,7 +4113,7 @@ const
      LocalOnlyOffset: 213; LocalOnlyCount: 3),
     { DE mobile }
     (HasData: True;
-     NationalNumberPattern: '1(?:6[023]|7\d)\d{7,8}|15(?:[0-25-9]\d\d|3(?:10|33))\d{6}';
+     NationalNumberPattern: '1(?:6[023]|7\d)\d{7,8}|15(?:[0-25-9]\d\d|3(?:10|33)|410)\d{6}';
      ExampleNumber: '15123456789';
      LengthOffset: 29; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -4546,7 +4546,7 @@ const
     (HasData: True;
      NationalNumberPattern: '1\d{9,10}|(?:[2-7]|9\d)\d{7}';
      ExampleNumber: '';
-     LengthOffset: 116; LengthCount: 4;
+     LengthOffset: 114; LengthCount: 4;
      LocalOnlyOffset: 19; LocalOnlyCount: 1),
     { EC fixedLine }
     (HasData: True;
@@ -4556,7 +4556,7 @@ const
      LocalOnlyOffset: 19; LocalOnlyCount: 1),
     { EC mobile }
     (HasData: True;
-     NationalNumberPattern: '964[0-2]\d{5}|9(?:39|[57][89]|6[0-36-9]|[89]\d)\d{6}';
+     NationalNumberPattern: '964[0-2]\d{5}|9(?:3[0-29]|[57][89]|6[0-36-9]|[89]\d)\d{6}';
      ExampleNumber: '991234567';
      LengthOffset: 20; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -4996,7 +4996,7 @@ const
      LocalOnlyOffset: 19; LocalOnlyCount: 1),
     { ET mobile }
     (HasData: True;
-     NationalNumberPattern: '700[1-9]\d{5}|(?:7(?:0[1-9]|1[0-8]|2[1-35-79]|3\d|77|86|99)|(?:8[01]|9\d)\d)\d{6}';
+     NationalNumberPattern: '(?:7(?:[03]\d|1[0-8]|2[1-35-79]|77|86|99)|(?:8[01]|9\d)\d)\d{6}';
      ExampleNumber: '911234567';
      LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -5584,7 +5584,7 @@ const
        '[13-9]|7[0-7])|(?:442|688)\d|50(?:2[0-3]|[3-68]2|76))|8(?:27[56]\d|37(?:5[2-5]|8[239])|843[2-58]' +
        ')|9(?:0(?:0(?:6[1-8]|85)|52\d)|3583|4(?:66[1-8]|9(?:2[01]|81))|63(?:23|3[1-4])|9561))\d{3}';
      ExampleNumber: '1212345678';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 259; LocalOnlyCount: 5),
     { GB mobile }
     (HasData: True;
@@ -5740,9 +5740,9 @@ const
      NationalNumberPattern: '5(?:(?:(?:0555|1(?:[17]77|555))[5-9]|757(?:7[7-9]|8[01]))\d|22252[0-4])\d\d|5(?:0(?:0(?:1[09]|70' +
        ')|505)|1(?:0[01]0|1(?:07|33|51))|2(?:0[02]0|2[25]2)|3(?:0[03]0|3[35]3)|4(?:0[04]0|411)|5222|9000' +
        ')[0-4]\d{3}|(?:5(?:0(?:0(?:0\d|1[12]|2[02]|3[0-6]|4[04]|5[05]|77|88|9[09])|(?:[14]\d|77)\d|22[02' +
-       '])|1(?:1(?:[03][01]|[124]\d|5[02-6]|7[0-6])|4\d\d)|2(?:228|555)|3555|4(?:4(?:[02-9]\d|14)|555)|5' +
-       '(?:[0157-9]\d\d|200|333|4(?:44|55))|6[89]\d\d|7(?:(?:[0147-9]\d|22)\d|5(?:00|[57]5))|8(?:0(?:[01' +
-       '8]\d|2[0-4])|5(?:55|8[89])|8(?:55|88))|9(?:090|[1-35-9]\d\d))|790\d\d)\d{4}';
+       ']|888)|1(?:1(?:[03][01]|[124]\d|5[02-6]|7[0-6])|4\d\d)|2(?:228|555)|3555|4(?:4(?:[02-9]\d|14)|55' +
+       '5)|5(?:[0157-9]\d\d|200|333|4(?:44|55))|6[89]\d\d|7(?:(?:[0147-9]\d|22)\d|5(?:00|[57]5))|8(?:0(?' +
+       ':[018]\d|2[0-4])|5(?:55|8[89])|8(?:55|88))|9(?:090|[1-35-9]\d\d))|790\d\d)\d{4}';
      ExampleNumber: '555123456';
      LengthOffset: 0; LengthCount: 0;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -7371,7 +7371,7 @@ const
     (HasData: True;
      NationalNumberPattern: '1212\d{4}|1(?:200|9(?:0[0-2]|19|9\d))\d{6}';
      ExampleNumber: '1919123456';
-     LengthOffset: 114; LengthCount: 2;
+     LengthOffset: 120; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { IL sharedCost }
     (HasData: True;
@@ -7895,7 +7895,7 @@ const
     (HasData: True;
      NationalNumberPattern: '3[2-9]\d{7,8}|(?:31|43)\d{8}';
      ExampleNumber: '3123456789';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { IT tollFree }
     (HasData: True;
@@ -7920,7 +7920,7 @@ const
     (HasData: True;
      NationalNumberPattern: '1(?:78\d|99)\d{6}';
      ExampleNumber: '1781234567';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { IT voip }
     (HasData: True;
@@ -8275,7 +8275,7 @@ const
     (HasData: True;
      NationalNumberPattern: '800[02-8]\d{5,6}';
      ExampleNumber: '800223456';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { KE premiumRate }
     (HasData: True;
@@ -8329,7 +8329,7 @@ const
     (HasData: True;
      NationalNumberPattern: '8\d{9}|[235-9]\d{8}';
      ExampleNumber: '';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 2),
     { KG fixedLine }
     (HasData: True;
@@ -8699,7 +8699,7 @@ const
     (HasData: True;
      NationalNumberPattern: '85\d{6}|(?:19\d|[2-7])\d{7}';
      ExampleNumber: '';
-     LengthOffset: 114; LengthCount: 2;
+     LengthOffset: 120; LengthCount: 2;
      LocalOnlyOffset: 250; LocalOnlyCount: 2),
     { KP fixedLine }
     (HasData: True;
@@ -8783,7 +8783,7 @@ const
     (HasData: True;
      NationalNumberPattern: '1(?:05(?:[0-8]\d|9[0-6])|22[13]\d)\d{4,5}|1(?:0[0-46-9]|[16-9]\d|2[013-9])\d{6,7}';
      ExampleNumber: '1020000000';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { KR tollFree }
     (HasData: True;
@@ -8819,7 +8819,7 @@ const
     (HasData: True;
      NationalNumberPattern: '15\d{7,8}';
      ExampleNumber: '1523456789';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { KR uan }
     (HasData: True;
@@ -9067,7 +9067,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { LA generalDesc }
     (HasData: True;
-     NationalNumberPattern: '[23]\d{9}|3\d{8}|(?:[235-8]\d|41)\d{6}';
+     NationalNumberPattern: '(?:2\d|3)\d{8}|(?:[235-8]\d|41)\d{6}';
      ExampleNumber: '';
      LengthOffset: 122; LengthCount: 3;
      LocalOnlyOffset: 4; LocalOnlyCount: 1),
@@ -9079,9 +9079,9 @@ const
      LocalOnlyOffset: 4; LocalOnlyCount: 1),
     { LA mobile }
     (HasData: True;
-     NationalNumberPattern: '(?:20(?:[23579]\d|8[78])|30[24]\d)\d{6}|30\d{7}';
+     NationalNumberPattern: '208[78]\d{6}|(?:20[23579]|30)\d{7}';
      ExampleNumber: '2023123456';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { LA tollFree }
     (HasData: False;
@@ -11427,7 +11427,7 @@ const
        '])|1(?:[1-5]\d\d|6(?:0[5-9]|[1-9]\d)|7(?:[0-4]\d|5[0-79]|6[02-4]|8[02-5]))|(?:[26]\d|[37][1-9]|4' +
        '[235-9])\d|5(?:31|9\d\d)|8(?:1[23]|[236]\d|4[06]|5(?:46|[7-9])|7[016-9]|8[01]|9[0-8]))\d{5}';
      ExampleNumber: '123456789';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { MY tollFree }
     (HasData: True;
@@ -12878,7 +12878,7 @@ const
        '(?:2(?:3[2358]|4[2-4]|9[2-8])|45[3479]|54[2-467]|60[468]|72[236]|8(?:2[2-689]|3[23578]|4[3478]|5' +
        '[2356])|9(?:2[2-8]|3[27-9]|4[2-6]|6[3569]|9[25-8]))[2-9]\d{5,6}';
      ExampleNumber: '2123456789';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 429; LocalOnlyCount: 4),
     { PK mobile }
     (HasData: True;
@@ -12965,7 +12965,7 @@ const
     (HasData: True;
      NationalNumberPattern: '800\d{6,7}';
      ExampleNumber: '800123456';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { PL premiumRate }
     (HasData: True;
@@ -13599,7 +13599,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { RO generalDesc }
     (HasData: True;
-     NationalNumberPattern: '(?:[236-8]\d|90)\d{7}|[23]\d{5}';
+     NationalNumberPattern: '(?:[2378]\d|90)\d{7}|[23]\d{5}';
      ExampleNumber: '';
      LengthOffset: 8; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -13611,7 +13611,7 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { RO mobile }
     (HasData: True;
-     NationalNumberPattern: '(?:630|702)0\d{5}|(?:6(?:00|2\d)|7(?:0[013-9]|1[0-3]|[2-7]\d|8[03-8]|9[0-39]))\d{6}';
+     NationalNumberPattern: '7020\d{5}|7(?:0[013-9]|1[0-3]|[2-7]\d|8[03-8]|9[0-39])\d{6}';
      ExampleNumber: '712034567';
      LengthOffset: 20; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -13890,7 +13890,7 @@ const
     (HasData: True;
      NationalNumberPattern: '(?:[15]\d|800|92)\d{7}';
      ExampleNumber: '';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 19; LocalOnlyCount: 1),
     { SA fixedLine }
     (HasData: True;
@@ -14687,7 +14687,7 @@ const
     (HasData: True;
      NationalNumberPattern: '(?:0549|[5-7]\d)\d{6}';
      ExampleNumber: '';
-     LengthOffset: 114; LengthCount: 2;
+     LengthOffset: 120; LengthCount: 2;
      LocalOnlyOffset: 4; LocalOnlyCount: 1),
     { SM fixedLine }
     (HasData: True;
@@ -16573,7 +16573,7 @@ const
     (HasData: True;
      NationalNumberPattern: '[89]\d{9}|[3-9]\d{8}';
      ExampleNumber: '';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 26; LocalOnlyCount: 3),
     { UA fixedLine }
     (HasData: True;
@@ -16972,7 +16972,7 @@ const
     (HasData: True;
      NationalNumberPattern: '3[1-9]\d{8}|3[2-9]\d{7}';
      ExampleNumber: '3123456789';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { VA tollFree }
     (HasData: True;
@@ -16997,7 +16997,7 @@ const
     (HasData: True;
      NationalNumberPattern: '1(?:78\d|99)\d{6}';
      ExampleNumber: '1781234567';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { VA voip }
     (HasData: True;
@@ -17890,7 +17890,7 @@ const
     (HasData: True;
      NationalNumberPattern: '861\d{6,7}';
      ExampleNumber: '861123456';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { ZA voicemail }
     (HasData: False;
@@ -17978,21 +17978,20 @@ const
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { ZW generalDesc }
     (HasData: True;
-     NationalNumberPattern: '(?:13|8\d{4})\d{5}|[235-8]\d{8}|[23568]\d{6}';
+     NationalNumberPattern: '8\d{6}(?:\d{3})?|[235-8]\d{8}';
      ExampleNumber: '';
      LengthOffset: 252; LengthCount: 3;
-     LocalOnlyOffset: 481; LocalOnlyCount: 4),
+     LocalOnlyOffset: 4; LocalOnlyCount: 1),
     { ZW fixedLine }
     (HasData: True;
-     NationalNumberPattern: '(?:(?:(?:13|6(?:[16-8]21|52[013])|8(?:[1349]28|523))\d|3(?:(?:123|92\d)\d|7[56]))\d|2(?:(?:(?:02' +
-       '[014]|[56]20|72[03]|9\d\d)\d|4(?:2\d\d|8))\d|2(?:[278]\d|92))|5(?:4(?:2\d{3}|83)|525\d\d))\d{3}|' +
-       '(?:2(?:(?:0\d|7[1-7])\d|583)|(?:55|6[78])\d\d)\d{3}';
-     ExampleNumber: '1312345';
-     LengthOffset: 149; LengthCount: 2;
-     LocalOnlyOffset: 481; LocalOnlyCount: 4),
+     NationalNumberPattern: '(?:2(?:02[014]|(?:42|9\d)\d|[56]20|72[03])|3(?:123|92\d)|5(?:42\d|525)|6(?:[16-8]21|52[013])|8(?' +
+       ':[1349]28|523))\d{5}';
+     ExampleNumber: '202012345';
+     LengthOffset: 20; LengthCount: 1;
+     LocalOnlyOffset: 250; LocalOnlyCount: 2),
     { ZW mobile }
     (HasData: True;
-     NationalNumberPattern: '7(?:[1278]\d|3[1-9]|9[01])\d{6}';
+     NationalNumberPattern: '7(?:[1278]\d|3[1-9]|51|9[01])\d{6}';
      ExampleNumber: '712345678';
      LengthOffset: 20; LengthCount: 1;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
@@ -18342,7 +18341,7 @@ const
     (HasData: True;
      NationalNumberPattern: '6\d{9}|[0-36-9]\d{8}';
      ExampleNumber: '';
-     LengthOffset: 120; LengthCount: 2;
+     LengthOffset: 118; LengthCount: 2;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { 001 fixedLine }
     (HasData: False;
@@ -18426,7 +18425,7 @@ const
     (HasData: True;
      NationalNumberPattern: '342\d{4}|(?:337|49)\d{6}|(?:3(?:2|47|7\d{3})|5(?:0\d{3}|2[0-2]))\d{7}';
      ExampleNumber: '3421234';
-     LengthOffset: 485; LengthCount: 5;
+     LengthOffset: 481; LengthCount: 5;
      LocalOnlyOffset: 0; LocalOnlyCount: 0),
     { 001 tollFree }
     (HasData: False;

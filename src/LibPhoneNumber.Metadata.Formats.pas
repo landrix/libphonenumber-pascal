@@ -6,7 +6,7 @@ unit LibPhoneNumber.Metadata.Formats;
   Number format tables (national and international) plus the shared leadingDigits pattern pool.
 
   Source:    vendor/libphonenumber/resources/PhoneNumberMetadata.xml
-  Commit:    8d8d75272c351b60b87163db5328e439c53a6b56
+  Commit:    86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7
   Generator: tools/generate_metadata.ps1 (metadata-v1)
 
   Regenerate with:
@@ -26,11 +26,11 @@ uses
   LibPhoneNumber.Metadata.Types;
 
 const
-  PhoneMetadataNumberFormatCount = 761;
-  PhoneMetadataIntlNumberFormatCount = 205;
-  PhoneMetadataLeadingDigitsCount = 575;
+  PhoneMetadataNumberFormatCount = 758;
+  PhoneMetadataIntlNumberFormatCount = 206;
+  PhoneMetadataLeadingDigitsCount = 569;
 
-  PhoneMetadataLeadingDigits: array[0..574] of string = (
+  PhoneMetadataLeadingDigits: array[0..568] of string = (
     '[135-9]',
     '1',
     '6',
@@ -167,6 +167,25 @@ const
     '1(?:00|2(?:1|395))|9[56]',
     '[1-9]12',
     '[1-9]123',
+    '101',
+    '1010',
+    '10100',
+    '(?:10|2[0-57-9])[19]|3(?:[15]|35|49|9[1-68])|4(?:1[125-9]|2[179]|[35][1-9]|6[47-9]|7|8[23])|5(?:' +
+       '[1357]|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-35]|6[0238]|9[12])|7(?:01|[1579]|2[248]|3[014-9]|4' +
+       '[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]|5[14-9]|8[36-8]|9[1-8])|9(?:0[1-3689]|1[1-79]|3|4[13]|' +
+       '5[1-5]|9[0-35-9])|[39]7[0-79]',
+    '10(?:12|9[56])|2[0-57-9](?:1[02]|9[56])|(?:3(?:[15]\d|35|49|7[0-79]|9[1-68])|4(?:1[125-9]|2[179]' +
+       '|[35][1-9]|6[47-9]|7\d|8[23])|5(?:[1357]\d|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-35]|6[0238]|9[' +
+       '12])|7(?:01|[1579]\d|2[248]|3[014-9]|4[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]\d|5[14-9]|8[36-8' +
+       ']|9[1-8])|9(?:0[1-3689]|1[1-79]|3\d|4[13]|5[1-5]|7[0-79]|9[0-35-9]))1',
+    '10(?:123|9[56])|2[0-57-9](?:1(?:00|23)|9[56])|(?:3(?:[15]\d|35|49|7[0-79]|9[1-68])|4(?:1[125-9]|' +
+       '2[179]|[35][1-9]|6[47-9]|7\d|8[23])|5(?:[1357]\d|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-35]|6[02' +
+       '38]|9[12])|7(?:01|[1579]\d|2[248]|3[014-9]|4[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]\d|5[14-9]|' +
+       '8[36-8]|9[1-8])|9(?:0[1-3689]|1[1-79]|3\d|4[13]|5[1-5]|7[0-79]|9[0-35-9]))12',
+    '10(?:123|9[56])|2[0-57-9](?:1(?:00|23)|9[56])|(?:3(?:[15]\d|35|49|7[0-79]|9[1-68])|4(?:1[125-9]|' +
+       '2[179]|[35][1-9]|6[47-9]|7\d|8[23])|5(?:[1357]\d|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-35]|6[02' +
+       '38]|9[12])|7(?:01|[1579]\d|2[248]|3[014-9]|4[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]\d|5[14-9]|' +
+       '8[36-8]|9[1-8])|9(?:0[1-3689]|1[1-79]|3\d|4[13]|5[1-5]|7[0-79]|9[0-35-9]))123',
     '[1-9]',
     '1[1-9]|26|[3-9]|(?:10|2[0-57-9])(?:[0-8]|9[0-47-9])',
     '1[1-9]|26|[3-9]|(?:10|2[0-57-9])(?:[02-8]|1(?:0[1-9]|[13-9]|2[0-24-9])|9[0-47-9])',
@@ -199,40 +218,6 @@ const
        '\d|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-35]|6[0238]|9[12])|7(?:01|[1579]\d|2[248]|3[014-9]|4[3' +
        '-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]\d|5[14-9]|8[36-8]|9[1-8])|9(?:0[1-3689]|1[1-79]|[379]\d|' +
        '4[13]|5[1-5]))(?:100|9[56])',
-    '[48]00',
-    '10|2(?:[02-57-9]|1[1-9])',
-    '10|2(?:[02-57-9]|1[1-9])',
-    '10[02-79]|2(?:[02-57-9]|1[2-79])|(?:10|21)[18](?:0[1-9]|[1-9])',
-    '3(?:35|49|5|7[02-6]|9[1-68])|4(?:1[25-9]|2[179]|3[3-9]|5[2-9]|6[47-9]|7|8[23])|5(?:3[03-9]|4[36]' +
-       '|6[1-46]|7[028]|80|9[2-46-9])|6(?:3[1-35]|6[0238]|9[12])|7(?:01|[17]|2[248]|3[04-9]|4[3-6]|5[0-4' +
-       '689]|6[2368])|8(?:1[236-8]|2[5-7]|3|5[14-9]|8[36-8]|9[1-7])|9(?:0[1-3689]|1[1-79]|[379]|4[13]|5[' +
-       '1-5])|(?:31|55|79|87)[02-9]',
-    '950',
-    '37[179]|43[1-35]|5(?:1|2[37]|3[12]|7[13-79]|9[15])|7(?:5[457]|6[09])|898|(?:31|4[15]|55|7[39]|8[' +
-       '57])1',
-    '1(?:[38]|4[57]|[59][0-35-9]|6[125-7]|7[0-8])',
-    '1(?:[38]|4[57]|[59][0-35-9]|6[25-7]|7[0-35-8])|1(?:61|74)0',
-    '1(?:[38]|4[57]|[59][0-35-9]|6(?:10|[25-7])|7(?:[0-35-8]|40[0-5]))',
-    '106',
-    '(?:10|21)8',
-    '(?:10|21)80',
-    '(?:10|21)800',
-    '(?:10|2[0-57-9])[19]|3(?:[15]|35|49|9[1-68])|4(?:1[125-9]|2[179]|[35][1-9]|6[47-9]|7|8[23])|5(?:' +
-       '[1357]|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-35]|6[0238]|9[12])|7(?:01|[1579]|2[248]|3[014-9]|4' +
-       '[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]|5[14-9]|8[36-8]|9[1-8])|9(?:0[1-3689]|1[1-79]|3|4[13]|' +
-       '5[1-5]|9[0-35-9])|[39]7[0-79]',
-    '(?:10|2[0-57-9])(?:1[02]|9[56])|(?:3(?:[15]\d|35|49|7[0-79]|9[1-68])|4(?:1[125-9]|2[179]|[35][1-' +
-       '9]|6[47-9]|7\d|8[23])|5(?:[1357]\d|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-35]|6[0238]|9[12])|7(?' +
-       ':01|[1579]\d|2[248]|3[014-9]|4[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]\d|5[14-9]|8[36-8]|9[1-8]' +
-       ')|9(?:0[1-3689]|1[1-79]|3\d|4[13]|5[1-5]|7[0-79]|9[0-35-9]))1',
-    '(?:10|2[0-57-9])(?:1(?:00|23)|9[56])|(?:3(?:[15]\d|35|49|7[0-79]|9[1-68])|4(?:1[125-9]|2[179]|[3' +
-       '5][1-9]|6[47-9]|7\d|8[23])|5(?:[1357]\d|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-35]|6[0238]|9[12]' +
-       ')|7(?:01|[1579]\d|2[248]|3[014-9]|4[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]\d|5[14-9]|8[36-8]|9' +
-       '[1-8])|9(?:0[1-3689]|1[1-79]|3\d|4[13]|5[1-5]|7[0-79]|9[0-35-9]))12',
-    '(?:10|2[0-57-9])(?:1(?:00|23)|9[56])|(?:3(?:[15]\d|35|49|7[0-79]|9[1-68])|4(?:1[125-9]|2[179]|[3' +
-       '5][1-9]|6[47-9]|7\d|8[23])|5(?:[1357]\d|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-35]|6[0238]|9[12]' +
-       ')|7(?:01|[1579]\d|2[248]|3[014-9]|4[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]\d|5[14-9]|8[36-8]|9' +
-       '[1-8])|9(?:0[1-3689]|1[1-79]|3\d|4[13]|5[1-5]|7[0-79]|9[0-35-9]))123',
     '[1-9]',
     '1(?:0(?:[02-578]|1[1-9]|6[013-579]|9[0-47-9])|[1-9])|2(?:[0-57-9](?:[0-8]|9[0-47-9])|6)|[3-9]',
     '1(?:0(?:[02-578]|1[1-9]|6(?:[01457]|[39][5-8])|9[0-47-9])|[1-9])|26|3(?:[0268]|3[0-46-9]|4[0-8]|' +
@@ -251,6 +236,17 @@ const
        ']|[35][1-9]|6[47-9]|7\d|8[23])|5(?:[1357]\d|2[37]|4[36]|6[1-46]|80|9[1-9])|6(?:3[1-35]|6[0238]|9' +
        '[12])|7(?:01|[1579]\d|2[248]|3[014-9]|4[3-6]|6[023689])|8(?:1[236-8]|2[5-7]|[37]\d|5[14-9]|8[36-' +
        '8]|9[1-8])|9(?:0[1-3689]|1[1-79]|[379]\d|4[13]|5[1-5]))(?:[02-8]|1(?:0[1-9]|[1-9])|9[0-47-9])',
+    '[48]0',
+    '10|2(?:[02-57-9]|1[1-9])',
+    '10|2(?:[02-57-9]|1[1-9])',
+    '10[0-79]|2(?:[02-57-9]|1[1-79])|(?:10|21)8(?:0[1-9]|[1-9])',
+    '3(?:[3-59]|7[02-6])|4(?:1[25-9]|[26-8]|3[3-9]|5[2-9])|5(?:3[03-9]|[468]|7[028]|9[2-46-9])|6|7(?:' +
+       '[0-247]|3[04-9]|5[0-4689]|6[2368])|8(?:[1-358]|9[1-7])|9(?:[013479]|5[1-5])|(?:31|55|79|87)[02-9' +
+       ']',
+    '[3-578]',
+    '1[3-9]',
+    '106',
+    '[12]',
     '46',
     '6|90',
     '3[0-357]|94',
@@ -287,8 +283,8 @@ const
     '18500',
     '18[68]',
     '15[1279]',
-    '15[03568]',
-    '15(?:[0568]|3[13])',
+    '15[03-68]',
+    '15(?:[0568]|3[13]|41)',
     '18',
     '1(?:6[023]|7)',
     '15[279]',
@@ -522,7 +518,6 @@ const
     '[12]2[1-3]',
     '[12](?:27|3[2-8]|4[2-68]|5[1-4689])',
     '[12](?:27|3[2-8]|4[2-68]|5[1-4689])[0-3]',
-    '[12]',
     '[268]',
     '[5-79]|8(?:0[6-9]|[36])',
     '[2-48]',
@@ -701,9 +696,6 @@ const
     '860',
     '[28]',
     '[579]',
-    '1|2(?:0[0-36-9]|29|58)|67[0-46-9]|(?:55|68)[0-69]',
-    '2(?:0[45]|[27]|48)|37|675|(?:55|68)[78]',
-    '548',
     '29[013-9]',
     '[256]|39|8[13-59]',
     '[235-7]',
@@ -721,7 +713,7 @@ const
     '[1359]'
   );
 
-  PhoneMetadataNumberFormats: array[0..760] of TNumberFormatRec = (
+  PhoneMetadataNumberFormats: array[0..757] of TNumberFormatRec = (
     { AD }
     (Pattern: '(\d{3})(\d{3})';
      Format: '$1 $2';
@@ -1434,15 +1426,6 @@ const
      IntlFormatKind: ifkInheritedFromNational;
      IntlFormat: ''),
     { BJ }
-    (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
-     Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 33; LeadingDigitsCount: 1;
-     NationalPrefixFormattingRule: '';
-     NationalPrefixOptionalWhenFormatting: False;
-     DomesticCarrierCodeFormattingRule: '';
-     IntlFormatKind: ifkInheritedFromNational;
-     IntlFormat: ''),
-    { BJ }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4 $5';
      LeadingDigitsOffset: 76; LeadingDigitsCount: 1;
@@ -1956,9 +1939,27 @@ const
      IntlFormatKind: ifkNotAvailable;
      IntlFormat: ''),
     { CN }
+    (Pattern: '(\d{2})(\d{5})';
+     Format: '$1 $2';
+     LeadingDigitsOffset: 120; LeadingDigitsCount: 3;
+     NationalPrefixFormattingRule: '0$1';
+     NationalPrefixOptionalWhenFormatting: False;
+     DomesticCarrierCodeFormattingRule: '$CC $1';
+     IntlFormatKind: ifkInheritedFromNational;
+     IntlFormat: ''),
+    { CN }
+    (Pattern: '(\d{2})(\d{5,6})';
+     Format: '$1 $2';
+     LeadingDigitsOffset: 123; LeadingDigitsCount: 4;
+     NationalPrefixFormattingRule: '0$1';
+     NationalPrefixOptionalWhenFormatting: False;
+     DomesticCarrierCodeFormattingRule: '$CC $1';
+     IntlFormatKind: ifkInheritedFromNational;
+     IntlFormat: ''),
+    { CN }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 120; LeadingDigitsCount: 4;
+     LeadingDigitsOffset: 127; LeadingDigitsCount: 4;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -1967,7 +1968,7 @@ const
     { CN }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 124; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 131; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC$1';
@@ -1976,7 +1977,7 @@ const
     { CN }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 126; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 133; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -1985,7 +1986,7 @@ const
     { CN }
     (Pattern: '(\d{8,9})';
      Format: '$1';
-     LeadingDigitsOffset: 127; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 134; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -1994,16 +1995,25 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{5,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 130; LeadingDigitsCount: 4;
+     LeadingDigitsOffset: 137; LeadingDigitsCount: 4;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
      IntlFormatKind: ifkInheritedFromNational;
      IntlFormat: ''),
     { CN }
+    (Pattern: '(\d{4})(\d{4})';
+     Format: '$1 $2';
+     LeadingDigitsOffset: 141; LeadingDigitsCount: 4;
+     NationalPrefixFormattingRule: '';
+     NationalPrefixOptionalWhenFormatting: False;
+     DomesticCarrierCodeFormattingRule: '';
+     IntlFormatKind: ifkNotAvailable;
+     IntlFormat: ''),
+    { CN }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 134; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 145; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2012,7 +2022,7 @@ const
     { CN }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 135; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 146; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -2021,7 +2031,7 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 138; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 149; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -2030,7 +2040,7 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{7,8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 139; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 34; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2039,7 +2049,7 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 140; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 150; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -2048,7 +2058,7 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 141; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 151; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -2057,7 +2067,7 @@ const
     { CN }
     (Pattern: '(\d{11,12})';
      Format: '$1';
-     LeadingDigitsOffset: 144; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 152; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2066,34 +2076,16 @@ const
     { CN }
     (Pattern: '(\d{2})(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 145; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 153; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
      IntlFormatKind: ifkInheritedFromNational;
      IntlFormat: ''),
-    { CN }
-    (Pattern: '(\d{2})(\d{5,6})';
-     Format: '$1 $2';
-     LeadingDigitsOffset: 148; LeadingDigitsCount: 4;
-     NationalPrefixFormattingRule: '0$1';
-     NationalPrefixOptionalWhenFormatting: False;
-     DomesticCarrierCodeFormattingRule: '$CC $1';
-     IntlFormatKind: ifkInheritedFromNational;
-     IntlFormat: ''),
-    { CN }
-    (Pattern: '(\d{4})(\d{4})';
-     Format: '$1 $2';
-     LeadingDigitsOffset: 152; LeadingDigitsCount: 4;
-     NationalPrefixFormattingRule: '';
-     NationalPrefixOptionalWhenFormatting: False;
-     DomesticCarrierCodeFormattingRule: '';
-     IntlFormatKind: ifkNotAvailable;
-     IntlFormat: ''),
     { CO }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 156; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 154; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2102,7 +2094,7 @@ const
     { CO }
     (Pattern: '(\d{3})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 157; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 155; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '($1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC $1';
@@ -2111,7 +2103,7 @@ const
     { CO }
     (Pattern: '(\d{3})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 158; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 156; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC $1';
@@ -2129,7 +2121,7 @@ const
     { CR }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 159; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 157; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -2147,7 +2139,7 @@ const
     { CU }
     (Pattern: '(\d{2})(\d{4,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 160; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 158; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2165,7 +2157,7 @@ const
     { CU }
     (Pattern: '(\d)(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 161; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 159; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2183,7 +2175,7 @@ const
     { CV }
     (Pattern: '(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 162; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 160; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2192,7 +2184,7 @@ const
     { CW }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 163; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 161; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2201,7 +2193,7 @@ const
     { CW }
     (Pattern: '(\d)(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 164; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 162; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2210,7 +2202,7 @@ const
     { CY }
     (Pattern: '(\d{2})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 165; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 163; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2219,7 +2211,7 @@ const
     { CZ }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 166; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 164; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2228,7 +2220,7 @@ const
     { CZ }
     (Pattern: '(\d{2})(\d{3})(\d{3})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 167; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 165; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2255,7 +2247,7 @@ const
     { DE }
     (Pattern: '(\d{2})(\d{3,13})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 168; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 166; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2264,7 +2256,7 @@ const
     { DE }
     (Pattern: '(\d{6})';
      Format: '$1';
-     LeadingDigitsOffset: 169; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 167; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2273,7 +2265,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{3,12})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 171; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 169; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2282,7 +2274,7 @@ const
     { DE }
     (Pattern: '(\d{4})(\d{2,11})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 173; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 171; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2291,7 +2283,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 175; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 173; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2300,7 +2292,7 @@ const
     { DE }
     (Pattern: '(\d{5})(\d{2,10})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 174; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2309,7 +2301,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{5,11})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 177; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 175; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2318,7 +2310,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d)(\d{4,10})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 178; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2327,7 +2319,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{7,8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 179; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 177; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2345,7 +2337,7 @@ const
     { DE }
     (Pattern: '(\d{5})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 180; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 178; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2363,7 +2355,7 @@ const
     { DE }
     (Pattern: '(\d{4})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 183; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 181; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2372,7 +2364,7 @@ const
     { DE }
     (Pattern: '(\d{4})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 184; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 182; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2381,7 +2373,7 @@ const
     { DE }
     (Pattern: '(\d{5})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 185; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 183; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2390,7 +2382,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 187; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 185; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2399,7 +2391,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{2})(\d{7,8})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 188; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 186; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2408,7 +2400,7 @@ const
     { DE }
     (Pattern: '(\d{4})(\d{2})(\d{7})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 189; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 187; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2417,7 +2409,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{2})(\d{8})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 190; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 188; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2426,7 +2418,7 @@ const
     { DJ }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 191; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 189; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2462,7 +2454,7 @@ const
     { DZ }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 192; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 190; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2507,7 +2499,7 @@ const
     { EE }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 193; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 191; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2516,7 +2508,7 @@ const
     { EE }
     (Pattern: '(\d{4})(\d{3,4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 195; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 193; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2552,7 +2544,7 @@ const
     { EG }
     (Pattern: '(\d{2})(\d{6,7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 197; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 195; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2579,7 +2571,7 @@ const
     { ER }
     (Pattern: '(\d)(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 198; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 196; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2588,7 +2580,7 @@ const
     { ES }
     (Pattern: '(\d{4})';
      Format: '$1';
-     LeadingDigitsOffset: 199; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 197; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2597,7 +2589,7 @@ const
     { ES }
     (Pattern: '(\d{6})';
      Format: '$1';
-     LeadingDigitsOffset: 201; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 199; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2606,7 +2598,7 @@ const
     { ES }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 202; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 200; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2615,7 +2607,7 @@ const
     { ES }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 203; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 201; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2624,7 +2616,7 @@ const
     { ET }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 204; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 202; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2633,7 +2625,7 @@ const
     { FI }
     (Pattern: '(\d{5})';
      Format: '$1';
-     LeadingDigitsOffset: 205; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 203; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2642,7 +2634,7 @@ const
     { FI }
     (Pattern: '(\d{5})';
      Format: '$1';
-     LeadingDigitsOffset: 206; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 204; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2651,7 +2643,7 @@ const
     { FI }
     (Pattern: '(\d{6})';
      Format: '$1';
-     LeadingDigitsOffset: 207; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 205; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2660,7 +2652,7 @@ const
     { FI }
     (Pattern: '(\d{3})(\d{3,7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 208; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 206; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2669,7 +2661,7 @@ const
     { FI }
     (Pattern: '(\d{2})(\d{4,8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 209; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 207; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2687,7 +2679,7 @@ const
     { FI }
     (Pattern: '(\d)(\d{4,9})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 210; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 208; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2696,7 +2688,7 @@ const
     { FJ }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 211; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 209; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2714,7 +2706,7 @@ const
     { FM }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 212; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 210; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2732,7 +2724,7 @@ const
     { FR }
     (Pattern: '(\d{4})';
      Format: '$1';
-     LeadingDigitsOffset: 213; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 211; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2759,7 +2751,7 @@ const
     { FR }
     (Pattern: '(\d)(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4 $5';
-     LeadingDigitsOffset: 214; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 212; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2786,7 +2778,7 @@ const
     { GA }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 215; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 213; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2795,7 +2787,7 @@ const
     { GB }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 216; LeadingDigitsCount: 5;
+     LeadingDigitsOffset: 214; LeadingDigitsCount: 5;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2804,7 +2796,7 @@ const
     { GB }
     (Pattern: '(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 221; LeadingDigitsCount: 4;
+     LeadingDigitsOffset: 219; LeadingDigitsCount: 4;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2822,7 +2814,7 @@ const
     { GB }
     (Pattern: '(\d{5})(\d{4,5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 225; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 223; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2831,7 +2823,7 @@ const
     { GB }
     (Pattern: '(\d{4})(\d{5,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 228; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 226; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2840,7 +2832,7 @@ const
     { GB }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 229; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 227; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2858,7 +2850,7 @@ const
     { GB }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 231; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 229; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2867,7 +2859,7 @@ const
     { GE }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 232; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 230; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2876,7 +2868,7 @@ const
     { GE }
     (Pattern: '(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 233; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 231; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2885,7 +2877,7 @@ const
     { GE }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 234; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 232; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2894,7 +2886,7 @@ const
     { GE }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 235; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 233; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2903,7 +2895,7 @@ const
     { GF }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 236; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 234; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2921,7 +2913,7 @@ const
     { GH }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 237; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 235; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2939,7 +2931,7 @@ const
     { GH }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 238; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 236; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2957,7 +2949,7 @@ const
     { GL }
     (Pattern: '(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 239; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 237; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2966,7 +2958,7 @@ const
     { GM }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 240; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 238; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2975,7 +2967,7 @@ const
     { GM }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 241; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 239; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2984,7 +2976,7 @@ const
     { GN }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 174; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -2993,7 +2985,7 @@ const
     { GN }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 242; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 240; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3002,7 +2994,7 @@ const
     { GP }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 243; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 241; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3020,7 +3012,7 @@ const
     { GQ }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 244; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 242; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3038,7 +3030,7 @@ const
     { GR }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 245; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 243; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3047,7 +3039,7 @@ const
     { GR }
     (Pattern: '(\d{4})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 246; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 244; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3056,7 +3048,7 @@ const
     { GR }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 247; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 245; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3092,7 +3084,7 @@ const
     { GW }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 248; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 246; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3101,7 +3093,7 @@ const
     { GW }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 249; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 247; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3119,7 +3111,7 @@ const
     { HK }
     (Pattern: '(\d{3})(\d{2,5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 250; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 248; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3128,7 +3120,7 @@ const
     { HK }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 252; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 250; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3155,7 +3147,7 @@ const
     { HN }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 253; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 251; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3173,7 +3165,7 @@ const
     { HR }
     (Pattern: '(\d{2})(\d{2})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 254; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 252; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3200,7 +3192,7 @@ const
     { HR }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 255; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 253; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3218,7 +3210,7 @@ const
     { HR }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 256; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 254; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3236,7 +3228,7 @@ const
     { HT }
     (Pattern: '(\d{2})(\d{2})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 162; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 160; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3254,7 +3246,7 @@ const
     { HU }
     (Pattern: '(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 257; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 255; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(06 $1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3272,7 +3264,7 @@ const
     { ID }
     (Pattern: '(\d)(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 190; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 188; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3281,7 +3273,7 @@ const
     { ID }
     (Pattern: '(\d{2})(\d{5,9})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 258; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 256; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3299,7 +3291,7 @@ const
     { ID }
     (Pattern: '(\d{3})(\d{5,8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 259; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 257; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3308,7 +3300,7 @@ const
     { ID }
     (Pattern: '(\d{3})(\d{3,4})(\d{3})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 260; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 258; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3326,7 +3318,7 @@ const
     { ID }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 261; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 259; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3335,7 +3327,7 @@ const
     { ID }
     (Pattern: '(\d{3})(\d)(\d{3})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 262; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 260; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3353,7 +3345,7 @@ const
     { ID }
     (Pattern: '(\d{3})(\d{3})(\d{3})(\d{2,8})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 263; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 261; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3371,7 +3363,7 @@ const
     { IE }
     (Pattern: '(\d{2})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 264; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 262; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3380,7 +3372,7 @@ const
     { IE }
     (Pattern: '(\d{3})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 265; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 263; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3398,7 +3390,7 @@ const
     { IE }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 266; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 264; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3407,7 +3399,7 @@ const
     { IE }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 232; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 230; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3416,7 +3408,7 @@ const
     { IE }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 267; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 265; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3425,7 +3417,7 @@ const
     { IE }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 268; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 266; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3461,7 +3453,7 @@ const
     { IL }
     (Pattern: '(\d{4})(\d{3})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 269; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 267; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3470,7 +3462,7 @@ const
     { IL }
     (Pattern: '(\d{4})(\d{2})(\d{2})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 270; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 268; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3479,7 +3471,7 @@ const
     { IL }
     (Pattern: '(\d)(\d{3})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 271; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 269; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3488,7 +3480,7 @@ const
     { IL }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 234; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 232; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3497,7 +3489,7 @@ const
     { IL }
     (Pattern: '(\d{4})(\d{3})(\d{3})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 272; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 270; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3506,7 +3498,7 @@ const
     { IL }
     (Pattern: '(\d{4})(\d{6})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 273; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 271; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3515,7 +3507,7 @@ const
     { IL }
     (Pattern: '(\d)(\d{3})(\d{3})(\d{3})';
      Format: '$1-$2-$3-$4';
-     LeadingDigitsOffset: 274; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 272; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3524,7 +3516,7 @@ const
     { IL }
     (Pattern: '(\d{3})(\d{1,2})(\d{3})(\d{4})';
      Format: '$1-$2 $3-$4';
-     LeadingDigitsOffset: 190; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 188; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3533,7 +3525,7 @@ const
     { IN }
     (Pattern: '(\d{7})';
      Format: '$1';
-     LeadingDigitsOffset: 275; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 273; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3542,7 +3534,7 @@ const
     { IN }
     (Pattern: '(\d{8})';
      Format: '$1';
-     LeadingDigitsOffset: 276; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 274; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -3551,7 +3543,7 @@ const
     { IN }
     (Pattern: '(\d{4})(\d{4,5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 279; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 277; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -3560,7 +3552,7 @@ const
     { IN }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 281; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 279; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -3569,7 +3561,7 @@ const
     { IN }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 282; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 280; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -3578,7 +3570,7 @@ const
     { IN }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 285; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 283; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -3587,7 +3579,7 @@ const
     { IN }
     (Pattern: '(\d{4})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 288; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 286; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -3596,7 +3588,7 @@ const
     { IN }
     (Pattern: '(\d{5})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 291; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 289; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -3605,7 +3597,7 @@ const
     { IN }
     (Pattern: '(\d{4})(\d{2,4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 292; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 290; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -3623,7 +3615,7 @@ const
     { IN }
     (Pattern: '(\d{4})(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 187; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 185; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -3632,7 +3624,7 @@ const
     { IO }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 174; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3668,7 +3660,7 @@ const
     { IR }
     (Pattern: '(\d{4,5})';
      Format: '$1';
-     LeadingDigitsOffset: 167; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 165; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3677,7 +3669,7 @@ const
     { IR }
     (Pattern: '(\d{2})(\d{4,5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 294; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 292; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3704,7 +3696,7 @@ const
     { IS }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 203; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 201; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3713,7 +3705,7 @@ const
     { IS }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 174; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3722,7 +3714,7 @@ const
     { IT }
     (Pattern: '(\d{4,5})';
      Format: '$1';
-     LeadingDigitsOffset: 295; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 293; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3731,7 +3723,7 @@ const
     { IT }
     (Pattern: '(\d{6})';
      Format: '$1';
-     LeadingDigitsOffset: 297; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 295; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3740,7 +3732,7 @@ const
     { IT }
     (Pattern: '(\d{2})(\d{4,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 298; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 296; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3749,7 +3741,7 @@ const
     { IT }
     (Pattern: '(\d{3})(\d{3,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 299; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 297; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3758,7 +3750,7 @@ const
     { IT }
     (Pattern: '(\d{4})(\d{2,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 301; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 299; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3767,7 +3759,7 @@ const
     { IT }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 302; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 300; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3776,7 +3768,7 @@ const
     { IT }
     (Pattern: '(\d{2})(\d{3,4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 303; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 301; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3785,7 +3777,7 @@ const
     { IT }
     (Pattern: '(\d{3})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 304; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 302; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3794,7 +3786,7 @@ const
     { IT }
     (Pattern: '(\d{3})(\d{3,4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 305; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 303; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3803,7 +3795,7 @@ const
     { IT }
     (Pattern: '(\d{2})(\d{4})(\d{5})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 298; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 296; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3821,7 +3813,7 @@ const
     { IT }
     (Pattern: '(\d{3})(\d{4})(\d{4,5})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 306; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 304; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3830,7 +3822,7 @@ const
     { JO }
     (Pattern: '(\d)(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 307; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 305; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3848,7 +3840,7 @@ const
     { JO }
     (Pattern: '(\d{2})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 232; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 230; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3857,7 +3849,7 @@ const
     { JO }
     (Pattern: '(\d)(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 308; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 306; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3866,7 +3858,7 @@ const
     { JP }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 309; LeadingDigitsCount: 4;
+     LeadingDigitsOffset: 307; LeadingDigitsCount: 4;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3875,7 +3867,7 @@ const
     { JP }
     (Pattern: '(\d{8,10})';
      Format: '$1';
-     LeadingDigitsOffset: 313; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 311; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3884,7 +3876,7 @@ const
     { JP }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 314; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 312; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3893,7 +3885,7 @@ const
     { JP }
     (Pattern: '(\d{4})(\d)(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 315; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 313; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3911,7 +3903,7 @@ const
     { JP }
     (Pattern: '(\d)(\d{4})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 318; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 316; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3920,7 +3912,7 @@ const
     { JP }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 320; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 318; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3929,7 +3921,7 @@ const
     { JP }
     (Pattern: '(\d{3})(\d{2})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 323; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 321; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3938,7 +3930,7 @@ const
     { JP }
     (Pattern: '(\d{4})(\d{2})(\d{3,4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 324; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 322; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -3947,7 +3939,7 @@ const
     { JP }
     (Pattern: '(\d{4})(\d{2})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 326; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 324; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4010,7 +4002,7 @@ const
     { KE }
     (Pattern: '(\d{2})(\d{5,7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 327; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 325; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4019,7 +4011,7 @@ const
     { KE }
     (Pattern: '(\d{3})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 328; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 326; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4037,7 +4029,7 @@ const
     { KG }
     (Pattern: '(\d{4})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 329; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 327; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4046,7 +4038,7 @@ const
     { KG }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 330; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 328; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4082,7 +4074,7 @@ const
     { KM }
     (Pattern: '(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 331; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 329; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4118,7 +4110,7 @@ const
     { KR }
     (Pattern: '(\d{5})';
      Format: '$1';
-     LeadingDigitsOffset: 332; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 330; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4127,7 +4119,7 @@ const
     { KR }
     (Pattern: '(\d{2})(\d{3,4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 335; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 333; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC-$1';
@@ -4154,7 +4146,7 @@ const
     { KR }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 336; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 334; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC-$1';
@@ -4163,7 +4155,7 @@ const
     { KR }
     (Pattern: '(\d{2})(\d{3,4})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 337; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 335; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC-$1';
@@ -4172,7 +4164,7 @@ const
     { KR }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 234; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 232; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC-$1';
@@ -4181,7 +4173,7 @@ const
     { KR }
     (Pattern: '(\d{5})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 338; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 336; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4217,7 +4209,7 @@ const
     { KW }
     (Pattern: '(\d{4})(\d{3,4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 340; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 338; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4226,7 +4218,7 @@ const
     { KW }
     (Pattern: '(\d{3})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 341; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 339; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4235,7 +4227,7 @@ const
     { LA }
     (Pattern: '(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 342; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 340; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4244,7 +4236,7 @@ const
     { LA }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 174; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4253,7 +4245,7 @@ const
     { LA }
     (Pattern: '(\d{2})(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 26; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 63; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4262,7 +4254,7 @@ const
     { LB }
     (Pattern: '(\d)(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 343; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 341; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4271,7 +4263,7 @@ const
     { LB }
     (Pattern: '(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 344; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 342; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4280,7 +4272,7 @@ const
     { LI }
     (Pattern: '(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 345; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 343; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -4298,7 +4290,7 @@ const
     { LI }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 347; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 345; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -4325,7 +4317,7 @@ const
     { LK }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 348; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 346; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4334,7 +4326,7 @@ const
     { LR }
     (Pattern: '(\d)(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 349; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 347; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4361,7 +4353,7 @@ const
     { LS }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 350; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 348; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4370,7 +4362,7 @@ const
     { LT }
     (Pattern: '(\d)(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 351; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 349; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0-$1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -4379,7 +4371,7 @@ const
     { LT }
     (Pattern: '(\d{3})(\d{2})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 352; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 350; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0 $1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -4388,7 +4380,7 @@ const
     { LT }
     (Pattern: '(\d{2})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 353; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 351; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0-$1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -4397,7 +4389,7 @@ const
     { LT }
     (Pattern: '(\d{3})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 354; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 352; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0-$1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -4406,7 +4398,7 @@ const
     { LU }
     (Pattern: '(\d{2})(\d{3})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 355; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 353; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -4415,7 +4407,7 @@ const
     { LU }
     (Pattern: '(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 355; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 353; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -4424,7 +4416,7 @@ const
     { LU }
     (Pattern: '(\d{2})(\d{2})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 356; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 354; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -4433,7 +4425,7 @@ const
     { LU }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{1,2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 357; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 355; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -4442,7 +4434,7 @@ const
     { LU }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{1,5})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 358; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 356; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -4451,7 +4443,7 @@ const
     { LU }
     (Pattern: '(\d{3})(\d{2})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 359; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 357; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -4460,7 +4452,7 @@ const
     { LU }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 357; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 355; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -4478,7 +4470,7 @@ const
     { LU }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})(\d{1,2})';
      Format: '$1 $2 $3 $4 $5';
-     LeadingDigitsOffset: 357; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 355; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -4487,7 +4479,7 @@ const
     { LV }
     (Pattern: '(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 360; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 358; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4505,7 +4497,7 @@ const
     { MA }
     (Pattern: '(\d{4})(\d{5})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 361; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 359; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4514,7 +4506,7 @@ const
     { MA }
     (Pattern: '(\d{2})(\d{7})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 362; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 360; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4523,7 +4515,7 @@ const
     { MA }
     (Pattern: '(\d)(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4 $5';
-     LeadingDigitsOffset: 192; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 190; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4532,7 +4524,7 @@ const
     { MC }
     (Pattern: '(\d{3})(\d{3})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 363; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 361; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4550,7 +4542,7 @@ const
     { MC }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 212; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 210; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4559,7 +4551,7 @@ const
     { MC }
     (Pattern: '(\d)(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4 $5';
-     LeadingDigitsOffset: 242; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 240; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4577,7 +4569,7 @@ const
     { MD }
     (Pattern: '(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 364; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 362; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4586,7 +4578,7 @@ const
     { MD }
     (Pattern: '(\d{3})(\d{2})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 365; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 363; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4622,7 +4614,7 @@ const
     { MK }
     (Pattern: '(\d)(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 366; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 364; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4631,7 +4623,7 @@ const
     { MK }
     (Pattern: '(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 367; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 365; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4640,7 +4632,7 @@ const
     { MK }
     (Pattern: '(\d{3})(\d)(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 368; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 366; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4649,7 +4641,7 @@ const
     { ML }
     (Pattern: '(\d{4})';
      Format: '$1';
-     LeadingDigitsOffset: 369; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 367; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4658,7 +4650,7 @@ const
     { ML }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 371; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 369; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4667,7 +4659,7 @@ const
     { MM }
     (Pattern: '(\d)(\d{2})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 372; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 370; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4676,7 +4668,7 @@ const
     { MM }
     (Pattern: '(\d{2})(\d{2})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 373; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 371; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4685,7 +4677,7 @@ const
     { MM }
     (Pattern: '(\d)(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 374; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 372; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4694,7 +4686,7 @@ const
     { MM }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 376; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 374; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4703,7 +4695,7 @@ const
     { MM }
     (Pattern: '(\d)(\d{3})(\d{4,6})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 377; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 375; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4730,7 +4722,7 @@ const
     { MM }
     (Pattern: '(\d)(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 378; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 376; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4748,7 +4740,7 @@ const
     { MN }
     (Pattern: '(\d{2})(\d{2})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 379; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 377; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4757,7 +4749,7 @@ const
     { MN }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 380; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 378; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4766,7 +4758,7 @@ const
     { MN }
     (Pattern: '(\d{3})(\d{5,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 381; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 379; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4775,7 +4767,7 @@ const
     { MN }
     (Pattern: '(\d{4})(\d{5,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 382; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 380; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4784,7 +4776,7 @@ const
     { MN }
     (Pattern: '(\d{5})(\d{4,5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 384; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 153; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4802,7 +4794,7 @@ const
     { MO }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 385; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 382; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4811,7 +4803,7 @@ const
     { MQ }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 386; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 383; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4829,7 +4821,7 @@ const
     { MR }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 387; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 384; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4838,7 +4830,7 @@ const
     { MT }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 388; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 385; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4847,7 +4839,7 @@ const
     { MU }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 389; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 386; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4856,7 +4848,7 @@ const
     { MU }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 234; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 232; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4874,7 +4866,7 @@ const
     { MV }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 390; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 387; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4892,7 +4884,7 @@ const
     { MW }
     (Pattern: '(\d)(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 391; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 388; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4901,7 +4893,7 @@ const
     { MW }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 392; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 389; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4910,7 +4902,7 @@ const
     { MX }
     (Pattern: '(\d{5})';
      Format: '$1';
-     LeadingDigitsOffset: 393; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 390; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4919,7 +4911,7 @@ const
     { MX }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 394; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 391; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4937,7 +4929,7 @@ const
     { MY }
     (Pattern: '(\d)(\d{3})(\d{4})';
      Format: '$1-$2 $3';
-     LeadingDigitsOffset: 395; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 392; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4946,7 +4938,7 @@ const
     { MY }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1-$2 $3';
-     LeadingDigitsOffset: 396; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 393; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4955,7 +4947,7 @@ const
     { MY }
     (Pattern: '(\d)(\d{4})(\d{4})';
      Format: '$1-$2 $3';
-     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 174; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4964,7 +4956,7 @@ const
     { MY }
     (Pattern: '(\d)(\d{3})(\d{2})(\d{4})';
      Format: '$1-$2-$3-$4';
-     LeadingDigitsOffset: 398; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 395; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4973,7 +4965,7 @@ const
     { MY }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1-$2 $3';
-     LeadingDigitsOffset: 190; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 188; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -4991,7 +4983,7 @@ const
     { MZ }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 399; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 396; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5027,7 +5019,7 @@ const
     { NA }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 363; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 361; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5045,7 +5037,7 @@ const
     { NC }
     (Pattern: '(\d{3})';
      Format: '$1';
-     LeadingDigitsOffset: 400; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 397; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5054,7 +5046,7 @@ const
     { NC }
     (Pattern: '(\d{2})(\d{2})(\d{2})';
      Format: '$1.$2.$3';
-     LeadingDigitsOffset: 401; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 398; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5063,7 +5055,7 @@ const
     { NE }
     (Pattern: '(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 402; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 399; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5072,7 +5064,7 @@ const
     { NE }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 403; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 400; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5081,7 +5073,7 @@ const
     { NF }
     (Pattern: '(\d{2})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 404; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 401; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5090,7 +5082,7 @@ const
     { NF }
     (Pattern: '(\d)(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 405; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 402; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5099,7 +5091,7 @@ const
     { NG }
     (Pattern: '(\d{3})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 352; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 350; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5108,7 +5100,7 @@ const
     { NG }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 406; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 403; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5126,7 +5118,7 @@ const
     { NG }
     (Pattern: '(\d{3})(\d{4})(\d{4,5})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 268; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 266; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5135,7 +5127,7 @@ const
     { NG }
     (Pattern: '(\d{3})(\d{5})(\d{5,6})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 268; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 266; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5144,7 +5136,7 @@ const
     { NI }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 407; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 404; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5153,7 +5145,7 @@ const
     { NL }
     (Pattern: '(\d{4})';
      Format: '$1';
-     LeadingDigitsOffset: 408; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 405; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5189,7 +5181,7 @@ const
     { NL }
     (Pattern: '(\d{2})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 409; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 406; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5207,7 +5199,7 @@ const
     { NL }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 410; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 407; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5216,7 +5208,7 @@ const
     { NL }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 411; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 408; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5243,7 +5235,7 @@ const
     { NO }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 259; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 257; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5252,7 +5244,7 @@ const
     { NP }
     (Pattern: '(\d)(\d{7})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 412; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 409; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5261,7 +5253,7 @@ const
     { NP }
     (Pattern: '(\d{2})(\d{6})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 413; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 410; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5288,7 +5280,7 @@ const
     { NR }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 371; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 369; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5306,7 +5298,7 @@ const
     { NZ }
     (Pattern: '(\d{2})(\d{3,8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 414; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 411; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5315,7 +5307,7 @@ const
     { NZ }
     (Pattern: '(\d{3})(\d{2})(\d{2,3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 415; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 412; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5324,7 +5316,7 @@ const
     { NZ }
     (Pattern: '(\d)(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 417; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 414; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5333,7 +5325,7 @@ const
     { NZ }
     (Pattern: '(\d{3})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 418; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 415; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5342,7 +5334,7 @@ const
     { NZ }
     (Pattern: '(\d{2})(\d{3,4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 419; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 416; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5351,7 +5343,7 @@ const
     { NZ }
     (Pattern: '(\d{2})(\d{3})(\d{3,5})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 420; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 417; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5360,7 +5352,7 @@ const
     { OM }
     (Pattern: '(\d{3})(\d{4,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 368; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 366; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5378,7 +5370,7 @@ const
     { OM }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 421; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 418; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5387,7 +5379,7 @@ const
     { PA }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 204; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 202; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5414,7 +5406,7 @@ const
     { PE }
     (Pattern: '(\d{3})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 262; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 260; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5432,7 +5424,7 @@ const
     { PE }
     (Pattern: '(\d{2})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 422; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 419; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5459,7 +5451,7 @@ const
     { PF }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 423; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 420; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5477,7 +5469,7 @@ const
     { PG }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 424; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 421; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5486,7 +5478,7 @@ const
     { PG }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 268; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 266; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5504,7 +5496,7 @@ const
     { PH }
     (Pattern: '(\d{4})(\d{4,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 425; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 422; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5513,7 +5505,7 @@ const
     { PH }
     (Pattern: '(\d{5})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 427; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 424; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5531,7 +5523,7 @@ const
     { PH }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 429; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 426; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5585,7 +5577,7 @@ const
     { PK }
     (Pattern: '(\d{3})(\d{6,7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 430; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 427; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5594,7 +5586,7 @@ const
     { PK }
     (Pattern: '(\d{2})(\d{7,8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 432; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 429; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5603,7 +5595,7 @@ const
     { PK }
     (Pattern: '(\d{5})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 433; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 430; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5612,7 +5604,7 @@ const
     { PK }
     (Pattern: '(\d{3})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 174; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5621,7 +5613,7 @@ const
     { PK }
     (Pattern: '(\d{2})(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 434; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 431; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5630,7 +5622,7 @@ const
     { PK }
     (Pattern: '(\d{3})(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 371; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 369; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5648,7 +5640,7 @@ const
     { PL }
     (Pattern: '(\d{3})(\d{3})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 435; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 432; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5657,7 +5649,7 @@ const
     { PL }
     (Pattern: '(\d{2})(\d{2})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 436; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 433; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5666,7 +5658,7 @@ const
     { PL }
     (Pattern: '(\d{3})(\d{2})(\d{2,3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 438; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 435; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5675,7 +5667,7 @@ const
     { PL }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 439; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 436; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5684,7 +5676,7 @@ const
     { PL }
     (Pattern: '(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 440; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 437; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5729,7 +5721,7 @@ const
     { PS }
     (Pattern: '(\d)(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 441; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 438; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5756,7 +5748,7 @@ const
     { PT }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 442; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 439; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5765,7 +5757,7 @@ const
     { PT }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 443; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 440; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5783,7 +5775,7 @@ const
     { PY }
     (Pattern: '(\d{6,7})';
      Format: '$1';
-     LeadingDigitsOffset: 444; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 441; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5792,7 +5784,7 @@ const
     { PY }
     (Pattern: '(\d{3})(\d{3,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 445; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 442; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5801,7 +5793,7 @@ const
     { PY }
     (Pattern: '(\d{2})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 446; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 443; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5810,7 +5802,7 @@ const
     { PY }
     (Pattern: '(\d{3})(\d{4,5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 447; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 444; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5819,7 +5811,7 @@ const
     { PY }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 448; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 445; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5828,7 +5820,7 @@ const
     { PY }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 363; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 361; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5837,7 +5829,7 @@ const
     { PY }
     (Pattern: '(\d{3})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 449; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 446; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5864,7 +5856,7 @@ const
     { QA }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 450; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 447; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5873,7 +5865,7 @@ const
     { QA }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 451; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 448; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5882,7 +5874,7 @@ const
     { RE }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 452; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 449; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5891,7 +5883,7 @@ const
     { RO }
     (Pattern: '(\d{3})(\d{3})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 453; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 450; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5900,7 +5892,7 @@ const
     { RO }
     (Pattern: '(\d{2})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 455; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 452; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5909,7 +5901,7 @@ const
     { RO }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 456; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 453; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5918,7 +5910,7 @@ const
     { RO }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 237; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 251; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5927,7 +5919,7 @@ const
     { RS }
     (Pattern: '(\d{3})(\d{3,9})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 457; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 454; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5936,7 +5928,7 @@ const
     { RS }
     (Pattern: '(\d{2})(\d{5,10})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 458; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 455; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5945,7 +5937,7 @@ const
     { RU }
     (Pattern: '(\d{3})(\d{2})(\d{2})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 459; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 456; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -5954,7 +5946,7 @@ const
     { RU }
     (Pattern: '(\d{4})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 460; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 457; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '8 ($1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -5963,7 +5955,7 @@ const
     { RU }
     (Pattern: '(\d{5})(\d)(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 463; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 460; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '8 ($1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -5981,7 +5973,7 @@ const
     { RU }
     (Pattern: '(\d{3})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2-$3-$4';
-     LeadingDigitsOffset: 466; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 463; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '8 ($1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -6017,7 +6009,7 @@ const
     { RW }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 352; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 350; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6062,7 +6054,7 @@ const
     { SB }
     (Pattern: '(\d{2})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 467; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 464; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6071,7 +6063,7 @@ const
     { SC }
     (Pattern: '(\d)(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 468; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 465; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6080,7 +6072,7 @@ const
     { SD }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 469; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 466; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6089,7 +6081,7 @@ const
     { SE }
     (Pattern: '(\d{2})(\d{2,3})(\d{2})';
      Format: '$1-$2 $3';
-     LeadingDigitsOffset: 357; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 355; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6098,7 +6090,7 @@ const
     { SE }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 470; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 467; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6107,7 +6099,7 @@ const
     { SE }
     (Pattern: '(\d{2})(\d{3})(\d{2})';
      Format: '$1-$2 $3';
-     LeadingDigitsOffset: 471; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 468; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6125,7 +6117,7 @@ const
     { SE }
     (Pattern: '(\d{3})(\d{2,3})(\d{2})';
      Format: '$1-$2 $3';
-     LeadingDigitsOffset: 472; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 469; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6134,7 +6126,7 @@ const
     { SE }
     (Pattern: '(\d{3})(\d{2,3})(\d{3})';
      Format: '$1-$2 $3';
-     LeadingDigitsOffset: 473; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 470; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6143,7 +6135,7 @@ const
     { SE }
     (Pattern: '(\d{2})(\d{2,3})(\d{2})(\d{2})';
      Format: '$1-$2 $3 $4';
-     LeadingDigitsOffset: 474; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 471; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6152,7 +6144,7 @@ const
     { SE }
     (Pattern: '(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1-$2 $3 $4';
-     LeadingDigitsOffset: 475; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 472; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6170,7 +6162,7 @@ const
     { SE }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1-$2 $3 $4';
-     LeadingDigitsOffset: 476; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 473; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6188,7 +6180,7 @@ const
     { SE }
     (Pattern: '(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1-$2 $3 $4 $5';
-     LeadingDigitsOffset: 477; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 474; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6197,7 +6189,7 @@ const
     { SG }
     (Pattern: '(\d{4,5})';
      Format: '$1';
-     LeadingDigitsOffset: 478; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 475; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6206,7 +6198,7 @@ const
     { SG }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 480; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 477; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6242,7 +6234,7 @@ const
     { SI }
     (Pattern: '(\d{2})(\d{3,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 481; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 478; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6251,7 +6243,7 @@ const
     { SI }
     (Pattern: '(\d{3})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 482; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 479; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6260,7 +6252,7 @@ const
     { SI }
     (Pattern: '(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 483; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 480; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6269,7 +6261,7 @@ const
     { SI }
     (Pattern: '(\d)(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 484; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 481; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6278,7 +6270,7 @@ const
     { SK }
     (Pattern: '(\d)(\d{2})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 485; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 482; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6287,7 +6279,7 @@ const
     { SK }
     (Pattern: '(\d{2})(\d{2})(\d{2,3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 486; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 483; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6296,7 +6288,7 @@ const
     { SK }
     (Pattern: '(\d{4})(\d{3})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 488; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 485; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6314,7 +6306,7 @@ const
     { SK }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 490; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 487; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6323,7 +6315,7 @@ const
     { SK }
     (Pattern: '(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 491; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 488; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6332,7 +6324,7 @@ const
     { SL }
     (Pattern: '(\d{2})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 237; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 235; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6377,7 +6369,7 @@ const
     { SN }
     (Pattern: '(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 492; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 489; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6386,7 +6378,7 @@ const
     { SO }
     (Pattern: '(\d{2})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 493; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 490; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6395,7 +6387,7 @@ const
     { SO }
     (Pattern: '(\d{6})';
      Format: '$1';
-     LeadingDigitsOffset: 494; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 491; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6404,7 +6396,7 @@ const
     { SO }
     (Pattern: '(\d)(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 495; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 492; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6413,7 +6405,7 @@ const
     { SO }
     (Pattern: '(\d{2})(\d{5,7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 496; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 493; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6422,7 +6414,7 @@ const
     { SO }
     (Pattern: '(\d)(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 497; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 494; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6431,7 +6423,7 @@ const
     { SO }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 498; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 495; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6440,7 +6432,7 @@ const
     { SR }
     (Pattern: '(\d{2})(\d{2})(\d{2})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 499; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 496; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6449,7 +6441,7 @@ const
     { SR }
     (Pattern: '(\d{3})(\d{3})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 500; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 497; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6458,7 +6450,7 @@ const
     { SR }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 501; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 498; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6467,7 +6459,7 @@ const
     { SS }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 469; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 466; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6494,7 +6486,7 @@ const
     { SV }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 365; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 363; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6512,7 +6504,7 @@ const
     { SY }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 502; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 499; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -6521,7 +6513,7 @@ const
     { SY }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 503; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 500; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -6530,7 +6522,7 @@ const
     { SZ }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 504; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 501; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6548,7 +6540,7 @@ const
     { TD }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 237; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 235; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6557,7 +6549,7 @@ const
     { TG }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 505; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 502; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6593,7 +6585,7 @@ const
     { TJ }
     (Pattern: '(\d{6})(\d)(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 506; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 503; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6602,7 +6594,7 @@ const
     { TJ }
     (Pattern: '(\d{3})(\d{2})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 508; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 505; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6611,7 +6603,7 @@ const
     { TJ }
     (Pattern: '(\d{4})(\d)(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 509; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 506; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6620,7 +6612,7 @@ const
     { TJ }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 510; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 507; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6629,7 +6621,7 @@ const
     { TL }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 511; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 508; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6647,7 +6639,7 @@ const
     { TM }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2-$3-$4';
-     LeadingDigitsOffset: 272; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 270; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(8 $1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6656,7 +6648,7 @@ const
     { TM }
     (Pattern: '(\d{3})(\d)(\d{2})(\d{2})';
      Format: '$1 $2-$3-$4';
-     LeadingDigitsOffset: 512; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 509; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(8 $1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6665,7 +6657,7 @@ const
     { TM }
     (Pattern: '(\d{2})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 242; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 240; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '8 $1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6674,7 +6666,7 @@ const
     { TN }
     (Pattern: '(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 513; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 510; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6683,7 +6675,7 @@ const
     { TO }
     (Pattern: '(\d{2})(\d{3})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 514; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 511; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6701,7 +6693,7 @@ const
     { TO }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 380; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 378; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6710,7 +6702,7 @@ const
     { TR }
     (Pattern: '(\d{3})(\d)(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 515; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 512; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -6719,7 +6711,7 @@ const
     { TR }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 516; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 513; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -6737,7 +6729,7 @@ const
     { TR }
     (Pattern: '(\d{3})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 517; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 514; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -6746,7 +6738,7 @@ const
     { TR }
     (Pattern: '(\d{3})(\d{3})(\d{6,7})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 262; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 260; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -6782,7 +6774,7 @@ const
     { TW }
     (Pattern: '(\d{2})(\d)(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 518; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 515; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6791,7 +6783,7 @@ const
     { TW }
     (Pattern: '(\d{3})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 519; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 516; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6800,7 +6792,7 @@ const
     { TW }
     (Pattern: '(\d{3})(\d{2})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 520; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 517; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6809,7 +6801,7 @@ const
     { TW }
     (Pattern: '(\d{2})(\d{2})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 521; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 518; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6818,7 +6810,7 @@ const
     { TW }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 522; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 519; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6827,7 +6819,7 @@ const
     { TW }
     (Pattern: '(\d)(\d{3,4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 523; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 520; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6836,7 +6828,7 @@ const
     { TW }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 249; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 247; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6863,7 +6855,7 @@ const
     { TZ }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 525; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 522; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6881,7 +6873,7 @@ const
     { TZ }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 242; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 240; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6890,7 +6882,7 @@ const
     { UA }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 526; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 523; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6899,7 +6891,7 @@ const
     { UA }
     (Pattern: '(\d{4})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 528; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 525; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6908,7 +6900,7 @@ const
     { UA }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 530; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 527; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6926,7 +6918,7 @@ const
     { UG }
     (Pattern: '(\d{4})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 531; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 528; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6935,7 +6927,7 @@ const
     { UG }
     (Pattern: '(\d{3})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 534; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 531; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6944,7 +6936,7 @@ const
     { UG }
     (Pattern: '(\d{2})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 536; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 533; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6953,7 +6945,7 @@ const
     { US }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 537; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 534; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -6962,7 +6954,7 @@ const
     { US }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 538; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 535; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6980,7 +6972,7 @@ const
     { UY }
     (Pattern: '(\d{4,5})';
      Format: '$1';
-     LeadingDigitsOffset: 485; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 482; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -6998,7 +6990,7 @@ const
     { UY }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 539; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 536; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7016,7 +7008,7 @@ const
     { UY }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 540; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 537; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7043,7 +7035,7 @@ const
     { UZ }
     (Pattern: '(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 541; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 538; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7052,7 +7044,7 @@ const
     { VE }
     (Pattern: '(\d{3})(\d{7})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 542; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 539; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -7061,7 +7053,7 @@ const
     { VN }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 543; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 540; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -7070,7 +7062,7 @@ const
     { VN }
     (Pattern: '(\d{3})(\d{4,5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 347; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 345; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -7079,7 +7071,7 @@ const
     { VN }
     (Pattern: '(\d{4})(\d{4,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 544; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 541; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -7088,7 +7080,7 @@ const
     { VN }
     (Pattern: '(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 545; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 542; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -7097,7 +7089,7 @@ const
     { VN }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 546; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 543; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -7106,7 +7098,7 @@ const
     { VN }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 547; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 544; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -7124,7 +7116,7 @@ const
     { VU }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 548; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 545; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7133,7 +7125,7 @@ const
     { WF }
     (Pattern: '(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 549; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 546; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7151,7 +7143,7 @@ const
     { WS }
     (Pattern: '(\d{5})';
      Format: '$1';
-     LeadingDigitsOffset: 550; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 547; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7187,7 +7179,7 @@ const
     { XK }
     (Pattern: '(\d{2})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 536; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 533; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7196,7 +7188,7 @@ const
     { XK }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 551; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 548; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7205,7 +7197,7 @@ const
     { XK }
     (Pattern: '(\d{2})(\d{7,10})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 174; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7214,7 +7206,7 @@ const
     { YE }
     (Pattern: '(\d)(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 552; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 549; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7232,7 +7224,7 @@ const
     { ZA }
     (Pattern: '(\d{2})(\d{3,4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 553; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 550; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7241,7 +7233,7 @@ const
     { ZA }
     (Pattern: '(\d{2})(\d{3})(\d{2,3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 553; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 550; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7250,7 +7242,7 @@ const
     { ZA }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 554; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 551; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7286,7 +7278,7 @@ const
     { ZM }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 555; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 552; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7295,25 +7287,7 @@ const
     { ZM }
     (Pattern: '(\d{2})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 556; LeadingDigitsCount: 1;
-     NationalPrefixFormattingRule: '0$1';
-     NationalPrefixOptionalWhenFormatting: False;
-     DomesticCarrierCodeFormattingRule: '';
-     IntlFormatKind: ifkInheritedFromNational;
-     IntlFormat: ''),
-    { ZW }
-    (Pattern: '(\d{2})(\d{3,5})';
-     Format: '$1 $2';
-     LeadingDigitsOffset: 557; LeadingDigitsCount: 1;
-     NationalPrefixFormattingRule: '0$1';
-     NationalPrefixOptionalWhenFormatting: False;
-     DomesticCarrierCodeFormattingRule: '';
-     IntlFormatKind: ifkInheritedFromNational;
-     IntlFormat: ''),
-    { ZW }
-    (Pattern: '(\d{3})(\d{3,5})';
-     Format: '$1 $2';
-     LeadingDigitsOffset: 558; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 553; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7322,16 +7296,7 @@ const
     { ZW }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 262; LeadingDigitsCount: 1;
-     NationalPrefixFormattingRule: '0$1';
-     NationalPrefixOptionalWhenFormatting: False;
-     DomesticCarrierCodeFormattingRule: '';
-     IntlFormatKind: ifkInheritedFromNational;
-     IntlFormat: ''),
-    { ZW }
-    (Pattern: '(\d{4})(\d{3,5})';
-     Format: '$1 $2';
-     LeadingDigitsOffset: 559; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 260; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7340,7 +7305,7 @@ const
     { ZW }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 560; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 554; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7349,7 +7314,7 @@ const
     { ZW }
     (Pattern: '(\d{2})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 561; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 555; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7367,7 +7332,7 @@ const
     { ZW }
     (Pattern: '(\d{3})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 174; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7385,7 +7350,7 @@ const
     { 001 }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 510; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 507; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7403,7 +7368,7 @@ const
     { 001 }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 562; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 556; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7421,7 +7386,7 @@ const
     { 001 }
     (Pattern: '(\d)(\d{3})(\d{5})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 563; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 557; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7439,7 +7404,7 @@ const
     { 001 }
     (Pattern: '(\d{2})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 564; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 558; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7448,7 +7413,7 @@ const
     { 001 }
     (Pattern: '(\d{2})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 565; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 559; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7457,7 +7422,7 @@ const
     { 001 }
     (Pattern: '(\d{2})(\d{2})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 566; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 560; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7466,7 +7431,7 @@ const
     { 001 }
     (Pattern: '(\d{2})(\d{4})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 567; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 561; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7484,7 +7449,7 @@ const
     { 001 }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 568; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 562; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7493,7 +7458,7 @@ const
     { 001 }
     (Pattern: '(\d{3})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 569; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 563; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7502,7 +7467,7 @@ const
     { 001 }
     (Pattern: '(\d{2})(\d{4,5})(\d{5})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 570; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 564; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7511,7 +7476,7 @@ const
     { 001 }
     (Pattern: '(\d{3})(\d{3})(\d{2,8})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 571; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 565; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7520,7 +7485,7 @@ const
     { 001 }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 572; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 566; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7529,7 +7494,7 @@ const
     { 001 }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 485; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 482; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7538,7 +7503,7 @@ const
     { 001 }
     (Pattern: '(\d{4})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 573; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 567; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7547,7 +7512,7 @@ const
     { 001 }
     (Pattern: '(\d{3})(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 244; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 242; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7565,7 +7530,7 @@ const
     { 001 }
     (Pattern: '(\d)(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 574; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 568; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -7573,7 +7538,7 @@ const
      IntlFormat: '')
   );
 
-  PhoneMetadataIntlNumberFormats: array[0..204] of TNumberFormatRec = (
+  PhoneMetadataIntlNumberFormats: array[0..205] of TNumberFormatRec = (
     { AF }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
@@ -8025,9 +7990,27 @@ const
      IntlFormatKind: ifkInheritedFromNational;
      IntlFormat: ''),
     { CN }
+    (Pattern: '(\d{2})(\d{5})';
+     Format: '$1 $2';
+     LeadingDigitsOffset: 120; LeadingDigitsCount: 3;
+     NationalPrefixFormattingRule: '0$1';
+     NationalPrefixOptionalWhenFormatting: False;
+     DomesticCarrierCodeFormattingRule: '$CC $1';
+     IntlFormatKind: ifkInheritedFromNational;
+     IntlFormat: ''),
+    { CN }
+    (Pattern: '(\d{2})(\d{5,6})';
+     Format: '$1 $2';
+     LeadingDigitsOffset: 123; LeadingDigitsCount: 4;
+     NationalPrefixFormattingRule: '0$1';
+     NationalPrefixOptionalWhenFormatting: False;
+     DomesticCarrierCodeFormattingRule: '$CC $1';
+     IntlFormatKind: ifkInheritedFromNational;
+     IntlFormat: ''),
+    { CN }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 124; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 131; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC$1';
@@ -8036,7 +8019,7 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{5,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 130; LeadingDigitsCount: 4;
+     LeadingDigitsOffset: 137; LeadingDigitsCount: 4;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -8045,7 +8028,7 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 134; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 145; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8054,7 +8037,7 @@ const
     { CN }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 135; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 146; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -8063,7 +8046,7 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 138; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 149; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -8072,7 +8055,7 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{7,8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 139; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 34; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8081,7 +8064,7 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 140; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 150; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -8090,7 +8073,7 @@ const
     { CN }
     (Pattern: '(\d{3})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 141; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 151; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '$CC $1';
@@ -8099,25 +8082,16 @@ const
     { CN }
     (Pattern: '(\d{2})(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 145; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 153; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
      IntlFormatKind: ifkInheritedFromNational;
      IntlFormat: ''),
-    { CN }
-    (Pattern: '(\d{2})(\d{5,6})';
-     Format: '$1 $2';
-     LeadingDigitsOffset: 148; LeadingDigitsCount: 4;
-     NationalPrefixFormattingRule: '0$1';
-     NationalPrefixOptionalWhenFormatting: False;
-     DomesticCarrierCodeFormattingRule: '$CC $1';
-     IntlFormatKind: ifkInheritedFromNational;
-     IntlFormat: ''),
     { CO }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 156; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 154; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8126,7 +8100,7 @@ const
     { CO }
     (Pattern: '(\d{3})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 157; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 155; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '($1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC $1';
@@ -8135,7 +8109,7 @@ const
     { CO }
     (Pattern: '(\d{3})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 158; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 156; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC $1';
@@ -8153,7 +8127,7 @@ const
     { DE }
     (Pattern: '(\d{2})(\d{3,13})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 168; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 166; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8162,7 +8136,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{3,12})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 171; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 169; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8171,7 +8145,7 @@ const
     { DE }
     (Pattern: '(\d{4})(\d{2,11})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 173; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 171; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8180,7 +8154,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 175; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 173; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8189,7 +8163,7 @@ const
     { DE }
     (Pattern: '(\d{5})(\d{2,10})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 174; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8198,7 +8172,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{5,11})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 177; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 175; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8207,7 +8181,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d)(\d{4,10})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 178; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 176; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8216,7 +8190,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{7,8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 179; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 177; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8234,7 +8208,7 @@ const
     { DE }
     (Pattern: '(\d{5})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 180; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 178; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8252,7 +8226,7 @@ const
     { DE }
     (Pattern: '(\d{4})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 183; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 181; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8261,7 +8235,7 @@ const
     { DE }
     (Pattern: '(\d{4})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 184; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 182; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8270,7 +8244,7 @@ const
     { DE }
     (Pattern: '(\d{5})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 185; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 183; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8279,7 +8253,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 187; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 185; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8288,7 +8262,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{2})(\d{7,8})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 188; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 186; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8297,7 +8271,7 @@ const
     { DE }
     (Pattern: '(\d{4})(\d{2})(\d{7})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 189; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 187; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8306,7 +8280,7 @@ const
     { DE }
     (Pattern: '(\d{3})(\d{2})(\d{8})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 190; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 188; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8342,7 +8316,7 @@ const
     { ES }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 202; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 200; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8351,7 +8325,7 @@ const
     { ES }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 203; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 201; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8360,7 +8334,7 @@ const
     { FI }
     (Pattern: '(\d{5})';
      Format: '$1';
-     LeadingDigitsOffset: 206; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 204; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8369,7 +8343,7 @@ const
     { FI }
     (Pattern: '(\d{3})(\d{3,7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 208; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 206; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8378,7 +8352,7 @@ const
     { FI }
     (Pattern: '(\d{2})(\d{4,8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 209; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 207; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8396,7 +8370,7 @@ const
     { FI }
     (Pattern: '(\d)(\d{4,9})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 210; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 208; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8414,7 +8388,7 @@ const
     { FR }
     (Pattern: '(\d)(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4 $5';
-     LeadingDigitsOffset: 214; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 212; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8432,7 +8406,7 @@ const
     { GH }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 238; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 236; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8441,7 +8415,7 @@ const
     { HN }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 253; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 251; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8450,7 +8424,7 @@ const
     { ID }
     (Pattern: '(\d)(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 190; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 188; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8459,7 +8433,7 @@ const
     { ID }
     (Pattern: '(\d{2})(\d{5,9})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 258; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 256; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8477,7 +8451,7 @@ const
     { ID }
     (Pattern: '(\d{3})(\d{5,8})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 259; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 257; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8486,7 +8460,7 @@ const
     { ID }
     (Pattern: '(\d{3})(\d{3,4})(\d{3})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 260; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 258; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8504,7 +8478,7 @@ const
     { ID }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 261; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 259; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8513,7 +8487,7 @@ const
     { ID }
     (Pattern: '(\d{3})(\d)(\d{3})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 262; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 260; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8531,7 +8505,7 @@ const
     { IN }
     (Pattern: '(\d{8})';
      Format: '$1';
-     LeadingDigitsOffset: 276; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 274; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -8540,7 +8514,7 @@ const
     { IN }
     (Pattern: '(\d{4})(\d{4,5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 279; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 277; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -8549,7 +8523,7 @@ const
     { IN }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 281; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 279; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -8558,7 +8532,7 @@ const
     { IN }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 282; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 280; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -8567,7 +8541,7 @@ const
     { IN }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 285; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 283; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -8576,7 +8550,7 @@ const
     { IN }
     (Pattern: '(\d{4})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 288; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 286; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -8585,7 +8559,7 @@ const
     { IN }
     (Pattern: '(\d{5})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 291; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 289; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -8594,7 +8568,7 @@ const
     { IN }
     (Pattern: '(\d{4})(\d{2,4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 292; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 290; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -8603,7 +8577,7 @@ const
     { IN }
     (Pattern: '(\d{4})(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 187; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 185; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -8612,7 +8586,7 @@ const
     { IT }
     (Pattern: '(\d{2})(\d{4,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 298; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 296; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8621,7 +8595,7 @@ const
     { IT }
     (Pattern: '(\d{3})(\d{3,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 299; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 297; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8630,7 +8604,7 @@ const
     { IT }
     (Pattern: '(\d{4})(\d{2,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 301; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 299; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8639,7 +8613,7 @@ const
     { IT }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 302; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 300; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8648,7 +8622,7 @@ const
     { IT }
     (Pattern: '(\d{2})(\d{3,4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 303; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 301; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8657,7 +8631,7 @@ const
     { IT }
     (Pattern: '(\d{3})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 304; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 302; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8666,7 +8640,7 @@ const
     { IT }
     (Pattern: '(\d{3})(\d{3,4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 305; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 303; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8675,7 +8649,7 @@ const
     { IT }
     (Pattern: '(\d{2})(\d{4})(\d{5})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 298; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 296; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8693,7 +8667,7 @@ const
     { IT }
     (Pattern: '(\d{3})(\d{4})(\d{4,5})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 306; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 304; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8702,7 +8676,7 @@ const
     { JP }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 314; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 312; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8711,7 +8685,7 @@ const
     { JP }
     (Pattern: '(\d{4})(\d)(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 315; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 313; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8729,7 +8703,7 @@ const
     { JP }
     (Pattern: '(\d)(\d{4})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 318; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 316; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8738,7 +8712,7 @@ const
     { JP }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 320; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 318; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8747,7 +8721,7 @@ const
     { JP }
     (Pattern: '(\d{3})(\d{2})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 323; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 321; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8774,7 +8748,7 @@ const
     { KR }
     (Pattern: '(\d{2})(\d{3,4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 335; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 333; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC-$1';
@@ -8801,7 +8775,7 @@ const
     { KR }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 336; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 334; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC-$1';
@@ -8810,7 +8784,7 @@ const
     { KR }
     (Pattern: '(\d{2})(\d{3,4})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 337; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 335; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC-$1';
@@ -8819,7 +8793,7 @@ const
     { KR }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1-$2-$3';
-     LeadingDigitsOffset: 234; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 232; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '0$CC-$1';
@@ -8846,7 +8820,7 @@ const
     { MC }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 212; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 210; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8855,7 +8829,7 @@ const
     { MC }
     (Pattern: '(\d)(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4 $5';
-     LeadingDigitsOffset: 242; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 240; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8864,7 +8838,7 @@ const
     { ML }
     (Pattern: '(\d{2})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 371; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 369; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8873,7 +8847,7 @@ const
     { MX }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 394; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 391; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8891,7 +8865,7 @@ const
     { NC }
     (Pattern: '(\d{2})(\d{2})(\d{2})';
      Format: '$1.$2.$3';
-     LeadingDigitsOffset: 401; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 398; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8909,7 +8883,7 @@ const
     { NL }
     (Pattern: '(\d{2})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 409; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 406; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8927,7 +8901,7 @@ const
     { NL }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 410; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 407; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8936,7 +8910,7 @@ const
     { NL }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 411; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 408; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8954,7 +8928,7 @@ const
     { NP }
     (Pattern: '(\d)(\d{7})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 412; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 409; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8963,7 +8937,7 @@ const
     { NP }
     (Pattern: '(\d{2})(\d{6})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 413; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 410; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8981,7 +8955,7 @@ const
     { PY }
     (Pattern: '(\d{3})(\d{3,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 445; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 442; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8990,7 +8964,7 @@ const
     { PY }
     (Pattern: '(\d{2})(\d{5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 446; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 443; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -8999,7 +8973,7 @@ const
     { PY }
     (Pattern: '(\d{3})(\d{4,5})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 447; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 444; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9008,7 +8982,7 @@ const
     { PY }
     (Pattern: '(\d{2})(\d{3})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 448; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 445; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9017,7 +8991,7 @@ const
     { PY }
     (Pattern: '(\d{2})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 363; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 361; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9026,7 +9000,7 @@ const
     { PY }
     (Pattern: '(\d{3})(\d{6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 449; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 446; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9053,7 +9027,7 @@ const
     { RU }
     (Pattern: '(\d{4})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 460; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 457; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '8 ($1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9062,7 +9036,7 @@ const
     { RU }
     (Pattern: '(\d{5})(\d)(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 463; LeadingDigitsCount: 3;
+     LeadingDigitsOffset: 460; LeadingDigitsCount: 3;
      NationalPrefixFormattingRule: '8 ($1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9080,7 +9054,7 @@ const
     { RU }
     (Pattern: '(\d{3})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2-$3-$4';
-     LeadingDigitsOffset: 466; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 463; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '8 ($1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9098,7 +9072,7 @@ const
     { SE }
     (Pattern: '(\d{2})(\d{2,3})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 357; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 355; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9107,7 +9081,7 @@ const
     { SE }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 470; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 467; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9116,7 +9090,7 @@ const
     { SE }
     (Pattern: '(\d{2})(\d{3})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 471; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 468; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9134,7 +9108,7 @@ const
     { SE }
     (Pattern: '(\d{3})(\d{2,3})(\d{2})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 472; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 469; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9143,7 +9117,7 @@ const
     { SE }
     (Pattern: '(\d{3})(\d{2,3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 473; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 470; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9152,7 +9126,7 @@ const
     { SE }
     (Pattern: '(\d{2})(\d{2,3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 474; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 471; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9161,7 +9135,7 @@ const
     { SE }
     (Pattern: '(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 475; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 472; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9179,7 +9153,7 @@ const
     { SE }
     (Pattern: '(\d{3})(\d{2})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 476; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 473; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9197,7 +9171,7 @@ const
     { SE }
     (Pattern: '(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4 $5';
-     LeadingDigitsOffset: 477; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 474; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9206,7 +9180,7 @@ const
     { SG }
     (Pattern: '(\d{4})(\d{4})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 480; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 477; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9242,7 +9216,7 @@ const
     { SK }
     (Pattern: '(\d)(\d{2})(\d{3,4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 485; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 482; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9251,7 +9225,7 @@ const
     { SK }
     (Pattern: '(\d{2})(\d{2})(\d{2,3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 486; LeadingDigitsCount: 2;
+     LeadingDigitsOffset: 483; LeadingDigitsCount: 2;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9269,7 +9243,7 @@ const
     { SK }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 490; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 487; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9278,7 +9252,7 @@ const
     { SK }
     (Pattern: '(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 491; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 488; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9305,7 +9279,7 @@ const
     { TR }
     (Pattern: '(\d{3})(\d{3})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 516; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 513; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9323,7 +9297,7 @@ const
     { TR }
     (Pattern: '(\d{3})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 517; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 514; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '(0$1)';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9332,7 +9306,7 @@ const
     { TR }
     (Pattern: '(\d{3})(\d{3})(\d{6,7})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 262; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 260; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9341,7 +9315,7 @@ const
     { US }
     (Pattern: '(\d{3})(\d{4})';
      Format: '$1-$2';
-     LeadingDigitsOffset: 537; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 534; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9359,7 +9333,7 @@ const
     { VN }
     (Pattern: '(\d{4})(\d{4,6})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 544; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 541; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9368,7 +9342,7 @@ const
     { VN }
     (Pattern: '(\d{2})(\d{3})(\d{2})(\d{2})';
      Format: '$1 $2 $3 $4';
-     LeadingDigitsOffset: 545; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 542; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9377,7 +9351,7 @@ const
     { VN }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 546; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 543; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9386,7 +9360,7 @@ const
     { VN }
     (Pattern: '(\d{2})(\d{4})(\d{4})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 547; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 544; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: True;
      DomesticCarrierCodeFormattingRule: '';
@@ -9404,7 +9378,7 @@ const
     { ZM }
     (Pattern: '(\d{3})(\d{3})(\d{3})';
      Format: '$1 $2 $3';
-     LeadingDigitsOffset: 555; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 552; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';
@@ -9413,7 +9387,7 @@ const
     { ZM }
     (Pattern: '(\d{2})(\d{7})';
      Format: '$1 $2';
-     LeadingDigitsOffset: 556; LeadingDigitsCount: 1;
+     LeadingDigitsOffset: 553; LeadingDigitsCount: 1;
      NationalPrefixFormattingRule: '0$1';
      NationalPrefixOptionalWhenFormatting: False;
      DomesticCarrierCodeFormattingRule: '';

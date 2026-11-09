@@ -21,10 +21,69 @@ upstream release in the same way. The first release, 0.1.0, predates the
 scheme and already carried metadata 9.0.41; 9.0.41.0 is the first release
 under the scheme and contains everything since.
 
-## Unreleased
+## 9.0.43.0 - 2026-11-09
 
-### Tooling
+Metadata refresh to upstream 9.0.43 (Java `86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7`,
+the `v9.0.43` tag; C# `b1d2be7422defe0ccf125eecac389f42e12f6d1b`, the
+`v9.0.43` tag; reference oracle NuGet `libphonenumber-csharp` 9.0.43). The
+nine generated units are regenerated; upstream changed no Java code between
+9.0.42 and 9.0.43, so the port itself is unchanged. The short number, the
+alternate format and the testing metadata are unchanged (only the recorded
+source commit moves).
 
+### Metadata
+
+- BJ: the uan (81, 8 digits) and voip (857[58], 8 digits) descriptions are
+  removed together with their example numbers 81123456 and 85751234; the
+  general description keeps only the 10 digit 01 numbers, and the 8 digit
+  format `(\d{2})(\d{2})(\d{2})(\d{2})` (leading digit 8) is dropped.
+- CN: no number range changes. The national formats are reordered and their
+  leadingDigits simplified (for example `[48]00` becomes `[48]0`, `950`
+  becomes `9`), and the 7 digit 10100 numbers get a format of their own,
+  `(\d{2})(\d{5})` (before they fell under `(\d{2})(\d{5,6})`); 17 formats
+  become 18.
+- DE: mobile 15410 (11 digits) added; the leadingDigits of the
+  `(\d{5})(\d{6})` format follow (1541).
+- EC: mobile 930, 931 and 932 added (939 was already there).
+- ET: mobile 7000 added (the 70 range excluded 7000 before).
+- GE: mobile 50888 added.
+- LA: the 10 digit mobile ranges 302 and 304 removed (the 9 digit 30 mobile
+  numbers are unchanged); the general description no longer has 10 digit
+  numbers starting with 3, and the 10 digit format applies to leading digit 2
+  only.
+- RO: mobile 600, 62 and 6300 removed, so no 9 digit number starting with 6
+  remains; the general description and the `(\d{3})(\d{3})(\d{3})` format
+  drop the leading 6.
+- ZW: every 7 digit fixed line number is removed (prefixes 13, 20, 222, 227,
+  228, 2292, 248, 2583, 271-277, 375, 376, 5483, 55, 67, 68); fixed line now
+  has only the 9 digit ranges, which are unchanged, and the local only lengths
+  become 6 and 7 instead of 3 to 6. The fixed line example number changes from
+  1312345 to 202012345. Mobile 751 added. The three short national formats
+  `(\d{2})(\d{3,5})`, `(\d{3})(\d{3,5})` and `(\d{4})(\d{3,5})` are dropped.
+
+### Tests and tooling
+
+- The example number corpus shrinks from 1143 to 1141 (the two BJ examples are
+  gone), the production national number patterns from 1430 to 1428, and the
+  format inventory from 966 (761 national + 205 international) to 964 (758 +
+  206), 961 of them usable by the AsYouTypeFormatter (was 963): the inventory
+  counts in `tests/LibPhoneNumber.Metadata.Tests.pas`,
+  `tests/LibPhoneNumber.MetadataCore.Tests.pas` and
+  `tests/LibPhoneNumber.AsYouTypeFormatter.Tests.pas`, the `-ExpectedCaseCount`
+  default of `tools/run_mass_differential.ps1` and the counts in the tool
+  comments follow.
+- The oracle 9.0.43 changes C# code in `PhoneNumberMatcher` (inner match
+  recovery with the six Java INNER_MATCHES patterns, PUB_PAGES tested in
+  `parseAndVerify` and spelled ASCII only, as Java), `PhoneNumberMatch.ToString`,
+  the ordinal ordering of the prefix map storage of the geocoder and carrier
+  mapper, and E164 formatting of a negative country code. No expected value
+  changes: the reference cases, the mass differential and the AYTF cases are
+  unaffected; `tests/data/aytf_reference_cases.json`, regenerated with
+  `tools/generate_aytf_cases.ps1`, differs only in the recorded oracle version.
+  The pinned Java-versus-oracle matcher divergences of
+  `tests/LibPhoneNumber.PhoneNumberMatcher.Tests.pas` keep their Java values;
+  the 9.0.43 oracle now gives the same answers for them.
+- Samples and their golden outputs are unchanged.
 - `tools/refresh_vendor_versions.ps1` pins upstream RELEASES: it fetches the
   tags of both vendor clones and checks out the release tag `vX.Y.Z` as a
   detached HEAD - by default the highest `vX.Y.Z` tag of google/libphonenumber,

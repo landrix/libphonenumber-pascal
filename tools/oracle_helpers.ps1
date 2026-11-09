@@ -31,7 +31,7 @@ function Get-OraclePin {
   #>
   return [pscustomobject]@{
     PackageId       = "libphonenumber-csharp"
-    PackageVersion  = "9.0.42"
+    PackageVersion  = "9.0.43"
     TargetFramework = "net8.0"
   }
 }
