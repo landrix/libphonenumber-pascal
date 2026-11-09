@@ -9,9 +9,10 @@ unit LibPhoneNumber.PhoneNumberMatcher.Tests;
   java/libphonenumber/test/com/google/i18n/phonenumbers/PhoneNumberMatcherTest.java;
   the expected VALUES do not (that suite runs against
   PhoneNumberMetadataForTesting.xml - see AGENTS.md "Test Expectations").
-  Every value below was recomputed with the NuGet oracle
-  (libphonenumber-csharp 9.0.38, the metadata release matching the pinned Java
-  baseline) through
+  The values below were computed with the NuGet oracle
+  (libphonenumber-csharp 9.0.38, then the metadata release matching the pinned
+  Java baseline); the inner match cases were re-checked with
+  libphonenumber-csharp 9.0.43. The oracle call is
 
     [PhoneNumbers.PhoneNumberUtil]::GetInstance().FindNumbers(
       $text, $region, [PhoneNumbers.PhoneNumberUtil+Leniency]::$leniency,
@@ -22,40 +23,50 @@ unit LibPhoneNumber.PhoneNumberMatcher.Tests;
   THE ORACLE IS NOT A FAITHFUL PhoneNumberMatcher (important)
   ----------------------------------------------------------
   Unlike every other part of this port, the C# PhoneNumberMatcher is NOT a
-  current translation of the Java one. Verified against
+  literal translation of the Java one. Verified against
   vendor/libphonenumber-csharp/csharp/PhoneNumbers/PhoneNumberMatcher.cs at the
-  pinned commit, the C# class differs from PhoneNumberMatcher.java in five
-  places:
+  v9.0.43 tag, the C# class still differs from PhoneNumberMatcher.java in
+  four places:
 
-  1. extractInnerMatch is an OLDER algorithm entirely. Java walks the six
-     INNER_MATCHES patterns (slash, opening bracket, spaced hyphen, wide
-     hyphen, full stop, space); C# has a single "GroupSeparator" white space
-     regex and tries only "first group", "without first group" and "without
-     last group".
-  2. PUB_PAGES is tested in extractMatch in C# (which kills the inner matches
-     of that candidate too); Java tests it inside parseAndVerify, so only the
-     one candidate is rejected.
-  3. MATCHING_BRACKETS is a structurally different expression built from
+  1. MATCHING_BRACKETS is a structurally different expression built from
      atomic groups.
-  4. PATTERN is written with \d where Java writes \p<Nd>, again with atomic
+  2. PATTERN is written with \d where Java writes \p<Nd>, again with atomic
      groups. This is a SOURCE PATTERN difference, not an ASCII versus Unicode
      one: .NET's \d is Unicode Nd by default (only RegexOptions.ECMAScript
      narrows it to [0-9]), so the two spellings agree on the digit class and
      differ in the atomic groups around it.
-  5. TIME_STAMPS_SUFFIX, trimAfterFirstMatch(SECOND_NUMBER_START) and
+  3. TIME_STAMPS_SUFFIX, trimAfterFirstMatch(SECOND_NUMBER_START) and
      trimAfterFirstMatch(UNWANTED_END_CHARS) are hand written in C# and
      UNWANTED_END_CHARS is spelled with char.IsLetterOrDigit rather than the
      upstream [\P<N>&&\P<L>] class.
+  4. TIME_STAMPS allows exactly ONE space before the hour in C#; Java writes
+     " +", one or more. This one was there all along and was only found
+     later. It changes an answer: a time stamp with two spaces before the
+     hour and a minute suffix is rejected by Java and found by the oracle.
+
+  Differences 1 to 3 are not known to change an expected value of this
+  fixture; difference 4 does, and its case is pinned.
+
+  History: up to 9.0.42 the C# matcher also had an OLDER extractInnerMatch (a
+  single "GroupSeparator" white space regex that tried only "first group",
+  "without first group" and "without last group" instead of the six Java
+  INNER_MATCHES patterns) and tested PUB_PAGES in extractMatch instead of
+  parseAndVerify. That is why the inner match cases of this fixture were
+  pinned as Java-versus-oracle divergences until then; since 9.0.43 the
+  oracle walks INNER_MATCHES and tests PUB_PAGES like Java, and answers those
+  cases exactly as Java does.
 
   Java is the functional source of truth of this port (AGENTS.md "Source of
-  Truth"), so the port follows Java. The consequence is recorded here rather
-  than smoothed over: the fixture below is split into
+  Truth"), so the port follows Java wherever the two differ. The fixture
+  below is split into
 
-    * cases where oracle and Java agree - the overwhelming majority, and the
-      value is the oracle answer;
-    * a block of PINNED JAVA-VERSUS-ORACLE DIVERGENCES near the end, each with
-      the Java trace that produces the expected value and the oracle answer
-      written next to it;
+    * cases where oracle and Java agree, and the value is the oracle answer;
+    * the inner match cases near the end (formerly pinned divergences), each
+      still derived from the Java source with its Java trace, and answered
+      the same way by the oracle since 9.0.43;
+    * a block of PINNED JAVA-VERSUS-ORACLE DIVERGENCES near the end - one
+      case, difference 4 - with the Java trace that produces the expected
+      value and the oracle answer written next to it;
     * one test for the ALTERNATE FORMAT metadata, which pins the upstream
       behaviour of the grouping levels.
 
@@ -66,8 +77,9 @@ unit LibPhoneNumber.PhoneNumberMatcher.Tests;
   Notation
   --------
   A closing brace ends a Pascal comment, so upstream expressions are quoted
-  with ANGLE brackets where they use a Unicode property class: \p<Z> is \p
-  and the brace form of Z.
+  with ANGLE brackets where they use a Unicode property class or a bounded
+  repetition: \p<Z> is \p and the brace form of Z, \d<3> is \d and the
+  brace form of 3.
 }
 
 {$IFDEF FPC}
@@ -223,16 +235,19 @@ type
     { --- mass smoke ----------------------------------------------------- }
     procedure ExampleNumbersInASentence_AreFoundInBothFormats;
 
+    { --- inner matches (formerly pinned oracle divergences) ------------- }
+    procedure InnerMatch_SlashReleasesTheNumbersOnBothSides;
+
+    procedure InnerMatch_BracketGroupsAreFoundOneByOne;
+
+    procedure InnerMatch_DoubledOpeningBracketFallsBackToTheBracketGroup;
+
+    procedure InnerMatch_WideHyphensSplitTheCandidate;
+
+    procedure InnerMatch_SlashRunIsConsumedAsAWhole;
+
     { --- pinned Java versus oracle divergences -------------------------- }
-    procedure Divergence_SlashInnerMatchIsFoundLikeJava;
-
-    procedure Divergence_BracketInnerMatchIsFoundLikeJava;
-
-    procedure Divergence_DoubledOpeningBracketFallsBackToTheInnerMatch;
-
-    procedure Divergence_WideHyphensSplitTheCandidateLikeJava;
-
-    procedure Divergence_SlashRunIsConsumedAsAWholeLikeJava;
+    procedure TimeStamps_SeveralSpacesBeforeTheHour;
 
     { --- alternate format metadata ------------------------- }
     procedure AlternateFormatsAreConsultedByTheGroupingCheck;
@@ -418,7 +433,7 @@ begin
   CheckValid('(650) 2)53-0000', 'US', []);
   { '((650) 253-0000' is NOT here: MATCHING_BRACKETS rejects the whole
     candidate, but the second bracket group is a match of its own; see
-    Divergence_DoubledOpeningBracketFallsBackToTheInnerMatch. }
+    InnerMatch_DoubledOpeningBracketFallsBackToTheBracketGroup. }
 end;
 
 procedure TPhoneNumberMatcherTests.MatchingBrackets_RejectsUpstreamNonMatchingBracketCases;
@@ -877,8 +892,9 @@ begin
     both rejected and only the third attempt - the second find() - carries a
     number.
 
-    ORACLE: no match. Its single "first group / without first group / without
-    last group" attempt never reaches the third group. }
+    ORACLE: 9.0.43 answers the same. Up to 9.0.42 it found no match: its
+    single "first group / without first group / without last group" attempt
+    never reached the third group. }
   CheckValid('12345 99999 650-253-0000', 'US',
     ['12|650-253-0000|+16502530000']);
 end;
@@ -892,8 +908,9 @@ begin
     "12345" and the captured group "99999" are two rejects, so the number is
     out of reach until the third try.
 
-    Java derived, like InnerMatch_FindIsRepeatedOnTheSameCandidate: the C#
-    matcher spends its budget in a different place. }
+    Java derived, like InnerMatch_FindIsRepeatedOnTheSameCandidate. The
+    oracle 9.0.43 spends its budget in the same place and gives the same three
+    answers; up to 9.0.42 its older ExtractInnerMatch spent it elsewhere. }
   CheckFind(Text, 'US', pnlValid, 1, []);
   CheckFind(Text, 'US', pnlValid, 2, []);
   CheckFind(Text, 'US', pnlValid, 3, ['12|650-253-0000|+16502530000']);
@@ -1072,15 +1089,16 @@ begin
 end;
 
 { ------------------------------------------------------------------
-  PINNED JAVA VERSUS ORACLE DIVERGENCES.
+  INNER MATCHES, FORMERLY PINNED JAVA VERSUS ORACLE DIVERGENCES.
 
   Every case below exercises PhoneNumberMatcher.extractInnerMatch, which the
-  C# port implements with an older, different algorithm (see the unit header).
-  The expected value is therefore the JAVA one, derived from the Java source,
-  and the oracle answer is written down next to it.
+  C# port implemented with an older, different algorithm up to 9.0.42 (see the
+  unit header). The expected value is the JAVA one, derived from the Java
+  source; since 9.0.43 the oracle gives exactly the same answer, and what it
+  answered before is written down next to it.
   ------------------------------------------------------------------ }
 
-procedure TPhoneNumberMatcherTests.Divergence_SlashInnerMatchIsFoundLikeJava;
+procedure TPhoneNumberMatcherTests.InnerMatch_SlashReleasesTheNumbersOnBothSides;
 begin
   { PATTERN matches the whole string, because '/' is VALID_PUNCTUATION, and
     the whole string does not parse (20 digits). Java then runs
@@ -1089,15 +1107,15 @@ begin
     The next PATTERN find starts behind it and yields "332-445-1234"; both
     numbers are valid in the productive metadata (checked with the oracle).
 
-    ORACLE: no matches at all. The C# port has no slash inner match (its
-    single GroupSeparator pattern needs white space), so it never looks
-    inside this candidate. }
+    ORACLE: 9.0.43 answers the same. Up to 9.0.42 it found no matches at
+    all: it had no slash inner match (its single white space separator
+    pattern needed white space), so it never looked inside this candidate. }
   CheckValid('651-234-2345/332-445-1234', 'US',
     ['0|651-234-2345|+16512342345',
      '13|332-445-1234|+13324451234']);
 end;
 
-procedure TPhoneNumberMatcherTests.Divergence_BracketInnerMatchIsFoundLikeJava;
+procedure TPhoneNumberMatcherTests.InnerMatch_BracketGroupsAreFoundOneByOne;
 begin
   { INNER_MATCHES[1] = "(\([^(]*)", the case the upstream comment names
     explicitly ("Will match a pattern like (650) 223 3345 (754) 223 3321").
@@ -1105,14 +1123,15 @@ begin
     "(650) 223 3345" is tried and accepted; the next PATTERN find then starts
     at the second bracket.
 
-    ORACLE: no matches. Its ExtractInnerMatch cuts on white space only, and
-    the first white space separated group "(650)" is not a number. }
+    ORACLE: 9.0.43 answers the same. Up to 9.0.42 it found no matches: its
+    ExtractInnerMatch cut on white space only, and the first white space
+    separated group "(650)" is not a number. }
   CheckValid('(650) 223 3345 (754) 223 3321', 'US',
     ['0|(650) 223 3345|+16502233345',
      '15|(754) 223 3321|+17542233321']);
 end;
 
-procedure TPhoneNumberMatcherTests.Divergence_DoubledOpeningBracketFallsBackToTheInnerMatch;
+procedure TPhoneNumberMatcherTests.InnerMatch_DoubledOpeningBracketFallsBackToTheBracketGroup;
 begin
   { MATCHING_BRACKETS rejects "((650) 253-0000" as a whole - its leading
     "(?:[openingParens])?" can absorb only ONE of the two brackets and
@@ -1121,12 +1140,13 @@ begin
     second match is "(650) 253-0000" at index 1, and that one is a valid US
     number.
 
-    ORACLE: no match under VALID, and "253-0000" at offset 7 under POSSIBLE -
-    both artefacts of the older C# ExtractInnerMatch. }
+    ORACLE: 9.0.43 answers the same, under VALID and under POSSIBLE. Up to
+    9.0.42 it found no match under VALID and "253-0000" at offset 7 under
+    POSSIBLE - both artefacts of the older C# ExtractInnerMatch. }
   CheckValid('((650) 253-0000', 'US', ['1|(650) 253-0000|+16502530000']);
 end;
 
-procedure TPhoneNumberMatcherTests.Divergence_WideHyphensSplitTheCandidateLikeJava;
+procedure TPhoneNumberMatcherTests.InnerMatch_WideHyphensSplitTheCandidate;
 
   procedure CheckWideHyphen(ACode: Integer; const AName: string);
   var
@@ -1147,15 +1167,16 @@ begin
     spaces". All members of the class are VALID_PUNCTUATION too, so PATTERN
     swallows both numbers into one candidate first.
 
-    ORACLE: no match at all for any of the three, at any leniency - the C#
-    matcher has no wide hyphen inner match. }
+    ORACLE: 9.0.43 answers the same for all four, under VALID and under
+    POSSIBLE. Up to 9.0.42 it found no match at all for any of them, at any
+    leniency - the C# matcher had no wide hyphen inner match. }
   CheckWideHyphen($2012, 'FIGURE DASH');
   CheckWideHyphen($2013, 'EN DASH');
   CheckWideHyphen($2015, 'HORIZONTAL BAR');
   CheckWideHyphen($FF0D, 'FULLWIDTH HYPHEN-MINUS');
 end;
 
-procedure TPhoneNumberMatcherTests.Divergence_SlashRunIsConsumedAsAWholeLikeJava;
+procedure TPhoneNumberMatcherTests.InnerMatch_SlashRunIsConsumedAsAWhole;
 begin
   { INNER_MATCHES[0] is "/+(.*)": the whole RUN of slashes belongs to the
     match, so the captured group starts at 14 and not at 13.
@@ -1165,10 +1186,35 @@ begin
     an extension, never in a slash, so ".*" always has at least the rest of
     the second number to consume.
 
-    ORACLE: no match - see Divergence_SlashInnerMatchIsFoundLikeJava. }
+    ORACLE: 9.0.43 answers the same. Up to 9.0.42 it found no match - see
+    InnerMatch_SlashReleasesTheNumbersOnBothSides. }
   CheckValid('650-253-0000//415-666-7777', 'US',
     ['0|650-253-0000|+16502530000',
      '14|415-666-7777|+14156667777']);
+end;
+
+{ ------------------------------------------------------------------
+  PINNED JAVA VERSUS ORACLE DIVERGENCES.
+
+  The expected value below is the JAVA one, derived from the Java source; the
+  oracle answer is written down next to it (see the unit header).
+  ------------------------------------------------------------------ }
+
+procedure TPhoneNumberMatcherTests.TimeStamps_SeveralSpacesBeforeTheHour;
+begin
+  { PATTERN takes "2012-01-02  08" as the candidate: the two spaces are
+    VALID_PUNCTUATION, the colon is not. TIME_STAMPS is
+    "[12]\d<3>[-/]?[01]\d[-/]?[0-3]\d +[0-2]\d$" - " +" accepts both spaces -
+    so find() matches the candidate, and TIME_STAMPS_SUFFIX ":[0-5]\d" matches
+    the following ":00" with lookingAt(). extractMatch therefore returns null
+    before parseAndVerify and before any inner match. The remaining "00" is
+    no number either.
+
+    ORACLE (9.0.43): 0|2012-01-02  08|+12012010208 under VALID and POSSIBLE.
+    Its TimeStamps pattern has exactly one space before the hour, so the
+    candidate is not taken for a time stamp. }
+  CheckValid('2012-01-02  08:00', 'US', []);
+  CheckFind('2012-01-02  08:00', 'US', pnlPossible, UnlimitedTries, []);
 end;
 
 { ------------------------------------------------------------------

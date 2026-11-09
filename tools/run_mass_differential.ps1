@@ -57,7 +57,7 @@ param(
   -FailOnFindings, which only counts divergences.
 
   Not covered here: PhoneNumberMatcher / FindNumbers. The C# matcher is not a
-  current translation of the Java one (five documented deviations, see the
+  literal translation of the Java one (four documented deviations, see the
   header of tests/LibPhoneNumber.PhoneNumberMatcher.Tests.pas), so the
   oracle is not an arbiter for it.
 

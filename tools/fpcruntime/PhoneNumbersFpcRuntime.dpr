@@ -284,7 +284,7 @@ const
     TrickyInputs: every non ASCII code unit, the apostrophe and the backslash
     as <U+XXXX>. Inputs only - no expectation is taken over. The last few
     entries are the driver's own (see there). }
-  MatcherTexts: array[0..257] of string = (
+  MatcherTexts: array[0..258] of string = (
     'T|US|Call me at 510-748-8230 if it<U+0027>s before 9:30, or on 703-4800500 after 10am.',
     'T|DE|Bitte rufen Sie 030 12345678 oder +49 30 901820 an.',
     'T|US|My number is 650-253-0000 and my fax is 650-253-0001.',
@@ -314,6 +314,7 @@ const
     'T|US|2012-01-02 08:00',
     'T|US|2012-01-02 08:00:23',
     'T|US|2012-01-02 08',
+    'T|US|2012-01-02  08:00',
     'T|US|Chen Li. VLDB J. 12(3): 211-227 (2003).',
     'T|US|abc8005001234',
     'T|US|8005001234def',

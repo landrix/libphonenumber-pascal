@@ -21,6 +21,40 @@ upstream release in the same way. The first release, 0.1.0, predates the
 scheme and already carried metadata 9.0.41; 9.0.41.0 is the first release
 under the scheme and contains everything since.
 
+## Unreleased
+
+### Tests and tooling
+
+- The matcher documentation follows the oracle 9.0.43: the C#
+  `PhoneNumberMatcher` no longer has its older `extractInnerMatch` and no
+  longer tests `PUB_PAGES` in `extractMatch`, so three of the five documented
+  differences remain. A fourth, never documented before, is added: the C#
+  `TIME_STAMPS` allows exactly one space before the hour, Java one or more.
+  The header of `tests/LibPhoneNumber.PhoneNumberMatcher.Tests.pas`, the
+  matcher unit header, `AGENTS.md`, `docs/ARCHITECTURE.md`, `tests/README.md` and
+  `tools/run_mass_differential.ps1` say so. The five former divergence tests
+  are renamed, with unchanged expected values:
+  `Divergence_SlashInnerMatchIsFoundLikeJava` ->
+  `InnerMatch_SlashReleasesTheNumbersOnBothSides`,
+  `Divergence_BracketInnerMatchIsFoundLikeJava` ->
+  `InnerMatch_BracketGroupsAreFoundOneByOne`,
+  `Divergence_DoubledOpeningBracketFallsBackToTheInnerMatch` ->
+  `InnerMatch_DoubledOpeningBracketFallsBackToTheBracketGroup`,
+  `Divergence_WideHyphensSplitTheCandidateLikeJava` ->
+  `InnerMatch_WideHyphensSplitTheCandidate`,
+  `Divergence_SlashRunIsConsumedAsAWholeLikeJava` ->
+  `InnerMatch_SlashRunIsConsumedAsAWhole`. Their oracle notes, and those of
+  `InnerMatch_FindIsRepeatedOnTheSameCandidate` and
+  `InnerMatch_MaxTriesIsSpentInsideTheInnerExtraction`, record that the
+  oracle 9.0.43 gives the Java answer.
+- New pinned Java-versus-oracle divergence test
+  `TimeStamps_SeveralSpacesBeforeTheHour` (568 tests, 53 in
+  `TPhoneNumberMatcherTests`): `2012-01-02  08:00` (two spaces) is a time stamp
+  in Java and the port, so nothing is found under VALID and POSSIBLE; the
+  oracle 9.0.43 finds `2012-01-02  08` as +12012010208.
+  The FreePascal runtime gate runs the text as well (matcher text list of
+  `tools/fpcruntime/PhoneNumbersFpcRuntime.dpr`; counts in the manifest).
+
 ## 9.0.43.0 - 2026-11-09
 
 Metadata refresh to upstream 9.0.43 (Java `86ea33cee5c22ab7e23b3de368e7cc7fa439a2b7`,

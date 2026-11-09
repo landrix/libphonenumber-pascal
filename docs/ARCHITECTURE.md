@@ -386,14 +386,19 @@ Known places where the oracle is NOT the reference:
    java.util.regex code points. The scanners follow Java; two supplementary
    character cases and the three extra case foldings of the extension labels
    (U+017F, U+0131, U+0130) are pinned as Java-versus-oracle divergences.
-2. **The C# `PhoneNumberMatcher` is not a current translation of the Java one.**
-   It differs in five places (an older `extractInnerMatch`, `PUB_PAGES` tested in
-   `extractMatch`, a different `MATCHING_BRACKETS`, a different `PATTERN`,
-   hand written `TIME_STAMPS_SUFFIX` / `trimAfterFirstMatch` /
-   `UNWANTED_END_CHARS`); see the header of
-   `tests/LibPhoneNumber.PhoneNumberMatcher.Tests.pas`. Matcher tests use the
-   oracle where it agrees with Java and pin the rest with the Java derivation;
-   the mass differential leaves the matcher out.
+2. **The C# `PhoneNumberMatcher` is not a literal translation of the Java one.**
+   It differs in four places (a different `MATCHING_BRACKETS`, a different
+   `PATTERN`, hand written `TIME_STAMPS_SUFFIX` / `trimAfterFirstMatch` /
+   `UNWANTED_END_CHARS`, and a `TIME_STAMPS` that allows only one space before
+   the hour, which changes an answer and is pinned as a Java-versus-oracle
+   divergence); see the header of
+   `tests/LibPhoneNumber.PhoneNumberMatcher.Tests.pas`. Release 9.0.43 removed
+   two further differences, an older `extractInnerMatch` and `PUB_PAGES`
+   tested in `extractMatch`; the inner match cases that were pinned as
+   divergences because of them keep their Java derivation, and the oracle now
+   gives the same answers. Matcher tests use the oracle where it agrees with
+   Java and derive the rest from Java; the mass differential leaves the
+   matcher out.
 3. **`getInvalidExampleNumber`** has no C# counterpart.
 
 ## Test strategy

@@ -104,9 +104,12 @@ Test units:
    leniency levels; its mass gate builds "Call me at <international> or
    <national>." from the FIXED_LINE example number of a fixed set of regions. READ ITS
    HEADER BEFORE CHANGING AN EXPECTATION: the C# `PhoneNumberMatcher` is not a
-   current translation of the Java one, so the oracle is only a partial
-   reference there and the disagreeing cases are pinned as Java-versus-oracle
-   divergences.
+   literal translation of the Java one, so the oracle is only a partial
+   reference there. The inner match cases are derived from the Java source;
+   up to oracle 9.0.42 they were Java-versus-oracle divergences, since 9.0.43
+   the oracle answers them like Java. The one case where the two still
+   disagree (a time stamp with several spaces before the hour) is pinned as a
+   Java-versus-oracle divergence.
 7. The four ported upstream suites - `LibPhoneNumber.UpstreamSuite.Tests.pas`
    (`PhoneNumberUtilTest`), `.ShortNumber.Tests.pas` (`ShortNumberInfoTest`),
    `.Matcher.Tests.pas` (`PhoneNumberMatcherTest`) and

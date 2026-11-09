@@ -10,10 +10,14 @@ unit LibPhoneNumber.PhoneNumberMatcher;
   port was used as a translation aid and as the reference oracle for every
   expected value in the test suite WHERE JAVA AND C# AGREE. That
   qualification matters here and nowhere else in this port: the C#
-  PhoneNumberMatcher is not a current translation of the Java one (five
-  documented deviations, extractInnerMatch above all), so a handful of test
-  expectations are derived from the Java source instead and are pinned as
-  such. The test unit header lists the deviations and the pinned cases.
+  PhoneNumberMatcher is not a literal translation of the Java one. Four
+  documented deviations remain (MATCHING_BRACKETS, PATTERN, the hand written
+  trimming and time stamp suffix checks, and a TIME_STAMPS that allows only
+  one space before the hour); the last one changes an answer and is pinned in
+  a test with the Java value. Up to 9.0.42 the C# extractInnerMatch was an
+  older algorithm, so the inner match expectations are derived from the Java
+  source, which the oracle has confirmed since 9.0.43. The test unit header
+  lists the deviations and those cases.
 
   Notation in the comments of this unit
   -------------------------------------
